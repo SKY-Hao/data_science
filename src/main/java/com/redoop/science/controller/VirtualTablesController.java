@@ -2,6 +2,8 @@ package com.redoop.science.controller;
 
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.redoop.science.entity.VirtualTables;
 import com.redoop.science.service.IVirtualTablesService;
 import com.redoop.science.utils.Result;
@@ -13,8 +15,8 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import org.springframework.stereotype.Controller;
-
-import java.util.List;
+import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.servlet.ModelAndView;
 
 /**
  * <p>
@@ -25,7 +27,7 @@ import java.util.List;
  * @since 2018-09-13
  */
 @Controller
-@RequestMapping("/virtual-tables")
+@RequestMapping("/virtual")
 public class VirtualTablesController {
     @Autowired
     private IVirtualTablesService virtualTablesService;
@@ -36,11 +38,14 @@ public class VirtualTablesController {
      * @return
      */
     @GetMapping
-    public String index(Model model){
+    public ModelAndView index(Model model,Page page){
         LambdaQueryWrapper<VirtualTables> wrapper = new LambdaQueryWrapper<>();
-        List<VirtualTables> list = virtualTablesService.list(wrapper);
-        model.addAttribute("list", list);
-        return "";
+//        IPage<VirtualTables> page = new Page<>();
+        IPage<VirtualTables> pages = virtualTablesService.page(page,null);
+        model.addAttribute("items", pages.getRecords());
+        model.addAttribute("pages", pages.getPages());
+        model.addAttribute("total", pages.getTotal());
+        return new ModelAndView("/select/index");
     }
 
     @PostMapping("/save")
