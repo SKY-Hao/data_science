@@ -64,6 +64,6 @@ spring:
       max-pool-prepared-statement-per-connection-size: 20
   thymeleaf:
     cache: false
-    mode: HTML5
+    mode: LEGACYHTML5
     encoding: utf-8
     prefix: classpath:/templates
