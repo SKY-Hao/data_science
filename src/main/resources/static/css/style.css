@@ -620,7 +620,7 @@ textarea.input {
 ===========================================================*/
 
 #navigation {
-  background: #FFF;
+  background: #15161D;
   border-bottom: 2px solid #E4E7ED;
   border-top: 3px solid #D10024;
 }
@@ -635,6 +635,7 @@ textarea.input {
 
 .main-nav>li>a {
   padding: 20px 0px;
+  color: #FFF;
 }
 
 .main-nav>li>a:hover, .main-nav>li>a:focus, .main-nav>li.active>a {

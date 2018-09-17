@@ -5,6 +5,7 @@ import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.redoop.science.entity.VirtualTables;
+import com.redoop.science.service.IRealDbService;
 import com.redoop.science.service.IVirtualTablesService;
 import com.redoop.science.utils.Result;
 import com.redoop.science.utils.ResultEnum;
@@ -31,6 +32,8 @@ import org.springframework.web.servlet.ModelAndView;
 public class VirtualTablesController {
     @Autowired
     private IVirtualTablesService virtualTablesService;
+    @Autowired
+    private IRealDbService realDbService;
 
     /**
      * 数据源列表分类
@@ -46,6 +49,17 @@ public class VirtualTablesController {
         model.addAttribute("pages", pages.getPages());
         model.addAttribute("total", pages.getTotal());
         return new ModelAndView("/select/index");
+    }
+    @GetMapping("/edit")
+    public ModelAndView edit(Model model,Long id){
+    //  获取ztree json
+    // 获取真实库ztreejson
+
+    // 获取虚拟库ztreejson
+
+    // 判断id是否为空，若为空直接返回页面不做操作，否则查询虚拟表编辑
+
+        return new ModelAndView("/select/edit");
     }
 
     @PostMapping("/save")
