@@ -8,7 +8,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
  * @author ALan
  */
 @SpringBootApplication
-@MapperScan(basePackages="mapper")
+@MapperScan("com.redoop.science.mapper")
 public class DataScienceApplication {
 
     public static void main(String[] args) {

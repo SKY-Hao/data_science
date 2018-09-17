@@ -18,9 +18,6 @@ import lombok.experimental.Accessors;
 @Data
 @EqualsAndHashCode(callSuper = false)
 @Accessors(chain = true)
-@Getter
-@Setter
-@Value
 public class RealDb implements Serializable {
 
     private static final long serialVersionUID = 1L;
