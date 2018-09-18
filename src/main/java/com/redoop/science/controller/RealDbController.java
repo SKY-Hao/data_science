@@ -9,12 +9,9 @@ import com.redoop.science.utils.Result;
 import com.redoop.science.utils.ResultEnum;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
 
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.RequestParam;
 
 import java.util.List;
 
@@ -39,13 +36,35 @@ public class RealDbController {
      */
     @GetMapping
     public String index(Model model){
-        LambdaQueryWrapper<RealDb> wrapper = new LambdaQueryWrapper<>();
+      /*  LambdaQueryWrapper<RealDb> wrapper = new LambdaQueryWrapper<>();
         //按照数据库种类分类
         wrapper.groupBy(RealDb::getDbType);
         List<RealDb> list = realDbService.list(wrapper);
-        model.addAttribute("list", list);
-        return "";
+        model.addAttribute("list", list);*/
+        return "/realDb/index";
     }
+
+
+
+
+
+
+    /**
+     * 去添加(修改)数据源
+     * @param id
+     * @param model
+     * @return
+     */
+    @RequestMapping(value = "/form/{id}", method = RequestMethod.GET)
+    public String form(@PathVariable String id, Model model) {
+        if(id != null){//id不为null则修改
+            RealDb realDb = realDbService.findById(id);
+            model.addAttribute("form", realDb);
+        }
+        return "/realDb/form";
+    }
+
+
 
     @PostMapping("/save")
     public Result<String> save(RealDb realDb){

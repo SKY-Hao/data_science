@@ -2005,6 +2005,8 @@ textarea.input {
 #footer {
   background: #15161D;
   color: #B9BABC;
+  padding:0;width: 100%; bottom: 0;
+  position: fixed;
 }
 
 #bottom-footer {

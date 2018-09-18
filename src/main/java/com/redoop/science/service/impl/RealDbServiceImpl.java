@@ -4,6 +4,7 @@ import com.redoop.science.entity.RealDb;
 import com.redoop.science.mapper.RealDbMapper;
 import com.redoop.science.service.IRealDbService;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 /**
@@ -17,4 +18,11 @@ import org.springframework.stereotype.Service;
 @Service
 public class RealDbServiceImpl extends ServiceImpl<RealDbMapper, RealDb> implements IRealDbService {
 
+    @Autowired
+    RealDbMapper realDbMapper;
+
+    @Override
+    public RealDb findById(String id) {
+        return realDbMapper.selectById(id);
+    }
 }
