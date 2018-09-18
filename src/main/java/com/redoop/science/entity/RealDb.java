@@ -94,5 +94,17 @@ public class RealDb implements Serializable {
     @TableField("NIKE_NAME")
     private String nikeName;
 
+    /**
+     * 数据库用户
+     */
+    @TableField("DB_NAME")
+    private Integer dbName;
+
+    /**
+     * 数据库用户密码
+     */
+    @TableField("DB_PASSWORD")
+    private Integer dbPassword;
+
 
 }

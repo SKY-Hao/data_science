@@ -26,6 +26,7 @@
 
  		<!-- Custom stlylesheet -->
  		<link type="text/css" rel="stylesheet" href="/css/style.css" />
+		<link type="text/css" rel="stylesheet" href="/css/realdb/form.css" />
 
 		<!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
 		<!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
@@ -38,8 +39,72 @@
 	<body>
 	<div th:include="/common/header::header"></div>
 	<!-- SECTION -->
+	<div style="text-align: center;color: red;margin-bottom: 10px;">
+		<span th:text="${session.message}"></span>
 
-	数据源添加页面
+	</div>
+	<form class="form-horizontal" role="form" style="margin-top: 33px" th:action="@{/real-db/save}" method="post">
+
+		<div class="form-group">
+			<label class="col-sm-2 control-label">IP</label>
+			<div class="col-sm-10">
+				<input class="form-control" id="ip" type="text" th:field="*{ip}"  style="width: 33%">
+			</div>
+		</div>
+		<div class="form-group">
+			<label class="col-sm-2 control-label">端口</label>
+			<div class="col-sm-10">
+				<input class="form-control" id="port" type="text" th:field="*{port}"  style="width: 33%">
+			</div>
+		</div>
+
+		<div class="form-group">
+			<label class="col-sm-2 control-label">驱动</label>
+			<div class="col-sm-10">
+				<select  id="dbType"   th:field="*{dbType}">
+					<option>1</option>
+					<option>2</option>
+					<option>3</option>
+					<option>4</option>
+					<option>5</option>
+				</select>
+			</div>
+		</div>
+
+		<div class="form-group">
+			<label class="col-sm-2 control-label">用户名</label>
+			<div class="col-sm-10">
+				<input class="form-control" id="name" type="text" th:field="*{dbName}" style="width: 33%">
+			</div>
+		</div>
+
+
+		<div class="form-group">
+			<label class="col-sm-2 control-label">密码</label>
+			<div class="col-sm-10">
+				<input class="form-control" id="password" type="text" th:field="*{dbPassword}"style="width: 33%">
+			</div>
+		</div>
+		<div class="form-group">
+			<label class="col-sm-2 control-label">库名</label>
+			<div class="col-sm-10">
+				<input class="form-control" id="database" type="text" th:field="*{name}" style="width: 33%">
+			</div>
+		</div>
+		<div class="form-group">
+			<label class="col-sm-2 control-label">数据源名</label>
+			<div class="col-sm-10">
+				<input class="form-control" id="realName" type="text"  th:field="*{nikeName}" style="width: 33%">
+			</div>
+		</div>
+		<div id="realFormButtn">
+			<button type="submit" class="btn btn-success">提交</button>
+			<button type="submit" class="btn btn-danger">取消</button>
+		</div>
+
+
+
+	</form>
 
 	<!-- /SECTION -->
 

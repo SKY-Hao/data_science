@@ -1,8 +1,9 @@
 package com.redoop.science.controller;
 
 
-import com.baomidou.mybatisplus.core.conditions.Wrapper;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.redoop.science.entity.RealDb;
 import com.redoop.science.service.IRealDbService;
 import com.redoop.science.utils.Result;
@@ -12,8 +13,11 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import org.springframework.stereotype.Controller;
+import org.springframework.web.servlet.ModelAndView;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
-import java.util.List;
+import javax.servlet.http.HttpSession;
+
 
 /**
  * <p>
@@ -35,13 +39,20 @@ public class RealDbController {
      * @return
      */
     @GetMapping
-    public String index(Model model){
+    public ModelAndView index(Model model,Page page){
       /*  LambdaQueryWrapper<RealDb> wrapper = new LambdaQueryWrapper<>();
         //按照数据库种类分类
         wrapper.groupBy(RealDb::getDbType);
         List<RealDb> list = realDbService.list(wrapper);
         model.addAttribute("list", list);*/
-        return "/realDb/index";
+        LambdaQueryWrapper<RealDb> wrapper = new LambdaQueryWrapper<>();
+//        IPage<VirtualTables> page = new Page<>();
+        IPage<RealDb> pages = realDbService.page(page,null);
+        model.addAttribute("list", pages.getRecords());
+        model.addAttribute("pages", pages.getPages());
+        model.addAttribute("total", pages.getTotal());
+
+        return new ModelAndView("/realDb/index");
     }
 
 
@@ -57,7 +68,8 @@ public class RealDbController {
      */
     @RequestMapping(value = "/form/{id}", method = RequestMethod.GET)
     public String form(@PathVariable String id, Model model) {
-        if(id != null){//id不为null则修改
+        //id不为null则修改
+        if(id != null){
             RealDb realDb = realDbService.findById(id);
             model.addAttribute("form", realDb);
         }
@@ -67,13 +79,24 @@ public class RealDbController {
 
 
     @PostMapping("/save")
+    public String save(RealDb realDb, HttpSession session){
+
+        realDbService.save(realDb);
+
+        System.out.println("保存后的信息==="+realDb.toString());
+
+        session.setAttribute("message","<script>toastr.success(\\\"数据源保存成功\\\")</script>");
+        return "/real-db";
+    }
+
+    /*@PostMapping("/save")
     public Result<String> save(RealDb realDb){
         if (realDbService.save(realDb)){
             return new Result<String>(ResultEnum.SECCUSS);
         }else {
             return new Result<String>(ResultEnum.FAIL);
         }
-    }
+    }*/
     @PostMapping("/update")
     public Result<String> update(RealDb realDb){
         if (realDbService.updateById(realDb)){
