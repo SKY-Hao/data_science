@@ -12,5 +12,4 @@ import com.baomidou.mybatisplus.core.mapper.BaseMapper;
  * @since 2018-09-13
  */
 public interface RealDbMapper extends BaseMapper<RealDb> {
-
 }

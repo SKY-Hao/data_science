@@ -13,5 +13,9 @@ import com.baomidou.mybatisplus.extension.service.IService;
  */
 public interface IRealDbService extends IService<RealDb> {
 
-    RealDb findById(String id);
+    /**
+     * 增加
+     * @param realDb
+     */
+    void saveForm(RealDb realDb);
 }

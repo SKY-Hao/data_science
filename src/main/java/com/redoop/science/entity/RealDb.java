@@ -3,9 +3,13 @@ package com.redoop.science.entity;
 import java.time.LocalDateTime;
 import com.baomidou.mybatisplus.annotation.TableField;
 import java.io.Serializable;
+import java.util.Date;
 
 import lombok.*;
 import lombok.experimental.Accessors;
+
+import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.NotNull;
 
 /**
  * <p>
@@ -31,6 +35,7 @@ public class RealDb implements Serializable {
     /**
      * 库名
      */
+    @NotEmpty(message="库名不能为空")
     @TableField("NAME")
     private String name;
 
@@ -56,7 +61,7 @@ public class RealDb implements Serializable {
      * 创建日期
      */
     @TableField("CREATE_DATE")
-    private LocalDateTime createDate;
+    private Date createDate;
 
     /**
      * 操作人编号
@@ -68,43 +73,49 @@ public class RealDb implements Serializable {
      * 操作时间
      */
     @TableField("OPERATION_TIME")
-    private LocalDateTime operationTime;
+    private Date operationTime;
 
     /**
      * 端口号
      */
+    @NotNull(message="端口号不能空")
     @TableField("PORT")
     private Integer port;
 
     /**
      * ip地址
      */
+    @NotEmpty(message="IP不能空")
     @TableField("IP")
     private String ip;
 
     /**
      * 数据库类型(1-mysql,2-oracle,3-pg,4-sql server,5-hive,6-redis,7-kafka)
      */
+
     @TableField("DB_TYPE")
     private Integer dbType;
 
     /**
      * 别名
      */
+    @NotEmpty(message="数据源名不能空")
     @TableField("NIKE_NAME")
     private String nikeName;
 
     /**
      * 数据库用户
      */
+    @NotEmpty(message="数据库用户不能空")
     @TableField("DB_NAME")
-    private Integer dbName;
+    private String dbName;
 
     /**
      * 数据库用户密码
      */
+    @NotEmpty(message="数据库密码不能空")
     @TableField("DB_PASSWORD")
-    private Integer dbPassword;
+    private String dbPassword;
 
 
 }

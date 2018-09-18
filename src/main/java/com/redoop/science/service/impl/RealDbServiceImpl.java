@@ -7,6 +7,9 @@ import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.Date;
+
+
 /**
  * <p>
  * 实体数据源库 服务实现类
@@ -21,8 +24,21 @@ public class RealDbServiceImpl extends ServiceImpl<RealDbMapper, RealDb> impleme
     @Autowired
     RealDbMapper realDbMapper;
 
+    /**
+     * 增加
+     * @param realDb
+     */
     @Override
-    public RealDb findById(String id) {
-        return realDbMapper.selectById(id);
+    public void saveForm(RealDb realDb) {
+
+        realDb.setCreateDate(new Date());
+        //判断用户为null的时候添加创建人
+        if (realDb.getCreatorName()==null || "".equals(realDb.getCreatorName())){
+            realDb.setCreatorName("admin");
+        }
+        realDb.setOperationTime(new Date());
+        System.out.println(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>==="+realDb.toString());
+
+        realDbMapper.insert(realDb);
     }
 }
