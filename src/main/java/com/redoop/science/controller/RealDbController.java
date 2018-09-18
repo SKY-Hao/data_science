@@ -68,11 +68,7 @@ public class RealDbController {
      */
     @RequestMapping(value = "/form/{id}", method = RequestMethod.GET)
     public String form(@PathVariable String id, Model model) {
-        //id不为null则修改
-        if(id != null){
-            RealDb realDb = realDbService.findById(id);
-            model.addAttribute("form", realDb);
-        }
+
         return "/realDb/form";
     }
 
