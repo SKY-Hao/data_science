@@ -79,7 +79,7 @@ public class RealDbController {
 
 
     @PostMapping("/save")
-    public String save(RealDb realDb, HttpSession session){
+    public String save(@RequestBody RealDb realDb, HttpSession session){
 
         realDbService.save(realDb);
 
