@@ -10,6 +10,9 @@ import com.redoop.science.utils.Result;
 import com.redoop.science.utils.ResultEnum;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.ObjectError;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import org.springframework.stereotype.Controller;
@@ -59,22 +62,63 @@ public class RealDbController {
 
 
 
-
     /**
-     * 去添加(修改)数据源
-     * @param id
+     * 去添加数据源
      * @param model
      * @return
      */
-    @RequestMapping(value = "/form/{id}", method = RequestMethod.GET)
-    public String form(@PathVariable String id, Model model) {
+    @RequestMapping(value = "/toAdd", method = RequestMethod.GET)
+    public ModelAndView form( Model model) {
+        model.addAttribute("realDb", new RealDb());
+        return new ModelAndView("/realDb/add");
+    }
+    /**
+     * 保存
+     * @param realDb
+     * @return
+     */
+    @PostMapping("/save")
+    public String save(@Validated RealDb realDb , BindingResult rs){
+        if(rs.hasErrors()){
+            for (ObjectError error : rs.getAllErrors()) {
+                System.out.println("错误信息>>>>>>>"+error.getDefaultMessage());
+            }
+            return "/realDb/add";
+        }
+        realDbService.saveForm(realDb);
+        System.out.println("保存后的信息>>>>>>>"+realDb.toString());
+        return "redirect:/real-db";
+    }
 
-        return "/realDb/form";
+    /**
+     * 去修改
+     * @param model
+     * @param id
+     * @return
+     */
+    @RequestMapping(value = "/toEdit")
+    public ModelAndView toEdit(Model model,String id) {
+        RealDb realDb = realDbService.getById(id);
+        model.addAttribute("realDb", realDb);
+        return new ModelAndView("/realDb/update");
     }
 
 
-
-    @PostMapping("/save")
+    /**
+     * 修改提交
+     * @param realDb
+     * @return
+     */
+    @PostMapping("/update")
+    public String  update(RealDb realDb){
+        System.out.println("保存后的信息==="+realDb.toString());
+        realDbService.updateById(realDb);
+        System.out.println("修改完后的信息>>>>>>>>>"+realDb);
+        return "redirect:/real-db";
+        //session.setAttribute("message","<script>toastr.success(\\\"数据源保存成功\\\")</script>");
+       // return "/real-db";
+    }
+    /*@PostMapping("/save")
     public String save(RealDb realDb, HttpSession session){
 
         realDbService.save(realDb);
@@ -83,7 +127,7 @@ public class RealDbController {
 
         session.setAttribute("message","<script>toastr.success(\\\"数据源保存成功\\\")</script>");
         return "/real-db";
-    }
+    }*/
 
     /*@PostMapping("/save")
     public Result<String> save(RealDb realDb){
@@ -93,14 +137,6 @@ public class RealDbController {
             return new Result<String>(ResultEnum.FAIL);
         }
     }*/
-    @PostMapping("/update")
-    public Result<String> update(RealDb realDb){
-        if (realDbService.updateById(realDb)){
-            return new Result<String>(ResultEnum.SECCUSS);
-        }else {
-            return new Result<String>(ResultEnum.FAIL);
-        }
-    }
     @PostMapping("/delete")
     public Result<String> delete(Long id){
         if (realDbService.removeById(id)){

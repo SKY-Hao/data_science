@@ -41,7 +41,7 @@ public class DataScienceApplicationTests {
         String content = "";
         try {
             RealDb realDb = new RealDb();
-            realDb.setCreateDate(LocalDateTime.now());
+            ///realDb.setCreateDate(LocalDateTime.now());
             realDb.setName("ORACLE2");
             realDb.setCreatorId(1);
             realDb.setCreatorName("www");
