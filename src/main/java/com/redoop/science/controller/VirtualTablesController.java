@@ -103,7 +103,7 @@ public class VirtualTablesController {
             Map<String,Object> zMap = new HashMap<>();
             zMap.put("pId",1);
             zMap.put("name",virtualTables.getName());
-            zMap.put("icon","/img/icon/db.png");
+            zMap.put("icon","/img/icon/table.png");
             zMap.put("id",virtualTables.getId()+10);
             virtualZList.add(zMap);
         }
@@ -142,4 +142,5 @@ public class VirtualTablesController {
             return new Result<String>(ResultEnum.FAIL);
         }
     }
+
 }
