@@ -17,9 +17,8 @@ import org.springframework.web.bind.annotation.*;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.web.servlet.ModelAndView;
-import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
-import javax.servlet.http.HttpSession;
+import java.util.List;
 
 
 /**
@@ -59,9 +58,6 @@ public class RealDbController {
     }
 
 
-
-
-
     /**
      * 去添加数据源
      * @param model
@@ -72,6 +68,7 @@ public class RealDbController {
         model.addAttribute("realDb", new RealDb());
         return new ModelAndView("/realDb/add");
     }
+
     /**
      * 保存
      * @param realDb
@@ -103,7 +100,6 @@ public class RealDbController {
         return new ModelAndView("/realDb/update");
     }
 
-
     /**
      * 修改提交
      * @param realDb
@@ -115,35 +111,36 @@ public class RealDbController {
         realDbService.updateById(realDb);
         System.out.println("修改完后的信息>>>>>>>>>"+realDb);
         return "redirect:/real-db";
-        //session.setAttribute("message","<script>toastr.success(\\\"数据源保存成功\\\")</script>");
-       // return "/real-db";
     }
-    /*@PostMapping("/save")
-    public String save(RealDb realDb, HttpSession session){
 
-        realDbService.save(realDb);
-
-        System.out.println("保存后的信息==="+realDb.toString());
-
-        session.setAttribute("message","<script>toastr.success(\\\"数据源保存成功\\\")</script>");
-        return "/real-db";
-    }*/
-
-    /*@PostMapping("/save")
-    public Result<String> save(RealDb realDb){
-        if (realDbService.save(realDb)){
-            return new Result<String>(ResultEnum.SECCUSS);
-        }else {
-            return new Result<String>(ResultEnum.FAIL);
-        }
-    }*/
-    @PostMapping("/delete")
-    public Result<String> delete(Long id){
-        if (realDbService.removeById(id)){
-            return new Result<String>(ResultEnum.SECCUSS);
-        }else {
-            return new Result<String>(ResultEnum.FAIL);
+    /**
+     * 删除
+     * @param id
+     * @return
+     */
+    @RequestMapping("/delete")
+    public String delete(Integer id){
+        if (id!=null){
+            realDbService.removeById(id);
+            return "redirect:/real-db";
+        } else {
+            return String.valueOf(new Result<String>(ResultEnum.FAIL));
         }
     }
+
+
+    @RequestMapping("/selectDatabase")
+    @ResponseBody
+    public List<RealDb> selectDatabase(Model model){
+
+        List<RealDb> list =  realDbService.selectDatabase();
+        model.addAttribute("list" ,list);
+
+        return list;
+    }
+
+
+
+
 
 }

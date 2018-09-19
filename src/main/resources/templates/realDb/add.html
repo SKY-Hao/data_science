@@ -46,14 +46,14 @@
 		<label class="col-sm-2 control-label">IP</label>
 		<div class="col-sm-10">
 			<input  style="width: 33%" class="form-control" type="text" id="ip"  th:name="ip" placeholder="Enter ip" >
-			<label style="color:red" th:if="${#fields.hasErrors('ip')}" th:errors="${ip}">ip Error</label>
+			<label style="color:red" th:if="${#fields.hasErrors('ip')}" th:errors="*{ip}">ip Error</label>
 		</div>
 	</div>
 	<div class="form-group">
 		<label class="col-sm-2 control-label">端口</label>
 		<div class="col-sm-10">
 			<input  style="width: 33%" class="form-control" id="port" type="text" th:name="port" placeholder="Enter 端口" >
-			<label style="color:red" th:if="${#fields.hasErrors('port')}" th:errors="${port}">port Error</label>
+			<label style="color:red" th:if="${#fields.hasErrors('port')}" th:errors="*{port}">port Error</label>
 		</div>
 	</div>
 
@@ -65,6 +65,10 @@
 				<option value="2">oracle</option>
 				<option value="3">pgsql</option>
 				<option value="4">sqlServer</option>
+				<option value="5">hive</option>
+				<option value="6">redis</option>
+				<option value="7">kafka</option>
+
 			</select>
 		</div>
 	</div>
@@ -73,14 +77,14 @@
 		<label class="col-sm-2 control-label">数据库名</label>
 		<div class="col-sm-10">
 			<input style="width: 33%" class="form-control" id="name" type="text" th:name="name" placeholder="Enter 数据库名" >
-			<label style="color:red" th:if="${#fields.hasErrors('name')}" th:errors="${name}">name Error</label>
+			<label style="color:red" th:if="${#fields.hasErrors('name')}" th:errors="*{name}">name Error</label>
 		</div>
 	</div>
 	<div class="form-group">
 		<label class="col-sm-2 control-label">数据库用户</label>
 		<div class="col-sm-10">
 			<input style="width: 33%" class="form-control" id="dbName" type="text"   th:name="dbName" placeholder="Enter 数据库用户">
-			<label style="color:red" th:if="${#fields.hasErrors('dbName')}" th:errors="${dbName}">dbName Error</label>
+			<label style="color:red" th:if="${#fields.hasErrors('dbName')}" th:errors="*{dbName}">dbName Error</label>
 		</div>
 	</div>
 
@@ -89,7 +93,7 @@
 		<label class="col-sm-2 control-label">数据库密码</label>
 		<div class="col-sm-10">
 			<input style="width: 33%" class="form-control" id="dbPassword" type="text"   th:name="dbPassword" placeholder="Enter 数据库密码">
-			<label style="color:red" th:if="${#fields.hasErrors('dbPassword')}" th:errors="${dbPassword}">dbPassword Error</label>
+			<label style="color:red" th:if="${#fields.hasErrors('dbPassword')}" th:errors="*{dbPassword}">dbPassword Error</label>
 		</div>
 	</div>
 
@@ -97,7 +101,7 @@
 		<label class="col-sm-2 control-label">数据源名</label>
 		<div class="col-sm-10">
 			<input  style="width: 33%" class="form-control" id="nikeName" type="text"   th:name="nikeName" placeholder="Enter 数据源名">
-			<label style="color:red" th:if="${#fields.hasErrors('nikeName')}" th:errors="${nikeName}">nikeName Error</label>
+			<label style="color:red" th:if="${#fields.hasErrors('nikeName')}" th:errors="*{nikeName}">nikeName Error</label>
 		</div>
 	</div>
 	<div id="realFormButtn">

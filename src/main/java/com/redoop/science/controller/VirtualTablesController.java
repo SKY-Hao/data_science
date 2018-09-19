@@ -90,6 +90,7 @@ public class VirtualTablesController {
             zMap.put("id",realDb.getId()+10);
             realZList.add(zMap);
         }
+
     // 获取虚拟库ztreejson
         List<Map<String,Object>> virtualZList = new ArrayList<>();
         Map<String,Object> vMap = new HashMap<>();

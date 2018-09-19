@@ -3,6 +3,8 @@ package com.redoop.science.service;
 import com.redoop.science.entity.RealDb;
 import com.baomidou.mybatisplus.extension.service.IService;
 
+import java.util.List;
+
 /**
  * <p>
  * 实体数据源库 服务类
@@ -18,4 +20,6 @@ public interface IRealDbService extends IService<RealDb> {
      * @param realDb
      */
     void saveForm(RealDb realDb);
+
+    List<RealDb> selectDatabase();
 }

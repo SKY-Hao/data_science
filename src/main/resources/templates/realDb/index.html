@@ -41,6 +41,7 @@
 	real-db列表页
 
 		<a href="/real-db/toAdd">添加数据源</a>
+		<a href="/real-db/selectDatabase">查看库表</a>
 
 		<!-- SECTION -->
 		<div class="section">
@@ -55,8 +56,8 @@
 						<div class="row">
 
 							<!-- product -->
-							<div class="col-md-3 col-xs-3">
-								<div class="product">
+							<div class="col-md-3 col-xs-3" >
+								<div class="product" onclick="window.open('/real-db/toAdd','_self')">
 									<div class="product-img">
 										<img src="/img/logoList.jpg">
 									</div>
@@ -87,8 +88,8 @@
 									<div class="product-body">
 										<h3 class="product-name"><a href="#" th:text="${item.nikeName}"></a></h3>
 										<div class="product-btns">
-											<button class="add-to-wishlist" th:id="${item.id}">
-												<i class="fa fa-heart-o"></i>
+											<!--<button class="add-to-wishlist" th:id="${item.id}">
+													<i class="fa fa-heart-o"></i>
 												<span class="tooltipp">修改</span>
 											</button>
 											<button class="add-to-compare" th:id="${item.id}">
@@ -98,9 +99,21 @@
 											<button class="quick-view" th:id="${item.id}">
 												<i class="fa fa-eye"></i>
 												<span class="tooltipp">查看</span>
+											</button>-->
+											<a class="add-to-wishlist" th:href="@{/real-db/toEdit(id=${item.id})}" th:title="修改">
+												<i class="fa fa-heart-o"></i>
+												<span class="tooltipp"></span>
+											</a>
+											<a class="add-to-compare" th:href="@{/real-db/delete(id=${item.id})}" th:title="删除">
+												<i class="fa fa-exchange"></i>
+												<span class="tooltipp"></span>
+											</a>
+											<button class="quick-view" th:id="${item.id}">
+												<i class="fa fa-eye"></i>
+												<span class="tooltipp">查看</span>
 											</button>
-
-											<a th:href="@{/real-db/toEdit(id=${item.id})}">edit</a>
+											<!--<a th:href="@{/real-db/toEdit(id=${item.id})}">edit</a>
+											<a th:href="@{/real-db/delete(id=${item.id})}">delete</a>-->
 										</div>
 									</div>
 								</div>
@@ -121,5 +134,6 @@
 		<!-- /SECTION -->
 
 		<div th:include="/common/footer::footer"></div>
-	</body>
+
+</body>
 </html>
