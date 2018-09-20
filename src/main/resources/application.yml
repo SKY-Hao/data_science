@@ -39,7 +39,7 @@ spring:
     druid:
       driver-class-name: com.mysql.cj.jdbc.Driver
       #\u57FA\u672C\u5C5E\u6027
-      url: jdbc:mysql://localhost:3306/data_science?serverTimezone=UTC&useUnicode=true&characterEncoding=utf8&autoReconnect=true&rewriteBatchedStatements=TRUE&useSSL=false&allowPublicKeyRetrieval=true
+      url: jdbc:mysql://localhost:3306/data_science?serverTimezone=Asia/Shanghai&useUnicode=true&characterEncoding=utf8&autoReconnect=true&rewriteBatchedStatements=TRUE&useSSL=false&allowPublicKeyRetrieval=true
       username: root
       password: root
 #      username: root

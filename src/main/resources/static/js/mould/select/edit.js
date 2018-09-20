@@ -1,4 +1,4 @@
-function onCheck(e,treeId,treeNode){
+function onCheck(){
     var treeObj=$.fn.zTree.getZTreeObj("treeReal"),
         nodes=treeObj.getCheckedNodes(true),
         v="";

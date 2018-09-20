@@ -17,6 +17,10 @@ public enum ResultEnum {
      */
     NOT_FOUND(404,"没有资源"),
     /**
+     * 没有资源
+     */
+    EXIST(300,"没有资源"),
+    /**
      *返回失败
      */
     FAIL(500,"执行错误");

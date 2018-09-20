@@ -52,13 +52,13 @@
 							<div class="col-md-4 col-xs-6">
 								<div class="product">
 									<div class="product-img">
-										<img src="/img/add.png">
+										<!--<img src="/img/add.png">-->
 									</div>
 									<div class="product-body">
 										<!--<p class="product-category" th:text=""></p>-->
 										<h3 class="product-name">新建空白查询</h3>
 										<div class="product-btns">
-											<button class="add-to-wishlist"><i class="fa fa-heart-o"></i><span class="tooltipp">新增</span></button>
+											<button class="add-to-wishlist" onclick="toAdd()"><i class="fa fa-plus"></i><span class="tooltipp">新增</span></button>
 											<!--<button class="add-to-compare"><i class="fa fa-exchange"></i><span class="tooltipp">删除</span></button>-->
 											<!--<button class="quick-view"><i class="fa fa-eye"></i><span class="tooltipp">查看</span></button>-->
 										</div>
@@ -74,9 +74,9 @@
 									<div class="product-body">
 										<h3 class="product-name"><a href="#" th:text="${item.name}"></a></h3>
 										<div class="product-btns">
-											<button class="add-to-wishlist" th:id="${item.id}"><i class="fa fa-heart-o"></i><span class="tooltipp">修改</span></button>
-											<button class="add-to-compare" th:id="${item.id}"><i class="fa fa-exchange"></i><span class="tooltipp">删除</span></button>
-											<button class="quick-view" th:id="${item.id}"><i class="fa fa-eye"></i><span class="tooltipp">查看</span></button>
+											<button class="add-to-wishlist" th:onclick="'javascript:toEdit('+${item.id}+')'" ><i class="fa fa-edit"></i><span class="tooltipp">修改</span></button>
+											<button class="add-to-compare" th:onclick="'javascript:toDel('+${item.id}+')'"><i class="fa fa-remove"></i><span class="tooltipp">删除</span></button>
+											<button class="quick-view" th:onclick="'javascript:toEdit('+${item.id}+')'"><i class="fa fa-eye"></i><span class="tooltipp">查看</span></button>
 										</div>
 									</div>
 								</div>
@@ -114,6 +114,35 @@
 		<script src="/js/nouislider.min.js"></script>
 		<script src="/js/jquery.zoom.min.js"></script>
 		<script src="/js/main.js"></script>
+	<script type="text/javascript">
+		function toAdd() {
+            window.location.href="/virtual/add";
+        }
+        function toEdit(id) {
+            window.location.href="/virtual/edit/"+id;
+        }
+        function toDel(id) {
 
+            $.ajax({
+                url: "/virtual/delete",
+                type:"POST",
+                dataType:"application/json;charset=UTF-8",
+                data:{"id":id} ,
+                success: function(data){
+                    var result = data.data;
+                    if(result.code==200){
+                        layer.alert("删除成功");
+                        setTimeout( function(){window.location.reload()},500);
+
+                    }else if (result.code==500){
+                        layer.alert("删除失败")
+                    }
+                },
+                error: function () {
+
+                }
+            });
+        }
+	</script>
 	</body>
 </html>

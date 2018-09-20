@@ -1,7 +1,5 @@
 package com.redoop.science.constant;
 
-import ch.qos.logback.core.db.dialect.MySQLDialect;
-
 /**
  * @Author: Alan
  * @Time: 2018/9/18 10:55

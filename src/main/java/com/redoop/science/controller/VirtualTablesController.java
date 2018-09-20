@@ -19,7 +19,6 @@ import org.springframework.web.bind.annotation.*;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.web.servlet.ModelAndView;
-import sun.security.pkcs11.Secmod;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -57,20 +56,31 @@ public class VirtualTablesController {
         model.addAttribute("total", pages.getTotal());
         return new ModelAndView("/select/index");
     }
-    @GetMapping("/edit")
-    public ModelAndView edit(Model model,@RequestParam(value = "id",required=false) Long id){
+    @GetMapping("/edit/{id}")
+    public ModelAndView edit(Model model,@RequestParam(value = "id",defaultValue = "1") String id){
 
+        VirtualTables virtualTables = virtualTablesService.getById(id);
+        if(virtualTables!=null){
+            model.addAttribute("virtual", virtualTables);
+            //返回值
+            getZtree(model);
+            return new ModelAndView("/select/edit");
+        }else{
+            model.addAttribute("message","不存在查询信息");
+            return new ModelAndView("/error/404");
+        }
 
-       /* { id:1, pId:0, name:"MySQL", open:true, iconOpen:"../../../css/zTreeStyle/img/diy/1_open.png", iconClose:"../../../css/zTreeStyle/img/diy/1_close.png"},
-        { id:11, pId:1, name:"库1", icon:"../../../css/zTreeStyle/img/diy/2.png"},
-        { id:12, pId:1, name:"库2", icon:"../../../css/zTreeStyle/img/diy/3.png"},
-        { id:13, pId:1, name:"库3", icon:"../../../css/zTreeStyle/img/diy/5.png"},
-        { id:2, pId:0, name:"Oracle", open:true, icon:"../../../css/zTreeStyle/img/diy/4.png"},
-        { id:21, pId:2, name:"库1", icon:"../../../css/zTreeStyle/img/diy/6.png"},
-        { id:22, pId:2, name:"库2", icon:"../../../css/zTreeStyle/img/diy/7.png"},
-        { id:23, pId:2, name:"库3", icon:"../../../css/zTreeStyle/img/diy/8.png"}*/
-    //  获取ztree json
-    // 获取真实库ztreejson
+    }
+    @GetMapping("/add")
+    public ModelAndView add(Model model){
+
+        getZtree(model);
+        return new ModelAndView("/select/edit");
+    }
+
+    public Model getZtree(Model model){
+        //  获取ztree json
+        // 获取真实库ztreejson
         List<RealDb> realDbs =  realDbService.list(null);
         List<Map<String,Object>> realZList = new ArrayList<>();
         for (DBEnum dbEnum : DBEnum.values())
@@ -91,7 +101,7 @@ public class VirtualTablesController {
             realZList.add(zMap);
         }
 
-    // 获取虚拟库ztreejson
+        // 获取虚拟库ztreejson
         List<Map<String,Object>> virtualZList = new ArrayList<>();
         Map<String,Object> vMap = new HashMap<>();
         vMap.put("pId",0);
@@ -108,14 +118,10 @@ public class VirtualTablesController {
             zMap.put("id",virtualTables.getId()+10);
             virtualZList.add(zMap);
         }
-    // 判断id是否为空，若为空直接返回页面不做操作，否则查询虚拟表编辑
-        if(id!=null){
-            model.addAttribute("virtual", virtualTablesService.getById(id));
-        }
         //返回值
         model.addAttribute("realZList", realZList);
         model.addAttribute("virtualZList", virtualZList);
-        return new ModelAndView("/select/edit");
+        return model;
     }
 
     @PostMapping("/save")
@@ -135,7 +141,7 @@ public class VirtualTablesController {
             return new Result<String>(ResultEnum.FAIL);
         }
     }
-    @PostMapping("/delete")
+    @GetMapping("/delete/{id}")
     public Result<String> delete(Long id){
         if (virtualTablesService.removeById(id)){
             return new Result<String>(ResultEnum.SECCUSS);

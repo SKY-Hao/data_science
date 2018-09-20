@@ -33,7 +33,12 @@
     <script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
     <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
     <![endif]-->
-
+    <style>
+        #editor{
+            width:100%;
+            height:300px;
+        }
+    </style>
 </head>
 <body>
 <div th:include="/common/header::header"></div>
@@ -67,7 +72,14 @@
 
             <!-- STORE -->
             <div id="store" class="col-md-9">
-                <div id=app></div>
+                <div class="row">
+                    <div id="editor"></div>
+                </div>
+                <div>
+                    <input id="sqlName" value="" placeholder="请填写sql name"/><br/>
+                    <button id="runButton" onclick="submitRunSQL()" class="btn btn-run waves-effect">查询</button>
+                    <button id="saveButton"  onclick="submitSaveSQL()" class="btn btn-run waves-effect">保存</button>
+                </div>
             </div>
             <!-- /STORE -->
         </div>
@@ -80,20 +92,17 @@
 <div th:include="/common/footer::footer"></div>
 
 <!-- jQuery Plugins -->
-<script src="/js/jquery.min.js"></script>
-<script src="/js/jquery.ztree.all.min.js"></script>
-<script src="/js/bootstrap.min.js"></script>
-<script src="/js/slick.min.js"></script>
-<script src="/js/nouislider.min.js"></script>
-<script src="/js/jquery.zoom.min.js"></script>
-<!--<script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>-->
-<!--<script type=text/javascript src=/js/mlsql/manifest.2ae2e69a05c33dfc65f8.js></script>-->
-<!--<script type=text/javascript src=/js/mlsql/vendor.227fabcc85b1148d80a7.js></script>-->
-<!--<script type=text/javascript src=/js/mlsql/app.303d85c440faff98c47f.js></script>-->
-<script src="/js/mould/select/edit.js"></script>
+<script type="text/javascript" src="/js/jquery.min.js"></script>
+<script type="text/javascript" src="/js/jquery.ztree.all.min.js"></script>
+<script type="text/javascript" src="/js/bootstrap.min.js"></script>
+<script type="text/javascript" src="/js/layer/layer.js"></script>
+<script type="text/javascript" src="/js/slick.min.js"></script>
+<script type="text/javascript" src="/js/nouislider.min.js"></script>
+<script type="text/javascript" src="/js/jquery.zoom.min.js"></script>
+<script type="text/javascript" src="/js/ace/ace.js"></script>
+<script type="text/javascript" src="/js/ace/ext-language_tools.js"></script>
 <script th:inline="javascript" >
     /*<![CDATA[*/
-    (function($) {
 
 // zTree 的参数配置，深入使用请参考 API 文档（setting 配置详解）
         var setting = {
@@ -108,9 +117,93 @@
         var virtualNodes = [[${virtualZList}]];
         $.fn.zTree.init($("#treeReal"), setting, realNodes);
         $.fn.zTree.init($("#treeVirtual"), setting, virtualNodes);
+        ace.require("ace/ext/language_tools");
+        var editor = ace.edit('editor');
 
-    })(jQuery);
+        editorInit(editor);
+
+
+    var virtual = [[${virtual}]];
+
+    function editorInit(editor) {
+
+
+        editor.setOptions({
+            enableBasicAutocompletion: true,
+            enableSnippets: true,
+            enableLiveAutocompletion: true
+        });
+        editor.setTheme("ace/theme/twilight");
+        editor.getSession().setMode("ace/mode/sql");
+        editor.setHighlightActiveLine(true);
+        editor.setFontSize(16);
+        editor.execCommand('find');
+        if(virtual!=null){
+            editor.setValue(virtual.code);
+        }else{
+            editor.setValue("欢迎使用");
+        }
+    }
+    function submitRunSQL() {
+        var sql =  editor.getValue();
+        var sqlName =  $("#sqlName").val();
+        if(sql==null||sql==""){
+            layer.alert("请输入sql");
+            return;
+        }
+        if(sqlName==null||sqlName==""){
+            layer.alert("请输入sql name");
+            return;
+        }
+        $.ajax({
+            url: "/run/script",
+            type:"POST",
+            dataType:"application/json;charset=UTF-8",
+            data:{"sql":sql,"sqlName":sqlName} ,
+            success: function(data){
+                var result = data.data;
+                    layer.alert(result)
+
+            },
+            error:function () {
+
+            }});
+    }
+    function submitSaveSQL(){
+        var sql =  editor.getValue();
+        var sqlName =  $("#sqlName").val();
+        if(sql==null||sql==""){
+            layer.alert("请输入sql");
+            return;
+        }
+        if(sqlName==null||sqlName==""){
+            layer.alert("请输入sql name");
+            return;
+        }
+        $.ajax({
+            url: "/run/save",
+            type:"POST",
+            dataType:"application/json;charset=UTF-8",
+            data:{"sql":sql,"sqlName":sqlName} ,
+            success: function(data){
+                var result = data.data;
+                if(result.code==200){
+                    layer.alert("保存成功");
+                }else if (result.code==300){
+                    layer.alert(result.msg)
+                }
+            },
+            error: function () {
+
+            }
+        });
+
+    }
+
     /*]]>*/
 </script>
+
+<script src="/js/mould/select/edit.js"></script>
+
 </body>
 </html>
