@@ -5,6 +5,7 @@ import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.redoop.science.entity.RealDb;
+import com.redoop.science.entity.VirtualTables;
 import com.redoop.science.service.IRealDbService;
 import com.redoop.science.utils.Result;
 import com.redoop.science.utils.ResultEnum;
@@ -18,6 +19,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.servlet.ModelAndView;
 
+import javax.sound.midi.Soundbank;
 import java.util.List;
 
 
@@ -48,7 +50,7 @@ public class RealDbController {
         List<RealDb> list = realDbService.list(wrapper);
         model.addAttribute("list", list);*/
         LambdaQueryWrapper<RealDb> wrapper = new LambdaQueryWrapper<>();
-//        IPage<VirtualTables> page = new Page<>();
+        //IPage<VirtualTables> page = new Page<>();
         IPage<RealDb> pages = realDbService.page(page,null);
         model.addAttribute("list", pages.getRecords());
         model.addAttribute("pages", pages.getPages());
@@ -65,8 +67,11 @@ public class RealDbController {
      */
     @RequestMapping(value = "/toAdd", method = RequestMethod.GET)
     public ModelAndView form( Model model) {
+
         model.addAttribute("realDb", new RealDb());
+
         return new ModelAndView("/realDb/add");
+
     }
 
     /**
@@ -75,16 +80,22 @@ public class RealDbController {
      * @return
      */
     @PostMapping("/save")
-    public String save(@Validated RealDb realDb , BindingResult rs){
+    public ModelAndView save(@Validated RealDb realDb , BindingResult rs,Model model ){
+
         if(rs.hasErrors()){
             for (ObjectError error : rs.getAllErrors()) {
-                System.out.println("错误信息>>>>>>>"+error.getDefaultMessage());
+                System.out.println(">>>>>>>>新增Real-db信息时-验证表单错误提示>>>>>>>"+error.getDefaultMessage());
             }
-            return "/realDb/add";
+            return new ModelAndView("/realDb/add");
         }
-        realDbService.saveForm(realDb);
-        System.out.println("保存后的信息>>>>>>>"+realDb.toString());
-        return "redirect:/real-db";
+        RealDb dataReal =  realDbService.findByNikeName(realDb.getNikeName());
+        if(dataReal != null){
+            model.addAttribute("hintMessage","数据源名已经存在");
+            return new ModelAndView("/realDb/add");
+        }else{
+            realDbService.saveForm(realDb);
+        }
+        return new ModelAndView("redirect:/real-db");
     }
 
     /**
@@ -106,11 +117,34 @@ public class RealDbController {
      * @return
      */
     @PostMapping("/update")
-    public String  update(RealDb realDb){
-        System.out.println("保存后的信息==="+realDb.toString());
-        realDbService.updateById(realDb);
-        System.out.println("修改完后的信息>>>>>>>>>"+realDb);
-        return "redirect:/real-db";
+    public ModelAndView  update(@Validated RealDb realDb ,BindingResult rs,Model model ){
+
+        if(rs.hasErrors()){
+            for (ObjectError error : rs.getAllErrors()) {
+                System.out.println(">>>>>>>>修改Real-db信息提交时-验证表单错误提示>>>>>>>"+error.getDefaultMessage());
+            }
+            return new ModelAndView("/realDb/update");
+        }
+        //根据id查询之前的nikeName
+        RealDb realDb1 = realDbService.getById(realDb.getId());
+        //查数据源别名
+        RealDb dataReal =  realDbService.findByNikeName(realDb.getNikeName());
+
+       /* if(dataReal != null || realDb1.getNikeName() == realDb.getNikeName()){
+            model.addAttribute("hintMessage","数据源名已经存在");
+            return new ModelAndView("/realDb/update");
+        }else{
+            realDbService.updateById(realDb);
+        }*/
+
+       if(realDb.getNikeName().equals( realDb1.getNikeName()) || dataReal==null){
+           realDbService.updateById(realDb);
+       }else {
+           model.addAttribute("hintMessage","数据源名已经存在");
+           return new ModelAndView("/realDb/update");
+       }
+
+        return new ModelAndView("redirect:/real-db");
     }
 
     /**
@@ -129,6 +163,11 @@ public class RealDbController {
     }
 
 
+    /**
+     * 查看库中的表信息
+     * @param model
+     * @return
+     */
     @RequestMapping("/selectDatabase")
     @ResponseBody
     public List<RealDb> selectDatabase(Model model){
@@ -138,9 +177,5 @@ public class RealDbController {
 
         return list;
     }
-
-
-
-
 
 }

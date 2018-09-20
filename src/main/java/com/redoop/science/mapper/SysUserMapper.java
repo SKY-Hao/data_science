@@ -2,6 +2,13 @@ package com.redoop.science.mapper;
 
 import com.redoop.science.entity.SysUser;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
+import org.apache.catalina.User;
+import org.apache.ibatis.annotations.Mapper;
+import org.apache.ibatis.annotations.Param;
+import org.apache.ibatis.annotations.Select;
+
+import javax.validation.Valid;
+import javax.validation.constraints.NotEmpty;
 
 /**
  * <p>
@@ -11,6 +18,14 @@ import com.baomidou.mybatisplus.core.mapper.BaseMapper;
  * @author Alan
  * @since 2018-09-13
  */
+@Mapper
 public interface SysUserMapper extends BaseMapper<SysUser> {
+
+
+
+   // SysUser select(SysUser user);
+
+    @Select("select * from sys_user where USERNAME = #{username} and PASSWORD = #{password}")
+    SysUser select(@NotEmpty(message = "用户名不能为空")@Param("username") String username, @NotEmpty(message = "密码不能为空")@Param("password") String password);
 
 }

@@ -4,7 +4,11 @@ import com.redoop.science.entity.SysUser;
 import com.redoop.science.mapper.SysUserMapper;
 import com.redoop.science.service.ISysUserService;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import javax.validation.Valid;
+import javax.validation.constraints.NotEmpty;
 
 /**
  * <p>
@@ -16,5 +20,20 @@ import org.springframework.stereotype.Service;
  */
 @Service
 public class SysUserServiceImpl extends ServiceImpl<SysUserMapper, SysUser> implements ISysUserService {
+
+
+    @Autowired
+    SysUserMapper sysUserMapper;
+
+    /*@Override
+    public SysUser select(SysUser user) {
+        return sysUserMapper.select(user);
+    }*/
+
+
+    @Override
+    public SysUser select(@NotEmpty(message = "用户名不能为空") String username, @NotEmpty(message = "密码不能为空") String password) {
+        return sysUserMapper.select(username,password);
+    }
 
 }

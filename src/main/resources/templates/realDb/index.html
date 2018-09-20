@@ -38,11 +38,6 @@
 	<body>
 	<div th:include="/common/header::header"></div>
 
-	real-db列表页
-
-		<a href="/real-db/toAdd">添加数据源</a>
-		<a href="/real-db/selectDatabase">查看库表</a>
-
 		<!-- SECTION -->
 		<div class="section">
 			<!-- container -->
@@ -85,7 +80,7 @@
 									<div class="product-img">
 										<img src="/img/logoList.jpg" alt="">
 									</div>
-									<div class="product-body">
+									<div class="product-body" style="    height: 95px;">
 										<h3 class="product-name"><a href="#" th:text="${item.nikeName}"></a></h3>
 										<div class="product-btns">
 											<!--<button class="add-to-wishlist" th:id="${item.id}">
@@ -104,14 +99,14 @@
 												<i class="fa fa-heart-o"></i>
 												<span class="tooltipp"></span>
 											</a>
-											<a class="add-to-compare" th:href="@{/real-db/delete(id=${item.id})}" th:title="删除">
+											<a class="add-to-compare" th:href="@{/real-db/delete(id=${item.id})}" th:title="删除" style="margin-left: 15px">
 												<i class="fa fa-exchange"></i>
 												<span class="tooltipp"></span>
 											</a>
-											<button class="quick-view" th:id="${item.id}">
+											<a class="quick-view"  th:title="查看"  style="margin-left: 15px">
 												<i class="fa fa-eye"></i>
-												<span class="tooltipp">查看</span>
-											</button>
+												<span class="tooltipp"></span>
+											</a>
 											<!--<a th:href="@{/real-db/toEdit(id=${item.id})}">edit</a>
 											<a th:href="@{/real-db/delete(id=${item.id})}">delete</a>-->
 										</div>
@@ -133,7 +128,7 @@
 		</div>
 		<!-- /SECTION -->
 
-		<div th:include="/common/footer::footer"></div>
+		<div th:include="/common/footer::footer" id="footerDiv"></div>
 
 </body>
 </html>

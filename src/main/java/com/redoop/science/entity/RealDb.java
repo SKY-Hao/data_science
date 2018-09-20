@@ -1,6 +1,5 @@
 package com.redoop.science.entity;
 
-import java.time.LocalDateTime;
 import com.baomidou.mybatisplus.annotation.TableField;
 import java.io.Serializable;
 import java.util.Date;
@@ -22,6 +21,8 @@ import javax.validation.constraints.NotNull;
 @Data
 @EqualsAndHashCode(callSuper = false)
 @Accessors(chain = true)
+@Setter
+@Getter
 public class RealDb implements Serializable {
 
     private static final long serialVersionUID = 1L;

@@ -13,6 +13,7 @@ import com.redoop.science.service.IRealDbService;
 import com.redoop.science.service.IVirtualTablesService;
 import com.redoop.science.utils.Result;
 import com.redoop.science.utils.ResultEnum;
+import com.sun.org.apache.xpath.internal.SourceTree;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -57,6 +58,7 @@ public class VirtualTablesController {
         model.addAttribute("total", pages.getTotal());
         return new ModelAndView("/select/index");
     }
+
     @GetMapping("/edit")
     public ModelAndView edit(Model model,@RequestParam(value = "id",required=false) Long id){
 
@@ -72,6 +74,15 @@ public class VirtualTablesController {
     //  获取ztree json
     // 获取真实库ztreejson
         List<RealDb> realDbs =  realDbService.list(null);
+        System.out.println(realDbs);
+
+//-------------------------------------------------------------------------------
+
+       // List<RealDb> list =  realDbService.selectDatabase();
+       // model.addAttribute("list" ,list);
+
+//--------------------------------------------------------------------
+
         List<Map<String,Object>> realZList = new ArrayList<>();
         for (DBEnum dbEnum : DBEnum.values())
         {
@@ -90,6 +101,7 @@ public class VirtualTablesController {
             zMap.put("id",realDb.getId()+10);
             realZList.add(zMap);
         }
+
 
     // 获取虚拟库ztreejson
         List<Map<String,Object>> virtualZList = new ArrayList<>();
@@ -117,6 +129,12 @@ public class VirtualTablesController {
         model.addAttribute("virtualZList", virtualZList);
         return new ModelAndView("/select/edit");
     }
+
+
+
+
+
+
 
     @PostMapping("/save")
     @ResponseBody
