@@ -10,7 +10,12 @@
                 <li><a href="#"><i class="fa fa-map-marker"></i>北京海淀区中关村软件园二期互联网创新中心506</a></li>
             </ul>
             <ul class="header-links pull-right">
-                <li><a href="#"><i class="fa fa-user-o"></i> My Account</a></li>
+                <li>
+                    <a href="#">
+                        <i class="fa fa-user-o"></i>
+                        <span style="font-size: 12px;color: red" th:text="${nickName}" aria-describedby="basic-addon0"></span>
+                    </a>
+                </li>
             </ul>
         </div>
     </div>
@@ -44,9 +49,15 @@
                         <div id="responsive-nav">
                             <!-- NAV -->
                             <ul class="main-nav nav navbar-nav">
-                                <li class="active"><a href="/virtual">查询</a></li>
-                                <li><a href="#">编辑</a></li>
-                                <li><a href="/real-db">数据源</a></li>
+                                <li class="active">
+                                    <a href="/virtual">查询</a>
+                                </li>
+                                <li>
+                                    <a href="#" >编辑</a>
+                                </li>
+                                <li>
+                                    <a href="/real-db" style="">数据源</a>
+                                </li>
                             </ul>
                             <!-- /NAV -->
                         </div>
@@ -64,3 +75,23 @@
 </header>
 <!-- /HEADER -->
 </div>
+
+<script th:inline="javascript" >
+   /* $(document).ready(function(){
+        $("#responsive-nav ul li  a").each(function(){
+            $this = $(this);
+            if($this[0].href==String(window.location)){
+                $this.css({"border-bottom":"2px solid #ca1828"});
+            }
+        });
+
+    });*/
+   $(function () {
+       $("#responsive-nav ul li  a").click(function () {
+           $("#examtype a").each(function () {
+               $(this).removeClass("cur");
+           });
+           $(this).attr('class', 'item cur');
+       });
+   });
+</script>

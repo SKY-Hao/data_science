@@ -13,6 +13,7 @@ import com.redoop.science.service.IRealDbService;
 import com.redoop.science.service.IVirtualTablesService;
 import com.redoop.science.utils.Result;
 import com.redoop.science.utils.ResultEnum;
+import com.sun.org.apache.xpath.internal.SourceTree;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -82,6 +83,15 @@ public class VirtualTablesController {
         //  获取ztree json
         // 获取真实库ztreejson
         List<RealDb> realDbs =  realDbService.list(null);
+        System.out.println(realDbs);
+
+//-------------------------------------------------------------------------------
+
+       // List<RealDb> list =  realDbService.selectDatabase();
+       // model.addAttribute("list" ,list);
+
+//--------------------------------------------------------------------
+
         List<Map<String,Object>> realZList = new ArrayList<>();
         for (DBEnum dbEnum : DBEnum.values())
         {
@@ -102,6 +112,7 @@ public class VirtualTablesController {
         }
 
         // 获取虚拟库ztreejson
+    // 获取虚拟库ztreejson
         List<Map<String,Object>> virtualZList = new ArrayList<>();
         Map<String,Object> vMap = new HashMap<>();
         vMap.put("pId",0);
@@ -123,6 +134,12 @@ public class VirtualTablesController {
         model.addAttribute("virtualZList", virtualZList);
         return model;
     }
+
+
+
+
+
+
 
     @PostMapping("/save")
     @ResponseBody

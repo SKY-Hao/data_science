@@ -21,5 +21,15 @@ public interface IRealDbService extends IService<RealDb> {
      */
     void saveForm(RealDb realDb);
 
+    /**
+     * 查看库中的表信息
+     */
     List<RealDb> selectDatabase();
+
+    /**
+     * 根据数据源别名查询
+     * @param nikeName
+     * @return
+     */
+    RealDb findByNikeName(String nikeName);
 }

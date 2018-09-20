@@ -39,8 +39,13 @@
 <body>
 <div th:include="/common/header::header"></div>
 
+
+
+
 <!-- SECTION -->
+
 <form class="form-horizontal" role="form" style="margin-top: 33px" th:action="@{/real-db/save}" th:object="${realDb}"  th:method="post">
+<!--<form class="form-horizontal" role="form" style="margin-top: 33px" th:method="post">-->
 
 	<div class="form-group">
 		<label class="col-sm-2 control-label">IP</label>
@@ -101,11 +106,13 @@
 		<label class="col-sm-2 control-label">数据源名</label>
 		<div class="col-sm-10">
 			<input  style="width: 33%" class="form-control" id="nikeName" type="text"   th:name="nikeName" placeholder="Enter 数据源名">
+			<div th:text="${hintMessage}"style="color: red; font-weight: 700;"/>
 			<label style="color:red" th:if="${#fields.hasErrors('nikeName')}" th:errors="*{nikeName}">nikeName Error</label>
 		</div>
 	</div>
 	<div id="realFormButtn">
-		<button type="submit" class="btn btn-success">submit</button>
+		<button type="submit" id="submit" class="btn btn-success">submit</button>
+		<!--<input type="reset" class="btn btn-warning" id="submit" value="submit" />-->
 		<input type="reset" class="btn btn-warning" value="return" onclick="window.open('/real-db')"/>
 	</div>
 
@@ -113,7 +120,7 @@
 
 <!-- /SECTION -->
 
-<div th:include="/common/footer::footer"></div>
+<div th:include="/common/footer::footer" id="footerDiv"></div>
 <!-- jQuery Plugins -->
 <script src="/js/jquery.min.js"></script>
 <script src="/js/bootstrap.min.js"></script>
@@ -122,6 +129,10 @@
 <script src="/js/jquery.zoom.min.js"></script>
 <script src="/js/main.js"></script>
 
+
 </body>
+
+
+
 
 </html>

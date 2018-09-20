@@ -26,6 +26,17 @@ public class RealDbServiceImpl extends ServiceImpl<RealDbMapper, RealDb> impleme
     @Autowired
     RealDbMapper realDbMapper;
 
+
+    /**
+     * 根据数据源别名查询
+     * @param nikeName
+     * @return
+     */
+    @Override
+    public RealDb findByNikeName(String nikeName) {
+        return realDbMapper.findByNikeName(nikeName);
+    }
+
     /**
      * 增加
      * @param realDb
@@ -39,12 +50,15 @@ public class RealDbServiceImpl extends ServiceImpl<RealDbMapper, RealDb> impleme
             realDb.setCreatorName("admin");
         }
         realDb.setOperationTime(new Date());
-        System.out.println("保存时输入的信息>>>>>>>>>>>>>>>"+realDb.toString());
-
+        //System.out.println("保存时输入的信息>>>>>>>>>>>>>>>"+realDb.toString());
         realDbMapper.insert(realDb);
     }
 
 
+    /**
+     * 查看库中的表信息
+     * @return
+     */
     @Override
     public List<RealDb> selectDatabase() {
 
@@ -55,12 +69,14 @@ public class RealDbServiceImpl extends ServiceImpl<RealDbMapper, RealDb> impleme
        String PASS = "root";
 
 
+
+
         Connection conn = null;
         Statement stmt = null;
         List list = new ArrayList();
         try{
             //STEP 2: 注册JDBC驱动程序
-            Class.forName("com.mysql.jdbc.Driver");
+            Class.forName(JDBC_DRIVER);
 
             //STEP 3: 打开连接
             System.out.println("查询数据库");
@@ -71,9 +87,7 @@ public class RealDbServiceImpl extends ServiceImpl<RealDbMapper, RealDb> impleme
             System.out.println("创建查询...");
             stmt = conn.createStatement();
 
-
             String sql = "select TABLE_NAME from information_schema.tables where table_schema='data_science'";
-
 
             ResultSet rs = stmt.executeQuery(sql);
             //获取键名

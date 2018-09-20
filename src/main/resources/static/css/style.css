@@ -56,6 +56,7 @@ Table OF Contents
 \*----------------------------*/
 
 body {
+  height:100%;
   font-family: 'Montserrat', sans-serif;
   font-weight: 400;
   color: #333;
@@ -2002,11 +2003,19 @@ textarea.input {
 	11 -> FOOTER
 ===========================================================*/
 
+#footerDiv{
+  color: #9c7e6d;
+  padding: 0;
+  width: 100%;
+  bottom: 0;
+  /*position: initial;*/
+}
+
 #footer {
   background: #15161D;
   color: #B9BABC;
   padding:0;width: 100%; bottom: 0;
-  position: fixed;
+ /* position: fixed;*/
 }
 
 #bottom-footer {
