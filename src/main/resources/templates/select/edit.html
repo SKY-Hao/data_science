@@ -76,7 +76,8 @@
                     <div id="editor"></div>
                 </div>
                 <div>
-                    <input id="sqlName" value="" placeholder="请填写sql name"/><br/>
+                    <input id="sqlName" th:value="${virtual.name}" placeholder="请填写sql name"/><br/>
+                    <input id="id" type="hidden" th:value="${virtual.id}" placeholder="请填写sql name"/><br/>
                     <button id="runButton" onclick="submitRunSQL()" class="btn btn-run waves-effect">查询</button>
                     <button id="saveButton"  onclick="submitSaveSQL()" class="btn btn-run waves-effect">保存</button>
                 </div>
@@ -138,7 +139,7 @@
         editor.setHighlightActiveLine(true);
         editor.setFontSize(16);
         editor.execCommand('find');
-        if(virtual!=null){
+        if(virtual.code!=null&&virtual.code!=""){
             editor.setValue(virtual.code);
         }else{
             editor.setValue("欢迎使用");
@@ -172,6 +173,7 @@
     function submitSaveSQL(){
         var sql =  editor.getValue();
         var sqlName =  $("#sqlName").val();
+        var id =  $("#id").val();
         if(sql==null||sql==""){
             layer.alert("请输入sql");
             return;
@@ -184,7 +186,7 @@
             url: "/run/save",
             type:"POST",
             dataType:"application/json;charset=UTF-8",
-            data:{"sql":sql,"sqlName":sqlName} ,
+            data:{"sql":sql,"sqlName":sqlName,"id":id} ,
             success: function(data){
                 var result = data.data;
                 if(result.code==200){

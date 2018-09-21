@@ -1,10 +1,8 @@
 package com.redoop.science.controller;
 
 
-import com.alibaba.fastjson.JSON;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
-import com.baomidou.mybatisplus.core.toolkit.StringUtils;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.redoop.science.constant.DBEnum;
 import com.redoop.science.entity.RealDb;
@@ -53,12 +51,12 @@ public class VirtualTablesController {
 //        IPage<VirtualTables> page = new Page<>();
         IPage<VirtualTables> pages = virtualTablesService.page(page,null);
         model.addAttribute("items", pages.getRecords());
-        model.addAttribute("pages", pages.getPages());
+        model.addAttribute("pages", pages.getPages()+1);
         model.addAttribute("total", pages.getTotal());
         return new ModelAndView("/select/index");
     }
     @GetMapping("/edit/{id}")
-    public ModelAndView edit(Model model,@RequestParam(value = "id",defaultValue = "1") String id){
+    public ModelAndView edit(Model model,@PathVariable(value = "id") String id){
 
         VirtualTables virtualTables = virtualTablesService.getById(id);
         if(virtualTables!=null){
@@ -158,8 +156,8 @@ public class VirtualTablesController {
             return new Result<String>(ResultEnum.FAIL);
         }
     }
-    @GetMapping("/delete/{id}")
-    public Result<String> delete(Long id){
+    @GetMapping("/delete}")
+    public Result<String> delete(@RequestParam(name = "id") Long id){
         if (virtualTablesService.removeById(id)){
             return new Result<String>(ResultEnum.SECCUSS);
         }else {
