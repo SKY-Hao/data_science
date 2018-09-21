@@ -24,4 +24,9 @@ public class Result<T> implements Serializable {
         this.code = resultEnum.getCode();
         this.msg = resultEnum.getMsg();
     }
+    public Result(ResultEnum resultEnum,String msg, T content) {
+        this.code = resultEnum.getCode();
+        this.msg = msg;
+        this.content = content;
+    }
 }

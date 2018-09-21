@@ -41,7 +41,6 @@ public class SessionFilter implements Filter {
         System.out.println("filter url:"+uri);
             // session中包含user对象,则是登录状态
             if(session!=null&& SessionUtils.getUser(request) != null){
-                // System.out.println("user:"+session.getAttribute("user"));
                 filterChain.doFilter(request, response);
             }else{
                 String requestType = request.getHeader("X-Requested-With");
