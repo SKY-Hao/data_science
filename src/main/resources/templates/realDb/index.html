@@ -46,15 +46,15 @@
 				<div class="row">
 
 					<!-- STORE -->
-					<div id="store" class="col-md-9">
+					<div id="store" class="col-md-12">
 						<!-- store products -->
 						<div class="row">
 
 							<!-- product -->
-							<div class="col-md-3 col-xs-3" >
+							<div class="col-md-3 col-xs-6" >
 								<div class="product" onclick="window.open('/real-db/toAdd','_self')">
 									<div class="product-img">
-										<img src="/img/logoList.jpg">
+										<img src="/img/logo.jpg">
 									</div>
 									<div class="product-body">
 										<!--<p class="product-category" th:text=""></p>-->
@@ -63,10 +63,11 @@
 										</h3>
 										<div class="product-btns">
 
-											<button class="add-to-wishlist">
+											<a class="add-to-wishlist" th:title="添加">
+												<span class="tooltipp"></span>
 												<i class="fa fa-heart-o"></i>
-												<span class="tooltipp">添加</span>
-											</button>
+
+											</a>
 										</div>
 									</div>
 								</div>
@@ -74,27 +75,21 @@
 
 
 
-
-							<div class="col-md-3 col-xs-3" th:if="${list != null}" th:each="item : ${list}">
+							<div class="col-md-3 col-xs-6" th:if="${list != null}" th:each="item : ${list}">
 								<div class="product">
 									<div class="product-img">
-										<img src="/img/logoList.jpg" alt="">
+										<!--<img src="/img/logoList.jpg">-->
+										<img th:src="${item.logo}">
 									</div>
-									<div class="product-body" style="    height: 95px;">
+									<div class="product-body" >
 										<h3 class="product-name"><a href="#" th:text="${item.nikeName}"></a></h3>
 										<div class="product-btns">
-											<!--<button class="add-to-wishlist" th:id="${item.id}">
-													<i class="fa fa-heart-o"></i>
-												<span class="tooltipp">修改</span>
-											</button>
-											<button class="add-to-compare" th:id="${item.id}">
-												<i class="fa fa-exchange"></i>
-												<span class="tooltipp">删除</span>
-											</button>
-											<button class="quick-view" th:id="${item.id}">
-												<i class="fa fa-eye"></i>
-												<span class="tooltipp">查看</span>
-											</button>-->
+
+											<!--<div class="product-btns">
+												<button class="add-to-wishlist" th:onclick="'javascript:toEdit('+${item.id}+')'" ><i class="fa fa-edit"></i><span class="tooltipp">修改</span></button>
+												<button class="add-to-compare" th:onclick="'javascript:toDel('+${item.id}+')'"><i class="fa fa-remove"></i><span class="tooltipp">删除</span></button>
+												<button class="quick-view" th:onclick="'javascript:toEdit('+${item.id}+')'"><i class="fa fa-eye"></i><span class="tooltipp">查看</span></button>
+											</div>-->
 											<a class="add-to-wishlist" th:href="@{/real-db/toEdit(id=${item.id})}" th:title="修改">
 												<i class="fa fa-heart-o"></i>
 												<span class="tooltipp"></span>
@@ -107,8 +102,6 @@
 												<i class="fa fa-eye"></i>
 												<span class="tooltipp"></span>
 											</a>
-											<!--<a th:href="@{/real-db/toEdit(id=${item.id})}">edit</a>
-											<a th:href="@{/real-db/delete(id=${item.id})}">delete</a>-->
 										</div>
 									</div>
 								</div>
@@ -118,6 +111,12 @@
 
 						</div>
 						<!-- /store products -->
+
+						<!-- store bottom filter -->
+						<div class="store-filter clearfix">
+							<div id="page" class="pagination"></div>
+						</div>
+						<!-- /store bottom filter -->
 
 					</div>
 					<!-- /STORE -->
@@ -129,6 +128,32 @@
 		<!-- /SECTION -->
 
 		<div th:include="/common/footer::footer" id="footerDiv"></div>
+	<!-- jQuery Plugins -->
+	<script type="text/javascript" src="/js/jquery.min.js"></script>
+	<script type="text/javascript" src="/js/bootstrap.min.js"></script>
+	<script type="text/javascript" src="/js/slick.min.js"></script>
+	<script type="text/javascript" src="/js/nouislider.min.js"></script>
+	<script type="text/javascript" src="/js/jquery.zoom.min.js"></script>
+	<script type="text/javascript" src="/js/jqpaginator.min.js"></script>
+	<script type="text/javascript" src="/js/main.js"></script>
+	<script th:inline="javascript">
+		/*<![CDATA[*/
+        $('#page').jqPaginator({
+            totalPages: [[${pages}]],
+            visiblePages: 10,
+            currentPage: 1,
 
+            first: '<li class="first"><a href="javascript:void(0);">首页</a></li>',
+            prev: '<li class="prev"><a href="javascript:void(0);">上一页</a></li>',
+            next: '<li class="next"><a href="javascript:void(0);">下一页</a></li>',
+            last: '<li class="last"><a href="javascript:void(0);">末页</a></li>',
+            page: '<li class="page"><a href="javascript:void(0);">{{page}}</a></li>',
+            onPageChange: function (num) {
+                alert('当前第' + num + '页')
+                /*$('#text').html('当前第' + num + '页');*/
+            }
+        });
+
+	</script>
 </body>
 </html>

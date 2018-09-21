@@ -9,6 +9,7 @@ import com.redoop.science.entity.VirtualTables;
 import com.redoop.science.service.IRealDbService;
 import com.redoop.science.utils.Result;
 import com.redoop.science.utils.ResultEnum;
+import com.sun.org.apache.xpath.internal.SourceTree;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -18,6 +19,7 @@ import org.springframework.web.bind.annotation.*;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.web.servlet.ModelAndView;
+import org.thymeleaf.spring5.context.SpringContextUtils;
 
 import javax.sound.midi.Soundbank;
 import java.util.List;
@@ -44,16 +46,11 @@ public class RealDbController {
      */
     @GetMapping
     public ModelAndView index(Model model,Page page){
-      /*  LambdaQueryWrapper<RealDb> wrapper = new LambdaQueryWrapper<>();
-        //按照数据库种类分类
-        wrapper.groupBy(RealDb::getDbType);
-        List<RealDb> list = realDbService.list(wrapper);
-        model.addAttribute("list", list);*/
         LambdaQueryWrapper<RealDb> wrapper = new LambdaQueryWrapper<>();
         //IPage<VirtualTables> page = new Page<>();
         IPage<RealDb> pages = realDbService.page(page,null);
         model.addAttribute("list", pages.getRecords());
-        model.addAttribute("pages", pages.getPages());
+        model.addAttribute("pages", pages.getPages()+1);
         model.addAttribute("total", pages.getTotal());
 
         return new ModelAndView("/realDb/index");
