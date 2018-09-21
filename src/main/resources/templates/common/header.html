@@ -49,13 +49,10 @@
                         <div id="responsive-nav">
                             <!-- NAV -->
                             <ul class="main-nav nav navbar-nav">
-                                <li class="active">
+                                <li th:class="${activeType eq 1}? 'active' : ''">
                                     <a href="/virtual">查询</a>
                                 </li>
-                                <li>
-                                    <a href="#" >编辑</a>
-                                </li>
-                                <li>
+                                <li th:class="${activeType eq 2}? 'active' : ''">
                                     <a href="/real-db" style="">数据源</a>
                                 </li>
                             </ul>
