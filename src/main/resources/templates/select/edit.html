@@ -34,9 +34,9 @@
     <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
     <![endif]-->
     <style>
-        #editor{
-            width:100%;
-            height:300px;
+        #editor {
+            width: 100%;
+            height: 300px;
         }
     </style>
 </head>
@@ -76,10 +76,10 @@
                     <div id="editor"></div>
                 </div>
                 <div>
-                    <input id="sqlName"  placeholder="请填写sql name"/><br/>
-                    <input id="id" type="hidden" /><br/>
+                    <input id="sqlName" placeholder="请填写sql name"/><br/>
+                    <input id="id" type="hidden"/><br/>
                     <button id="runButton" onclick="submitRunSQL()" class="btn btn-run waves-effect">查询</button>
-                    <button id="saveButton"  onclick="submitSaveSQL()" class="btn btn-run waves-effect">保存</button>
+                    <button id="saveButton" onclick="submitSaveSQL()" class="btn btn-run waves-effect">保存</button>
                 </div>
             </div>
             <!-- /STORE -->
@@ -102,33 +102,32 @@
 <script type="text/javascript" src="/js/jquery.zoom.min.js"></script>
 <script type="text/javascript" src="/js/ace/ace.js"></script>
 <script type="text/javascript" src="/js/ace/ext-language_tools.js"></script>
-<script th:inline="javascript" >
+<script th:inline="javascript">
     /*<![CDATA[*/
 
-// zTree 的参数配置，深入使用请参考 API 文档（setting 配置详解）
-        var setting = {
-            data: {
-                simpleData: {
-                    enable: true
-                }
+    // zTree 的参数配置，深入使用请参考 API 文档（setting 配置详解）
+    var setting = {
+        data: {
+            simpleData: {
+                enable: true
             }
-        };
-// zTree 的数据属性，深入使用请参考 API 文档（zTreeNode 节点数据详解）
-        var realNodes = [[${realZList}]];
-        var virtualNodes = [[${virtualZList}]];
-        $.fn.zTree.init($("#treeReal"), setting, realNodes);
-        $.fn.zTree.init($("#treeVirtual"), setting, virtualNodes);
-        ace.require("ace/ext/language_tools");
-        var editor = ace.edit('editor');
-        var virtualCode = "";
-        var virtual = [[${virtual}]];
-        if(virtual!=null){
-            virtualCode = virtual.code;
-            $("#sqlName").val(virtual.name);
-            $("#id").val(virtual.id);
         }
-        editorInit(editor);
-
+    };
+    // zTree 的数据属性，深入使用请参考 API 文档（zTreeNode 节点数据详解）
+    var realNodes = [[${realZList}]];
+    var virtualNodes = [[${virtualZList}]];
+    $.fn.zTree.init($("#treeReal"), setting, realNodes);
+    $.fn.zTree.init($("#treeVirtual"), setting, virtualNodes);
+    ace.require("ace/ext/language_tools");
+    var editor = ace.edit('editor');
+    var virtualCode = "";
+    var virtual = [[${virtual}]];
+    if (virtual != null) {
+        virtualCode = virtual.code;
+        $("#sqlName").val(virtual.name);
+        $("#id").val(virtual.id);
+    }
+    editorInit(editor);
 
 
     function editorInit(editor) {
@@ -144,76 +143,62 @@
         editor.setHighlightActiveLine(true);
         editor.setFontSize(16);
         editor.execCommand('find');
-        if(virtualCode!=null&&virtualCode!=""){
+        if (virtualCode != null && virtualCode != "") {
             editor.setValue(virtualCode);
-        }else{
+        } else {
             editor.setValue("欢迎使用");
         }
     }
+
+    /*]]>*/
+</script>
+<script type="text/javascript">
     function submitRunSQL() {
-        var sql =  editor.getValue();
-        var sqlName =  $("#sqlName").val();
-        if(sql==null||sql==""){
+        var sql = editor.getValue();
+        var sqlName = $("#sqlName").val();
+        if (sql == null || sql == "") {
             layer.alert("请输入sql");
             return;
         }
-        if(sqlName==null||sqlName==""){
+        if (sqlName == null || sqlName == "") {
             layer.alert("请输入sql name");
             return;
         }
-        $.ajax({
-            url: "/run/script",
-            type:"POST",
-            dataType:"application/json;charset=UTF-8",
-            data:{"sql":sql,"sqlName":sqlName} ,
-            success: function(data){
-                debugger
-                console.log("1111111111111111111")
-                console.log(data);
+        $.post("/run/script", {"sql": sql, "sqlName": sqlName}, function (result) {
+            debugger
+            console.log("1111111111111111111")
+            console.log(result);
 
-                let columns = data["columns"]
-                let tableData = data["tableData"]
-                console.log(columns);
-                console.log(tableData);
-                layer.alert(data)
-            },
-            error:function () {
-
-            }});
+            let columns = result["columns"]
+            let tableData = result["tableData"]
+            console.log(columns);
+            console.log(tableData);
+            layer.alert(result)
+        });
     }
-    function submitSaveSQL(){
-        var sql =  editor.getValue();
-        var sqlName =  $("#sqlName").val();
-        var id =  $("#id").val();
-        if(sql==null||sql==""){
+
+    function submitSaveSQL() {
+        var sql = editor.getValue();
+        var sqlName = $("#sqlName").val();
+        var id = $("#id").val();
+        if (sql == null || sql == "") {
             layer.alert("请输入sql");
             return;
         }
-        if(sqlName==null||sqlName==""){
+        if (sqlName == null || sqlName == "") {
             layer.alert("请输入sql name");
             return;
         }
-        $.ajax({
-            url: "/run/save",
-            type:"POST",
-            dataType:"application/json;charset=UTF-8",
-            data:{"sql":sql,"sqlName":sqlName,"id":id} ,
-            success: function(data){
-                var result = data.data;
-                if(result.code==200){
-                    layer.alert("保存成功");
-                }else if (result.code==300){
-                    layer.alert(result.msg)
-                }
-            },
-            error: function () {
-
+        $.post("/run/save", {"sql": sql, "sqlName": sqlName, "id": id}, function (result) {
+            let data = result.data;
+            if (data.code == 200) {
+                layer.alert("保存成功");
+            } else if (data.code == 300) {
+                layer.alert(data.msg)
             }
         });
 
     }
-
-    /*]]>*/
 </script>
 
 <script src="/js/mould/select/edit.js"></script>

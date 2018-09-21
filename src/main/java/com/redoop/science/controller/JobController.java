@@ -15,10 +15,7 @@ import com.redoop.science.utils.SessionUtils;
 import okhttp3.HttpUrl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
@@ -33,7 +30,7 @@ import java.util.Set;
  * @Time: 2018/9/20 9:52
  * @Description:
  */
-@Controller
+@RestController
 @RequestMapping("/run")
 public class JobController {
 
@@ -43,7 +40,8 @@ public class JobController {
     private IVirtualTablesService virtualTablesService;
 
     @PostMapping("/script")
-    public Result<String> script(@RequestParam(value = "sql") String sql,@RequestParam(value = "sqlName") String  sqlName) {
+    @ResponseBody
+    public Result<String> script(@RequestParam(value = "sql") String sql) {
         String result = "";
         try {
              String runSql = parseSql(sql);
@@ -61,10 +59,11 @@ public class JobController {
             e.printStackTrace();
         }
         System.out.println("resultresultresult>>>>>"+result);
-        return new Result<>(ResultEnum.SECCUSS,result);
+        return new Result<String>(ResultEnum.SECCUSS,result);
     }
 
     @PostMapping("/save")
+    @ResponseBody
     public Result save(HttpServletRequest request, @RequestParam(name = "id",required = false) Long id, @RequestParam(name = "sql") String sql, @RequestParam(value = "sqlName") String  sqlName) {
         VirtualTables virtualTables = null;
         SysUser sysUser = SessionUtils.getUser(request);
