@@ -11,6 +11,7 @@ import java.io.IOException;
  */
 public class HttpClient {
     public static final MediaType type = MediaType.parse("application/x-www-form-urlencoded;charset=utf-8");
+    public static final MediaType type_json = MediaType.parse("application/json;charset=UTF-8");
     public static final OkHttpClient httpClient = new OkHttpClient();
     //Get方法调用服务
     public static String httpGet(HttpUrl url) throws IOException {
@@ -22,7 +23,7 @@ public class HttpClient {
     }
     //Post方法调用服务
     public static String httpPost(HttpUrl url,String content) throws IOException{
-        RequestBody requestBody = RequestBody.create(type,content);
+        RequestBody requestBody = RequestBody.create(type_json,content);
         Request request = new Request.Builder()
                 .url(url)
                 .post(requestBody)
@@ -30,4 +31,13 @@ public class HttpClient {
         Response response = httpClient.newCall(request).execute();
         return response.body().string();
     }
+
+    public Object invokeEntry(HttpUrl url,String sql) throws IOException {
+        url.newBuilder()
+                /*  下面方法可为HttpUrl添加query部分内容，添加结果为：../../..?systemID = 系统id值&dishesID = 接口编号&data = 参数数据  */
+                .addQueryParameter("sql", sql)
+                .build();
+        return HttpClient.httpGet(url);
+    }
+
 }

@@ -59,6 +59,7 @@ public class VirtualTablesController {
         model.addAttribute("nickName", SessionUtils.getUserNickName(request));
         model.addAttribute("items", pages.getRecords());
         model.addAttribute("activeType", 1);
+        model.addAttribute("virtual", new VirtualTables());
         model.addAttribute("pages", pages.getPages()+1);
         model.addAttribute("total", pages.getTotal());
         return new ModelAndView("/select/index");

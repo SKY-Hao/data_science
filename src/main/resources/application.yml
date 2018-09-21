@@ -77,6 +77,5 @@ spring:
     host: localhost # Redis server host.
     password:
     port: 6379
-    timeout: 1h
 server:
   session:
