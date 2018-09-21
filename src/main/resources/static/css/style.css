@@ -2009,7 +2009,7 @@ textarea.input {
   width: 100%;
   bottom: 0;*/
   /*position: initial;*/
-  position:fixed;
+
   height:100px;
   width:100%;
   left:0px;
@@ -2017,10 +2017,12 @@ textarea.input {
 
 
 #footer {
+  height: 78px;
+  z-index: 100;
   background: #15161D;
   color: #B9BABC;
   padding:0;width: 100%; bottom: 0;
- /* position: fixed;*/
+  position: fixed;
 }
 
 #bottom-footer {

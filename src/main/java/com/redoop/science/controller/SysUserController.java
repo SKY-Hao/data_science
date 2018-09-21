@@ -45,8 +45,9 @@ public class SysUserController {
         return new ModelAndView("/login");
     }
 
-    @PostMapping("/login")
-    public ModelAndView login(ModelAndView modelAndView, @RequestParam(name = "username")String username, @RequestParam(name = "password")String password, HttpServletRequest request, BindingResult rs){
+   @RequestMapping("/login")
+    public ModelAndView login(ModelAndView modelAndView, @RequestParam(name = "username")String username,
+                              @RequestParam(name = "password")String password, HttpServletRequest request, BindingResult rs){
         String usernameTrim = username.trim();
         String passwordTrim = password.trim();
 
@@ -75,7 +76,8 @@ public class SysUserController {
         }
 
 
-}
+    }
+
      /**
      * 数据源列表分类
      * @param model

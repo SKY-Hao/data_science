@@ -64,7 +64,8 @@ public class JobController {
     }
 
     @PostMapping("/save")
-    public Result save(HttpServletRequest request, @RequestParam(name = "id",required = false) Long id, @RequestParam(name = "sql") String sql, @RequestParam(value = "sqlName") String  sqlName) {
+    public Result save(HttpServletRequest request, @RequestParam(name = "id",required = false) Long id, @RequestParam(name = "sql") String sql,
+                       @RequestParam(value = "sqlName") String  sqlName) {
         VirtualTables virtualTables = null;
         SysUser sysUser = SessionUtils.getUser(request);
         QueryWrapper queryWrapper = new QueryWrapper();

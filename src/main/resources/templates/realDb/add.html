@@ -43,8 +43,10 @@
 
 
 <!-- SECTION -->
+<div style="text-align: center;">
 
-<form class="form-horizontal" role="form" style="margin-top: 33px" th:action="@{/real/save}" th:object="${realDb}"  th:method="post">
+
+	<form class="form-horizontal" role="form" style="margin-top: 33px" th:action="@{/real/save}" th:object="${realDb}"  th:method="post">
 <!--<form class="form-horizontal" role="form" style="margin-top: 33px" th:method="post">-->
 
 	<div class="form-group">
@@ -117,7 +119,7 @@
 	</div>
 
 </form>
-
+</div>
 <!-- /SECTION -->
 
 <div th:include="/common/footer::footer" id="footerDiv"></div>
