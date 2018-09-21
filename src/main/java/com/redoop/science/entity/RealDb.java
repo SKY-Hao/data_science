@@ -118,5 +118,8 @@ public class RealDb implements Serializable {
     @TableField("DB_PASSWORD")
     private String dbPassword;
 
+    @TableField("LOGO")
+    private String logo;
+
 
 }

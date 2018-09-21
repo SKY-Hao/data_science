@@ -1,24 +1,33 @@
 package com.redoop.science.filter;
 
+import com.redoop.science.utils.SessionUtils;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.GetMapping;
+
 import javax.servlet.*;
 import javax.servlet.annotation.WebFilter;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.io.IOException;
+import java.util.List;
+import java.util.Map;
 
 /**
  * @Author: Alan
  * @Time: 2018/9/21 11:05
  * @Description:
  */
-@WebFilter(filterName = "sessionFilter",urlPatterns = {"/*"})
+@WebFilter(filterName = "sessionFilter",urlPatterns = {"/run/*","/real/*","/real-db-tables/*","/virtual/*"})
 public class SessionFilter implements Filter {
     //标示符：表示当前用户未登录(可根据自己项目需要改为json样式)
     String NO_LOGIN = "您还未登录";
 
     //不需要登录就可以访问的路径(比如:注册登录等)
     String[] includeUrls = new String[]{"/user/login","/user/tologin","/css","/js","/img","/fonts"};
+
+
+
 
 
     @Override
@@ -37,7 +46,7 @@ public class SessionFilter implements Filter {
             filterChain.doFilter(servletRequest, servletResponse);
         }else { //需要过滤器
             // session中包含user对象,则是登录状态
-            if(session!=null&&session.getAttribute("user") != null){
+            if(session!=null&& SessionUtils.getUser(request) != null){
                 // System.out.println("user:"+session.getAttribute("user"));
                 filterChain.doFilter(request, response);
             }else{

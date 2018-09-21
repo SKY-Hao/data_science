@@ -23,6 +23,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
 import java.util.List;
+import java.util.Map;
 
 /**
  * <p>
@@ -38,14 +39,13 @@ public class SysUserController {
     @Autowired
     private ISysUserService sysUserService;
 
-
     @GetMapping("/tologin")
     public ModelAndView login(ModelAndView modelAndViewm){
+
         return new ModelAndView("/login");
     }
 
     @PostMapping("/login")
-
     public ModelAndView login(ModelAndView modelAndView, @RequestParam(name = "username")String username, @RequestParam(name = "password")String password, HttpServletRequest request, BindingResult rs){
         String usernameTrim = username.trim();
         String passwordTrim = password.trim();

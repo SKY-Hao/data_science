@@ -1,5 +1,6 @@
 package com.redoop.science.service.impl;
 
+import com.redoop.science.constant.DBEnum;
 import com.redoop.science.entity.RealDb;
 import com.redoop.science.mapper.RealDbMapper;
 import com.redoop.science.service.IRealDbService;
@@ -51,6 +52,22 @@ public class RealDbServiceImpl extends ServiceImpl<RealDbMapper, RealDb> impleme
         }
         realDb.setOperationTime(new Date());
         //System.out.println("保存时输入的信息>>>>>>>>>>>>>>>"+realDb.toString());
+        if (realDb.getDbType()==1){
+            realDb.setLogo("/img/realDb/mysql.jpg");
+        } if (realDb.getDbType()==2){
+            realDb.setLogo("/img/realDb/oracle.jpg");
+        } if (realDb.getDbType()==3){
+            realDb.setLogo("/img/realDb/pg.jpg");
+        } if (realDb.getDbType()==4){
+            realDb.setLogo("/img/realDb/sqlserver.jpg");
+        } if (realDb.getDbType()==5){
+            realDb.setLogo("/img/realDb/hive.jpg");
+        } if (realDb.getDbType()==6){
+            realDb.setLogo("/img/realDb/redis.jpg");
+        } if (realDb.getDbType()==7){
+            realDb.setLogo("/img/realDb/kafka.jpg");
+        }
+
         realDbMapper.insert(realDb);
     }
 

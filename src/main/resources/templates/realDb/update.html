@@ -39,7 +39,7 @@
 <body>
 <div th:include="/common/header::header"></div>
 
-<form class="form-horizontal" role="form" style="margin-top: 33px" th:action="@{/real-db/update}" th:object="${realDb}"  th:method="post">
+<form class="form-horizontal" role="form" style="margin-top: 33px" th:action="@{/real/update}" th:object="${realDb}"  th:method="post">
 
     <input type="hidden" th:name="id" th:value="${realDb.id}" />
 
@@ -108,7 +108,7 @@
     </div>
     <div id="realFormButtn">
         <button type="submit" class="btn btn-success">submit</button>
-        <input type="reset" class="btn btn-warning" value="return" onclick="window.open('/real-db')"/>
+        <input type="reset" class="btn btn-warning" value="return" onclick="window.open('/real')"/>
     </div>
 
 </form>

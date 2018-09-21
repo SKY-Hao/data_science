@@ -9,6 +9,7 @@ import com.redoop.science.entity.VirtualTables;
 import com.redoop.science.service.IRealDbService;
 import com.redoop.science.utils.Result;
 import com.redoop.science.utils.ResultEnum;
+import com.sun.org.apache.xpath.internal.SourceTree;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -18,6 +19,7 @@ import org.springframework.web.bind.annotation.*;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.web.servlet.ModelAndView;
+import org.thymeleaf.spring5.context.SpringContextUtils;
 
 import javax.sound.midi.Soundbank;
 import java.util.List;
@@ -32,7 +34,7 @@ import java.util.List;
  * @since 2018-09-13
  */
 @Controller
-@RequestMapping("/real-db")
+@RequestMapping("/real")
 public class RealDbController {
     @Autowired
     private IRealDbService realDbService;
@@ -44,11 +46,6 @@ public class RealDbController {
      */
     @GetMapping
     public ModelAndView index(Model model,Page page){
-      /*  LambdaQueryWrapper<RealDb> wrapper = new LambdaQueryWrapper<>();
-        //按照数据库种类分类
-        wrapper.groupBy(RealDb::getDbType);
-        List<RealDb> list = realDbService.list(wrapper);
-        model.addAttribute("list", list);*/
         LambdaQueryWrapper<RealDb> wrapper = new LambdaQueryWrapper<>();
         //IPage<VirtualTables> page = new Page<>();
         IPage<RealDb> pages = realDbService.page(page,null);
@@ -95,7 +92,7 @@ public class RealDbController {
         }else{
             realDbService.saveForm(realDb);
         }
-        return new ModelAndView("redirect:/real-db");
+        return new ModelAndView("redirect:/real");
     }
 
     /**
@@ -144,7 +141,7 @@ public class RealDbController {
            return new ModelAndView("/realDb/update");
        }
 
-        return new ModelAndView("redirect:/real-db");
+        return new ModelAndView("redirect:/real");
     }
 
     /**
@@ -156,7 +153,7 @@ public class RealDbController {
     public String delete(Integer id){
         if (id!=null){
             realDbService.removeById(id);
-            return "redirect:/real-db";
+            return "redirect:/real";
         } else {
             return String.valueOf(new Result<String>(ResultEnum.FAIL));
         }
