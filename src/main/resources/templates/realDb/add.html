@@ -44,7 +44,7 @@
 
 <!-- SECTION -->
 
-<form class="form-horizontal" role="form" style="margin-top: 33px" th:action="@{/real-db/save}" th:object="${realDb}"  th:method="post">
+<form class="form-horizontal" role="form" style="margin-top: 33px" th:action="@{/real/save}" th:object="${realDb}"  th:method="post">
 <!--<form class="form-horizontal" role="form" style="margin-top: 33px" th:method="post">-->
 
 	<div class="form-group">
@@ -113,7 +113,7 @@
 	<div id="realFormButtn">
 		<button type="submit" id="submit" class="btn btn-success">submit</button>
 		<!--<input type="reset" class="btn btn-warning" id="submit" value="submit" />-->
-		<input type="reset" class="btn btn-warning" value="return" onclick="window.open('/real-db')"/>
+		<input type="reset" class="btn btn-warning" value="return" onclick="window.open('/real')"/>
 	</div>
 
 </form>

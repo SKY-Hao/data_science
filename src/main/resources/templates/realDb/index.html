@@ -52,14 +52,14 @@
 
 							<!-- product -->
 							<div class="col-md-3 col-xs-6" >
-								<div class="product" onclick="window.open('/real-db/toAdd','_self')">
+								<div class="product" onclick="window.open('/real/toAdd','_self')">
 									<div class="product-img">
 										<img src="/img/logo.jpg">
 									</div>
 									<div class="product-body">
 										<!--<p class="product-category" th:text=""></p>-->
 										<h3 class="product-name">
-											<a href="/real-db/toAdd">新建数据源</a>
+											<a href="/real/toAdd">新建数据源</a>
 										</h3>
 										<div class="product-btns">
 
@@ -90,11 +90,11 @@
 												<button class="add-to-compare" th:onclick="'javascript:toDel('+${item.id}+')'"><i class="fa fa-remove"></i><span class="tooltipp">删除</span></button>
 												<button class="quick-view" th:onclick="'javascript:toEdit('+${item.id}+')'"><i class="fa fa-eye"></i><span class="tooltipp">查看</span></button>
 											</div>-->
-											<a class="add-to-wishlist" th:href="@{/real-db/toEdit(id=${item.id})}" th:title="修改">
+											<a class="add-to-wishlist" th:href="@{/real/toEdit(id=${item.id})}" th:title="修改">
 												<i class="fa fa-heart-o"></i>
 												<span class="tooltipp"></span>
 											</a>
-											<a class="add-to-compare" th:href="@{/real-db/delete(id=${item.id})}" th:title="删除" style="margin-left: 15px">
+											<a class="add-to-compare" th:href="@{/real/delete(id=${item.id})}" th:title="删除" style="margin-left: 15px">
 												<i class="fa fa-exchange"></i>
 												<span class="tooltipp"></span>
 											</a>

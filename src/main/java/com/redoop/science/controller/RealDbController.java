@@ -34,7 +34,7 @@ import java.util.List;
  * @since 2018-09-13
  */
 @Controller
-@RequestMapping("/real-db")
+@RequestMapping("/real")
 public class RealDbController {
     @Autowired
     private IRealDbService realDbService;
@@ -92,7 +92,7 @@ public class RealDbController {
         }else{
             realDbService.saveForm(realDb);
         }
-        return new ModelAndView("redirect:/real-db");
+        return new ModelAndView("redirect:/real");
     }
 
     /**
@@ -141,7 +141,7 @@ public class RealDbController {
            return new ModelAndView("/realDb/update");
        }
 
-        return new ModelAndView("redirect:/real-db");
+        return new ModelAndView("redirect:/real");
     }
 
     /**
@@ -153,7 +153,7 @@ public class RealDbController {
     public String delete(Integer id){
         if (id!=null){
             realDbService.removeById(id);
-            return "redirect:/real-db";
+            return "redirect:/real";
         } else {
             return String.valueOf(new Result<String>(ResultEnum.FAIL));
         }

@@ -51,7 +51,7 @@ public class DataScienceApplicationTests {
             realDb.setPort(456);
             realDb.setRemark("dfdwwwerwe");
             content = JSON.toJSONString(realDb);
-            mockMvc.perform(MockMvcRequestBuilders.post("/real-db/save").content(content).contentType(MediaType.APPLICATION_JSON_UTF8));
+            mockMvc.perform(MockMvcRequestBuilders.post("/real/save").content(content).contentType(MediaType.APPLICATION_JSON_UTF8));
         } catch (Exception e) {
             e.printStackTrace();
         }

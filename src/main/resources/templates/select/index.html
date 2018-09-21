@@ -101,60 +101,60 @@
 		<!-- /SECTION -->
 
 	<div th:include="/common/footer::footer" id="footerDiv"></div>
-		<!-- jQuery Plugins -->
-		<script type="text/javascript" src="/js/jquery.min.js"></script>
-		<script type="text/javascript" src="/js/bootstrap.min.js"></script>
-		<script type="text/javascript" src="/js/slick.min.js"></script>
-		<script type="text/javascript" src="/js/nouislider.min.js"></script>
-		<script type="text/javascript" src="/js/jquery.zoom.min.js"></script>
-		<script type="text/javascript" src="/js/jqpaginator.min.js"></script>
-		<script type="text/javascript" src="/js/main.js"></script>
-		<script th:inline="javascript">
-        /*<![CDATA[*/
-        $('#page').jqPaginator({
-            totalPages: [[${pages}]],
-            visiblePages: 10,
-            currentPage: 1,
+	<!-- jQuery Plugins -->
+	<script type="text/javascript" src="/js/jquery.min.js"></script>
+	<script type="text/javascript" src="/js/bootstrap.min.js"></script>
+	<script type="text/javascript" src="/js/slick.min.js"></script>
+	<script type="text/javascript" src="/js/nouislider.min.js"></script>
+	<script type="text/javascript" src="/js/jquery.zoom.min.js"></script>
+	<script type="text/javascript" src="/js/jqpaginator.min.js"></script>
+	<script type="text/javascript" src="/js/main.js"></script>
+	<script th:inline="javascript">
+	/*<![CDATA[*/
+	$('#page').jqPaginator({
+		totalPages: [[${pages}]],
+		visiblePages: 10,
+		currentPage: 1,
 
-            first: '<li class="first"><a href="javascript:void(0);">首页</a></li>',
-            prev: '<li class="prev"><a href="javascript:void(0);">上一页</a></li>',
-            next: '<li class="next"><a href="javascript:void(0);">下一页</a></li>',
-            last: '<li class="last"><a href="javascript:void(0);">末页</a></li>',
-            page: '<li class="page"><a href="javascript:void(0);">{{page}}</a></li>',
-            onPageChange: function (num) {
-                $('#text').html('当前第' + num + '页');
-            }
-        });
+		first: '<li class="first"><a href="javascript:void(0);">首页</a></li>',
+		prev: '<li class="prev"><a href="javascript:void(0);">上一页</a></li>',
+		next: '<li class="next"><a href="javascript:void(0);">下一页</a></li>',
+		last: '<li class="last"><a href="javascript:void(0);">末页</a></li>',
+		page: '<li class="page"><a href="javascript:void(0);">{{page}}</a></li>',
+		onPageChange: function (num) {
+			$('#text').html('当前第' + num + '页');
+		}
+	});
 
-		function toAdd() {
-            window.location.href="/virtual/add";
-        }
-        function toEdit(id) {
-            window.location.href="/virtual/edit/"+id;
-        }
-        function toDel(id) {
+	function toAdd() {
+		window.location.href="/virtual/add";
+	}
+	function toEdit(id) {
+		window.location.href="/virtual/edit/"+id;
+	}
+	function toDel(id) {
 
-            $.ajax({
-                url: "/virtual/delete",
-                type:"POST",
-                dataType:"application/json;charset=UTF-8",
-                data:{"id":id} ,
-                success: function(data){
-                    var result = data.data;
-                    if(result.code==200){
-                        layer.alert("删除成功");
-                        setTimeout( function(){window.location.reload()},500);
+		$.ajax({
+			url: "/virtual/delete",
+			type:"POST",
+			dataType:"application/json;charset=UTF-8",
+			data:{"id":id} ,
+			success: function(data){
+				var result = data.data;
+				if(result.code==200){
+					layer.alert("删除成功");
+					setTimeout( function(){window.location.reload()},500);
 
-                    }else if (result.code==500){
-                        layer.alert("删除失败")
-                    }
-                },
-                error: function () {
+				}else if (result.code==500){
+					layer.alert("删除失败")
+				}
+			},
+			error: function () {
 
-                }
-            });
-        }
-        /*]]>*/
-	</script>
-	</body>
+			}
+		});
+	}
+	/*]]>*/
+</script>
+</body>
 </html>
