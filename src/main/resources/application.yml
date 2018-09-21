@@ -67,3 +67,16 @@ spring:
     mode: LEGACYHTML5
     encoding: utf-8
     prefix: classpath:/templates
+  session:
+    store-type: REDIS
+    redis:
+      flush-mode: ON_SAVE
+      namespace: redoop:session
+    timeout: 1h
+  redis:
+    host: localhost # Redis server host.
+    password:
+    port: 6379
+    timeout: 1h
+server:
+  session:
