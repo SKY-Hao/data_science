@@ -50,7 +50,7 @@ public class RealDbController {
         //IPage<VirtualTables> page = new Page<>();
         IPage<RealDb> pages = realDbService.page(page,null);
         model.addAttribute("list", pages.getRecords());
-        model.addAttribute("pages", pages.getPages()+1);
+        model.addAttribute("pages", pages.getPages());
         model.addAttribute("total", pages.getTotal());
 
         return new ModelAndView("/realDb/index");
