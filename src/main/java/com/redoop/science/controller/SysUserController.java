@@ -61,7 +61,7 @@ public class SysUserController {
         SysUser user = sysUserService.getOne(queryWrapper);
         if(user==null){
             modelAndView.addObject("error","不存在该用户");
-            modelAndView.setViewName("/login");
+            modelAndView.setViewName("/tologin");
             return modelAndView;
         }else if(passwordTrim.equals(user.getPassword())){
             SessionUtils.setUser(request,user);
@@ -70,7 +70,7 @@ public class SysUserController {
             return modelAndView;
         }else {
             modelAndView.addObject("error","密码错误，请重新输入");
-            modelAndView.setViewName("/login");
+            modelAndView.setViewName("/tologin");
             return modelAndView;
         }
 

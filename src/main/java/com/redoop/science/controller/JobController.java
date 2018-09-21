@@ -14,6 +14,7 @@ import com.redoop.science.utils.ResultEnum;
 import com.redoop.science.utils.SessionUtils;
 import okhttp3.HttpUrl;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -32,7 +33,7 @@ import java.util.Set;
  * @Time: 2018/9/20 9:52
  * @Description:
  */
-@RestController
+@Controller
 @RequestMapping("/run")
 public class JobController {
 
@@ -42,26 +43,25 @@ public class JobController {
     private IVirtualTablesService virtualTablesService;
 
     @PostMapping("/script")
-    public String script( HttpServletRequest request,@RequestParam(value = "sql") String sql,@RequestParam(value = "sqlName") String  sqlName) {
+    public Result<String> script(@RequestParam(value = "sql") String sql,@RequestParam(value = "sqlName") String  sqlName) {
         String result = "";
-        HttpUrl url = new HttpUrl.Builder()
-                .scheme("http")
-//                .host("127.0.0.1")
-                .host("192.168.0.122")
-                .port(9003)
-                .addPathSegments("run\\script")
-                .build();
         try {
-            Map<String,String> params = new HashMap<>();
              String runSql = parseSql(sql);
-             params.put("sql",runSql);
-             params.put("jobName",String.valueOf(Math.random()*1000000000000L));
-             params.put("owner", SessionUtils.getUserNickName(request));
-            result = HttpClient.httpPost(url, JSON.toJSONString(params));
+            HttpUrl url = new HttpUrl.Builder()
+                    .scheme("http")
+//                .host("127.0.0.1")
+                    .host("192.168.0.122")
+                    .port(9003)
+                    .addPathSegments("run\\script")
+                    .addQueryParameter("sql", runSql)
+                    .build();
+            String sqlResult = HttpClient.httpPost(url, "");
+            result = sqlResult;
         } catch (IOException e) {
             e.printStackTrace();
         }
-        return result;
+        System.out.println("resultresultresult>>>>>"+result);
+        return new Result<>(ResultEnum.SECCUSS,result);
     }
 
     @PostMapping("/save")

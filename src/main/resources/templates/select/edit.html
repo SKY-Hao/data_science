@@ -76,8 +76,8 @@
                     <div id="editor"></div>
                 </div>
                 <div>
-                    <input id="sqlName" th:value="${virtual.name}" placeholder="请填写sql name"/><br/>
-                    <input id="id" type="hidden" th:value="${virtual.id}"/><br/>
+                    <input id="sqlName"  placeholder="请填写sql name"/><br/>
+                    <input id="id" type="hidden" /><br/>
                     <button id="runButton" onclick="submitRunSQL()" class="btn btn-run waves-effect">查询</button>
                     <button id="saveButton"  onclick="submitSaveSQL()" class="btn btn-run waves-effect">保存</button>
                 </div>
@@ -120,11 +120,16 @@
         $.fn.zTree.init($("#treeVirtual"), setting, virtualNodes);
         ace.require("ace/ext/language_tools");
         var editor = ace.edit('editor');
-
+        var virtualCode = "";
+        var virtual = [[${virtual}]];
+        if(virtual!=null){
+            virtualCode = virtual.code;
+            $("#sqlName").val(virtual.name);
+            $("#id").val(virtual.id);
+        }
         editorInit(editor);
 
 
-    var virtual = [[${virtual}]];
 
     function editorInit(editor) {
 
@@ -139,8 +144,8 @@
         editor.setHighlightActiveLine(true);
         editor.setFontSize(16);
         editor.execCommand('find');
-        if(virtual.code!=null&&virtual.code!=""){
-            editor.setValue(virtual.code);
+        if(virtualCode!=null&&virtualCode!=""){
+            editor.setValue(virtualCode);
         }else{
             editor.setValue("欢迎使用");
         }
@@ -162,9 +167,15 @@
             dataType:"application/json;charset=UTF-8",
             data:{"sql":sql,"sqlName":sqlName} ,
             success: function(data){
-                var result = data.data;
-                    layer.alert(result)
+                debugger
+                console.log("1111111111111111111")
+                console.log(data);
 
+                let columns = data["columns"]
+                let tableData = data["tableData"]
+                console.log(columns);
+                console.log(tableData);
+                layer.alert(data)
             },
             error:function () {
 
