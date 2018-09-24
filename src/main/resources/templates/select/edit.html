@@ -167,13 +167,12 @@
         $.post("/run/script", {"sql": sql, "sqlName": sqlName}, function (result) {
             debugger
             console.log("1111111111111111111")
-            console.log(result);
 
-            let columns = result["columns"]
-            let tableData = result["tableData"]
+            let columns = result.content["columns"]
+            let tableData = result.content["tableData"]
             console.log(columns);
             console.log(tableData);
-            layer.alert(result)
+            layer.alert(result.content);
         });
     }
 
@@ -190,11 +189,10 @@
             return;
         }
         $.post("/run/save", {"sql": sql, "sqlName": sqlName, "id": id}, function (result) {
-            let data = result.data;
-            if (data.code == 200) {
+            if (result.code == 200) {
                 layer.alert("保存成功");
-            } else if (data.code == 300) {
-                layer.alert(data.msg)
+            } else if (result.code == 300) {
+                layer.alert(result.msg)
             }
         });
 

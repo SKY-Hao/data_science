@@ -121,11 +121,15 @@
 		next: '<li class="next"><a href="javascript:void(0);">下一页</a></li>',
 		last: '<li class="last"><a href="javascript:void(0);">末页</a></li>',
 		page: '<li class="page"><a href="javascript:void(0);">{{page}}</a></li>',
-		onPageChange: function (num) {
-            // window.location.href="/virtual?current="+num;
+		onPageChange: function (num,type) {
+            if(!"init"==type){
+                 nextPage(num);
+            }
 		}
 	});
-
+    function nextPage(num){
+        window.location.href="/virtual/"+num;
+    }
 	function toAdd() {
 		window.location.href="/virtual/add";
 	}
@@ -136,7 +140,7 @@
 
 		$.ajax({
 			url: "/virtual/delete",
-			type:"POST",
+			type:"GET",
 			dataType:"application/json;charset=UTF-8",
 			data:{"id":id} ,
 			success: function(data){
