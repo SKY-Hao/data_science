@@ -45,37 +45,28 @@ public class SysUserController {
         return new ModelAndView("/login");
     }
 
-    @PostMapping("/login")
-    public ModelAndView login(ModelAndView modelAndView, @RequestParam(name = "username")String username, @RequestParam(name = "password")String password, HttpServletRequest request, BindingResult rs){
+   @PostMapping("/login")
+   @ResponseBody
+    public Result<String> login( @RequestParam(name = "username")String username,
+                              @RequestParam(name = "password")String password, HttpServletRequest request){
         String usernameTrim = username.trim();
         String passwordTrim = password.trim();
-
-        if(rs.hasErrors()){
-            modelAndView.addObject("error",rs.getFieldError().getDefaultMessage());
-            modelAndView.setViewName("/login");
-           return modelAndView;
-        }
 
         QueryWrapper<SysUser> queryWrapper = new QueryWrapper<>();
         queryWrapper.eq("USERNAME",usernameTrim);
         SysUser user = sysUserService.getOne(queryWrapper);
         if(user==null){
-            modelAndView.addObject("error","不存在该用户");
-            modelAndView.setViewName("/tologin");
-            return modelAndView;
+            return new Result<String>(ResultEnum.NOT_FOUND);
         }else if(passwordTrim.equals(user.getPassword())){
             SessionUtils.setUser(request,user);
-            modelAndView.addObject("nickName",user.getNickName());
-            modelAndView.setViewName("/select/index");
-            return modelAndView;
+            return new Result<String>(ResultEnum.SECCUSS);
         }else {
-            modelAndView.addObject("error","密码错误，请重新输入");
-            modelAndView.setViewName("/tologin");
-            return modelAndView;
+            return new Result<String>(ResultEnum.FAIL_PASSWORD);
         }
 
 
-}
+    }
+
      /**
      * 数据源列表分类
      * @param model

@@ -76,10 +76,17 @@
                     <div id="editor"></div>
                 </div>
                 <div>
+
+                    <!--<input id="sqlName" th:value="${virtual.name}" placeholder="请填写sql name"/><br/>
+                    <input id="id" type="hidden" th:value="${virtual.id}" placeholder="请填写sql name"/><br/>
+                    <button id="runButton" onclick="submitRunSQL()" class="btn btn-run waves-effect">查询</button>
+                    <button id="saveButton"  onclick="submitSaveSQL()" class="btn btn-run waves-effect">保存</button>-->
+
                     <input id="sqlName" placeholder="请填写sql name"/><br/>
                     <input id="id" type="hidden"/><br/>
                     <button id="runButton" onclick="submitRunSQL()" class="btn btn-run waves-effect">查询</button>
                     <button id="saveButton" onclick="submitSaveSQL()" class="btn btn-run waves-effect">保存</button>
+
                 </div>
             </div>
             <!-- /STORE -->
@@ -157,15 +164,15 @@
         var sql = editor.getValue();
         var sqlName = $("#sqlName").val();
         if (sql == null || sql == "") {
-            layer.alert("请输入sql");
+            layer.msg("请输入sql");
             return;
         }
         if (sqlName == null || sqlName == "") {
-            layer.alert("请输入sql name");
+            layer.msg("请输入sql name");
             return;
         }
         $.post("/run/script", {"sql": sql, "sqlName": sqlName}, function (result) {
-            debugger
+
             console.log("1111111111111111111")
 
             let columns = result.content["columns"]
@@ -181,16 +188,16 @@
         var sqlName = $("#sqlName").val();
         var id = $("#id").val();
         if (sql == null || sql == "") {
-            layer.alert("请输入sql");
+            layer.msg("请输入sql");
             return;
         }
         if (sqlName == null || sqlName == "") {
-            layer.alert("请输入sql name");
+            layer.msg("请输入sql name");
             return;
         }
         $.post("/run/save", {"sql": sql, "sqlName": sqlName, "id": id}, function (result) {
             if (result.code == 200) {
-                layer.alert("保存成功");
+                layer.msg("保存成功");
             } else if (result.code == 300) {
                 layer.alert(result.msg)
             }

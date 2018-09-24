@@ -146,8 +146,8 @@
 			success: function(data){
 				var result = data.data;
 				if(result.code==200){
-					layer.alert("删除成功");
-					setTimeout( function(){window.location.reload()},500);
+					layer.msg("删除成功");
+                    window.location.reload()
 
 				}else if (result.code==500){
 					layer.alert("删除失败")

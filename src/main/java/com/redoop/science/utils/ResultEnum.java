@@ -23,7 +23,11 @@ public enum ResultEnum {
     /**
      *返回失败
      */
-    FAIL(500,"执行错误");
+    FAIL(500,"执行错误"),
+    /**
+     *返回失败
+     */
+    FAIL_PASSWORD(501,"密码错误");
 
 
     private int code;

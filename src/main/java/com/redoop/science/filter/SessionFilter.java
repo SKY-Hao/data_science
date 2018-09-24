@@ -31,7 +31,8 @@ public class SessionFilter implements Filter {
 
 
     @Override
-    public void doFilter(ServletRequest servletRequest, ServletResponse servletResponse, FilterChain filterChain) throws IOException, ServletException {
+    public void doFilter(ServletRequest servletRequest, ServletResponse servletResponse, FilterChain filterChain) throws IOException,
+            ServletException {
         HttpServletRequest request = (HttpServletRequest) servletRequest;
         HttpServletResponse response = (HttpServletResponse) servletResponse;
         HttpSession session = request.getSession(false);
@@ -40,7 +41,6 @@ public class SessionFilter implements Filter {
         System.out.println("filter url:"+uri);
             // session中包含user对象,则是登录状态
             if(session!=null&& SessionUtils.getUser(request) != null){
-                // System.out.println("user:"+session.getAttribute("user"));
                 filterChain.doFilter(request, response);
             }else{
                 String requestType = request.getHeader("X-Requested-With");
