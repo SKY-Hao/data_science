@@ -6,33 +6,34 @@
 		<meta name="viewport" content="width=device-width, initial-scale=1">
 		 <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
 
-		<title>查询首页</title>
+		<title>数据源</title>
 
- 		<!-- Google font -->
- 		<link href="https://fonts.googleapis.com/css?family=Montserrat:400,500,700" rel="stylesheet">
+		<!-- Google font -->
+		<link href="https://fonts.googleapis.com/css?family=Montserrat:400,500,700" rel="stylesheet">
 
- 		<!-- Bootstrap -->
- 		<link type="text/css" rel="stylesheet" href="/css/bootstrap.min.css" />
+		<!-- Bootstrap -->
+		<link type="text/css" rel="stylesheet" href="/css/bootstrap.min.css" />
 
- 		<!-- Slick -->
- 		<link type="text/css" rel="stylesheet" href="/css/slick.css" />
- 		<link type="text/css" rel="stylesheet" href="/css/slick-theme.css" />
+		<!-- Slick -->
+		<link type="text/css" rel="stylesheet" href="/css/slick.css" />
+		<link type="text/css" rel="stylesheet" href="/css/slick-theme.css" />
 
- 		<!-- nouislider -->
- 		<link type="text/css" rel="stylesheet" href="/css/nouislider.min.css" />
+		<!-- nouislider -->
+		<link type="text/css" rel="stylesheet" href="/css/nouislider.min.css" />
 
- 		<!-- Font Awesome Icon -->
- 		<link rel="stylesheet" href="/css/font-awesome.min.css" />
+		<!-- Font Awesome Icon -->
+		<link rel="stylesheet" href="/css/font-awesome.min.css" />
 
- 		<!-- Custom stlylesheet -->
- 		<link type="text/css" rel="stylesheet" href="/css/style.css" />
+		<!-- Custom stlylesheet -->
+		<link type="text/css" rel="stylesheet" href="/css/style.css" />
 
 		<!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
 		<!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
 		<!--[if lt IE 9]>
-		  <script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
-		  <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
+		<script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
+		<script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
 		<![endif]-->
+
 
     </head>
 	<body>
@@ -51,30 +52,21 @@
 						<div class="row">
 
 							<!-- product -->
-							<div class="col-md-3 col-xs-6" >
+							<div class="col-md-3 col-xs-6">
 								<div class="product" onclick="window.open('/real/toAdd','_self')">
 									<div class="product-img">
 										<img src="/img/logo.jpg">
 									</div>
 									<div class="product-body">
-										<!--<p class="product-category" th:text=""></p>-->
-										<h3 class="product-name">
-											<a href="/real/toAdd">新建数据源</a>
-										</h3>
+										<h3 class="product-name">新建数据源</h3>
 										<div class="product-btns">
-
-											<a class="add-to-wishlist" th:title="添加">
-												<span class="tooltipp"></span>
-												<i class="fa fa-heart-o"></i>
-
-											</a>
+											<button class="add-to-wishlist" onclick="toAdd()"><i class="fa fa-plus"></i><span class="tooltipp">新增数据源</span></button>
 										</div>
 									</div>
 								</div>
 							</div>
 
-
-
+							<!--列表-->
 							<div class="col-md-3 col-xs-6" th:if="${list != null}" th:each="item : ${list}">
 								<div class="product">
 									<div class="product-img">
@@ -83,8 +75,8 @@
 									</div>
 									<div class="product-body" >
 										<h3 class="product-name"><a href="#" th:text="${item.nikeName}"></a></h3>
+										<!--按钮-->
 										<div class="product-btns">
-
 											<div class="product-btns">
 												<button class="add-to-wishlist" th:onclick="'javascript:toEdit('+${item.id}+')'" >
 													<i class="fa fa-edit"></i>
@@ -94,23 +86,11 @@
 													<i class="fa fa-remove"></i>
 													<span class="tooltipp">删除</span>
 												</button>
-												<button class="quick-view" th:onclick="'javascript:toEdit('+${item.id}+')'">
+												<button class="quick-view" th:onclick="'javascript:toList('+${item.id}+')'">
 													<i class="fa fa-eye"></i>
 													<span class="tooltipp">查看</span>
 												</button>
 											</div>
-											<!--<a class="add-to-wishlist" th:href="@{/real/toEdit(id=${item.id})}" th:title="修改">
-												<i class="fa fa-heart-o"></i>
-												<span class="tooltipp"></span>
-											</a>
-											<a class="add-to-compare" th:href="@{/real/delete(id=${item.id})}" th:title="删除" style="margin-left: 15px">
-												<i class="fa fa-exchange"></i>
-												<span class="tooltipp"></span>
-											</a>
-											<a class="quick-view"  th:title="查看"  style="margin-left: 15px">
-												<i class="fa fa-eye"></i>
-												<span class="tooltipp"></span>
-											</a>-->
 										</div>
 									</div>
 								</div>
@@ -150,18 +130,36 @@
         $('#page').jqPaginator({
             totalPages: [[${pages}]],
             visiblePages: 10,
-            currentPage: 1,
+            currentPage: [[${pageNum}]],
 
             first: '<li class="first"><a href="javascript:void(0);">首页</a></li>',
             prev: '<li class="prev"><a href="javascript:void(0);">上一页</a></li>',
             next: '<li class="next"><a href="javascript:void(0);">下一页</a></li>',
             last: '<li class="last"><a href="javascript:void(0);">末页</a></li>',
             page: '<li class="page"><a href="javascript:void(0);">{{page}}</a></li>',
-            onPageChange: function (num) {
-                //alert('当前第' + num + '页')
-                $('#text').html('当前第' + num + '页');
+            onPageChange: function (num,type) {
+                if(type=="change"){
+                    console.log("num==="+num);
+                    console.log("type==="+type);
+                    location.href="/real/"+num;
+                }
             }
         });
+        function toAdd(id) {
+           location.href="/real/toAdd/"+id;
+        }
+        function toEdit(id) {
+            location.href="/real/toEdit/"+id;
+        }
+        function toDel(id) {
+            location.href="/real/delete/"+id;
+        }
+        function toList(id) {
+            location.href="/real/toList/"+id;
+        }
+
+
+
 
 	</script>
 </body>
