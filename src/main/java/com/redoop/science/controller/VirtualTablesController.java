@@ -50,15 +50,17 @@ public class VirtualTablesController {
      * @param model
      * @return
      */
-    @GetMapping
-    public ModelAndView index(Model model,Page page,HttpServletRequest request){
-        page.setSize(11);
-        LambdaQueryWrapper<VirtualTables> wrapper = new LambdaQueryWrapper<>();
-//        IPage<VirtualTables> page = new Page<>();
+    @GetMapping("/{num}")
+    public ModelAndView index(Model model,@PathVariable Long num,HttpServletRequest request){
+        Page<VirtualTables> page = new Page<>();
+        page.setSize(11L);
+        page.setCurrent(num);
+        page.setDesc("ID");
         IPage<VirtualTables> pages = virtualTablesService.page(page,null);
         model.addAttribute("nickName", SessionUtils.getUserNickName(request));
         model.addAttribute("items", pages.getRecords());
         model.addAttribute("activeType", 1);
+        model.addAttribute("pageNum", num);
         model.addAttribute("virtual", new VirtualTables());
         model.addAttribute("pages", pages.getPages()+1);
         model.addAttribute("total", pages.getTotal());
