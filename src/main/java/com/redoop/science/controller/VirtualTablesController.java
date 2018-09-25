@@ -57,18 +57,19 @@ public class VirtualTablesController {
         model.addAttribute("activeType", 1);
         model.addAttribute("pageNum", num);
         model.addAttribute("virtual", new VirtualTables());
-        model.addAttribute("pages", pages.getPages()+1);
+        model.addAttribute("pages", pages.getPages());
         model.addAttribute("total", pages.getTotal());
         return new ModelAndView("/select/index");
     }
     @GetMapping("/edit/{id}")
-    public ModelAndView edit(Model model,@PathVariable(value = "id") String id){
+    public ModelAndView edit(Model model,@PathVariable(value = "id") String id,HttpServletRequest request){
 
         VirtualTables virtualTables = virtualTablesService.getById(id);
         if(virtualTables!=null){
             model.addAttribute("virtual", virtualTables);
             //返回值
             getZtree(model);
+            model.addAttribute("nickName", SessionUtils.getUserNickName(request));
             return new ModelAndView("/select/edit");
         }else{
             model.addAttribute("message","不存在查询信息");
@@ -77,9 +78,10 @@ public class VirtualTablesController {
 
     }
     @GetMapping("/add")
-    public ModelAndView add(Model model){
+    public ModelAndView add(Model model,HttpServletRequest request){
 
         getZtree(model);
+        model.addAttribute("nickName", SessionUtils.getUserNickName(request));
         return new ModelAndView("/select/edit");
     }
 
