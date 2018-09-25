@@ -1,7 +1,6 @@
 package com.redoop.science.controller;
 
 
-import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.redoop.science.entity.RealDb;
@@ -9,7 +8,6 @@ import com.redoop.science.entity.VirtualTables;
 import com.redoop.science.service.IRealDbService;
 import com.redoop.science.utils.Result;
 import com.redoop.science.utils.ResultEnum;
-import com.sun.org.apache.xpath.internal.SourceTree;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -19,9 +17,8 @@ import org.springframework.web.bind.annotation.*;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.web.servlet.ModelAndView;
-import org.thymeleaf.spring5.context.SpringContextUtils;
 
-import javax.sound.midi.Soundbank;
+import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 
 
@@ -44,7 +41,22 @@ public class RealDbController {
      * @param model
      * @return
      */
-    @GetMapping
+    @GetMapping("/{num}")
+    public ModelAndView index(Model model,@PathVariable Long num,HttpServletRequest request){
+        Page<RealDb> page = new Page<>();
+        page.setSize(11L);
+        page.setCurrent(num);
+        page.setDesc("ID");
+        IPage<RealDb> pages = realDbService.page(page,null);
+        model.addAttribute("list", pages.getRecords());
+        model.addAttribute("activeType", 2);
+        model.addAttribute("pageNum", num);
+        model.addAttribute("real", new RealDb());
+        model.addAttribute("pages", pages.getPages());
+        model.addAttribute("total", pages.getTotal());
+        return new ModelAndView("/realDb/index");
+    }
+    /*@GetMapping
     public ModelAndView index(Model model,Page page){
         LambdaQueryWrapper<RealDb> wrapper = new LambdaQueryWrapper<>();
         //IPage<VirtualTables> page = new Page<>();
@@ -54,7 +66,7 @@ public class RealDbController {
         model.addAttribute("total", pages.getTotal());
 
         return new ModelAndView("/realDb/index");
-    }
+    }*/
 
 
     /**
@@ -92,7 +104,7 @@ public class RealDbController {
         }else{
             realDbService.saveForm(realDb);
         }
-        return new ModelAndView("redirect:/real");
+        return new ModelAndView("redirect:/real/1");
     }
 
     /**
@@ -101,11 +113,36 @@ public class RealDbController {
      * @param id
      * @return
      */
-    @RequestMapping(value = "/toEdit")
-    public ModelAndView toEdit(Model model,String id) {
+    @RequestMapping(value = "/toEdit/{id}",method = RequestMethod.GET)
+    public ModelAndView toEdit(Model model,@PathVariable(value = "id") String id) {
         RealDb realDb = realDbService.getById(id);
-        model.addAttribute("realDb", realDb);
-        return new ModelAndView("/realDb/update");
+        if (realDb!=null){
+            model.addAttribute("realDb", realDb);
+
+            return new ModelAndView("/realDb/update");
+        }else {
+            //model.addAttribute("message","信息无效");
+            return new ModelAndView("/error/500");
+        }
+    }
+
+    /**
+     * 查看单个数据源信息-不能修改
+     * @param model
+     * @param id
+     * @return
+     */
+    @RequestMapping(value = "/toList/{id}",method = RequestMethod.GET)
+    public ModelAndView toList(Model model,@PathVariable(value = "id") String id) {
+        RealDb realDb = realDbService.getById(id);
+        if (realDb!=null){
+            model.addAttribute("realDb", realDb);
+
+            return new ModelAndView("/realDb/update");
+        }else {
+            //model.addAttribute("message","信息无效");
+            return new ModelAndView("/error/500");
+        }
     }
 
     /**
@@ -126,7 +163,7 @@ public class RealDbController {
         RealDb realDb1 = realDbService.getById(realDb.getId());
         //查数据源别名
         RealDb dataReal =  realDbService.findByNikeName(realDb.getNikeName());
-
+        realDb.setLogo(" /img/realDb/"+realDb.getDbType()+".jpg");
        /* if(dataReal != null || realDb1.getNikeName() == realDb.getNikeName()){
             model.addAttribute("hintMessage","数据源名已经存在");
             return new ModelAndView("/realDb/update");
@@ -141,7 +178,7 @@ public class RealDbController {
            return new ModelAndView("/realDb/update");
        }
 
-        return new ModelAndView("redirect:/real");
+        return new ModelAndView("redirect:/real/1");
     }
 
     /**
@@ -149,16 +186,15 @@ public class RealDbController {
      * @param id
      * @return
      */
-    @RequestMapping("/delete")
-    public String delete(Integer id){
+    @RequestMapping("/delete/{id}")
+    public String delete(@PathVariable(value = "id")  Integer id){
         if (id!=null){
             realDbService.removeById(id);
-            return "redirect:/real";
+            return "redirect:/real/1";
         } else {
             return String.valueOf(new Result<String>(ResultEnum.FAIL));
         }
     }
-
 
     /**
      * 查看库中的表信息
@@ -168,10 +204,8 @@ public class RealDbController {
     @RequestMapping("/selectDatabase")
     @ResponseBody
     public List<RealDb> selectDatabase(Model model){
-
         List<RealDb> list =  realDbService.selectDatabase();
         model.addAttribute("list" ,list);
-
         return list;
     }
 

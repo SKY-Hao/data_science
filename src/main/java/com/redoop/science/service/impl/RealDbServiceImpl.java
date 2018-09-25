@@ -8,6 +8,7 @@ import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import javax.xml.bind.SchemaOutputResolver;
 import java.sql.*;
 import java.util.*;
 import java.util.Date;
@@ -51,23 +52,8 @@ public class RealDbServiceImpl extends ServiceImpl<RealDbMapper, RealDb> impleme
             realDb.setCreatorName("admin");
         }
         realDb.setOperationTime(new Date());
-        //System.out.println("保存时输入的信息>>>>>>>>>>>>>>>"+realDb.toString());
-        if (realDb.getDbType()==1){
-            realDb.setLogo("/img/realDb/mysql.jpg");
-        } if (realDb.getDbType()==2){
-            realDb.setLogo("/img/realDb/oracle.jpg");
-        } if (realDb.getDbType()==3){
-            realDb.setLogo("/img/realDb/pg.jpg");
-        } if (realDb.getDbType()==4){
-            realDb.setLogo("/img/realDb/sqlserver.jpg");
-        } if (realDb.getDbType()==5){
-            realDb.setLogo("/img/realDb/hive.jpg");
-        } if (realDb.getDbType()==6){
-            realDb.setLogo("/img/realDb/redis.jpg");
-        } if (realDb.getDbType()==7){
-            realDb.setLogo("/img/realDb/kafka.jpg");
-        }
-
+        //根据类型添加类型图片
+        realDb.setLogo(" /img/realDb/"+realDb.getDbType()+".jpg");
         realDbMapper.insert(realDb);
     }
 
