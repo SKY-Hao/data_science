@@ -60,8 +60,6 @@
 										<h3 class="product-name">新建空白查询</h3>
 										<div class="product-btns">
 											<button class="add-to-wishlist" onclick="toAdd()"><i class="fa fa-plus"></i><span class="tooltipp">新增</span></button>
-											<!--<button class="add-to-compare"><i class="fa fa-exchange"></i><span class="tooltipp">删除</span></button>-->
-											<!--<button class="quick-view"><i class="fa fa-eye"></i><span class="tooltipp">查看</span></button>-->
 										</div>
 									</div>
 								</div>
@@ -122,10 +120,7 @@
 		last: '<li class="last"><a href="javascript:void(0);">末页</a></li>',
 		page: '<li class="page"><a href="javascript:void(0);">{{page}}</a></li>',
 		onPageChange: function (num,type) {
-debugger
             if(type=="change"){
-                console.log("num==="+num);
-                console.log("type==="+type);
                 window.location.href="/virtual/"+num;
             }
 		}
@@ -139,17 +134,14 @@ debugger
 	function toDel(id) {
 
 		$.ajax({
-			url: "/virtual/delete",
-			type:"GET",
-			dataType:"application/json;charset=UTF-8",
-			data:{"id":id} ,
+			url: "/virtual/delete/"+id,
+			type:"DELETE",
+			dataType:"json",
 			success: function(data){
-				var result = data.data;
-				if(result.code==200){
+				if(data.code==200){
 					layer.msg("删除成功");
                     window.location.reload()
-
-				}else if (result.code==500){
+ 				}else if (data.code==500){
 					layer.alert("删除失败")
 				}
 			},

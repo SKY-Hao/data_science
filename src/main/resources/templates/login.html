@@ -80,14 +80,13 @@
 <script type="text/javascript">
 
 function login() {
-    debugger
     var username = $("#username").val();
     var password = $("#password").val();
     $.post("/user/login", {"username":username,"password":password}, function (result) {
 
         if (result.code == 200) {
             layer.msg("登录成功");
-            location.href="/virtual";
+            location.href="/virtual/1";
             //window.location.href=="/virtual";
         } else {
             layer.msg(result.msg)

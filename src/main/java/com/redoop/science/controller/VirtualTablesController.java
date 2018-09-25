@@ -1,20 +1,16 @@
 package com.redoop.science.controller;
 
 
-import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.redoop.science.constant.DBEnum;
 import com.redoop.science.entity.RealDb;
-import com.redoop.science.entity.SysUser;
 import com.redoop.science.entity.VirtualTables;
 import com.redoop.science.service.IRealDbService;
 import com.redoop.science.service.IVirtualTablesService;
 import com.redoop.science.utils.Result;
 import com.redoop.science.utils.ResultEnum;
 import com.redoop.science.utils.SessionUtils;
-import com.sun.org.apache.xpath.internal.SourceTree;
-import org.apache.ibatis.annotations.Delete;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -23,7 +19,6 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpServletRequest;
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -94,13 +89,6 @@ public class VirtualTablesController {
         List<RealDb> realDbs =  realDbService.list(null);
         System.out.println(realDbs);
 
-//-------------------------------------------------------------------------------
-
-       // List<RealDb> list =  realDbService.selectDatabase();
-       // model.addAttribute("list" ,list);
-
-//--------------------------------------------------------------------
-
         List<Map<String,Object>> realZList = new ArrayList<>();
         for (DBEnum dbEnum : DBEnum.values())
         {
@@ -144,8 +132,9 @@ public class VirtualTablesController {
         return model;
     }
 
-    @DeleteMapping("/delete")
-    public Result<String> delete(@RequestParam(name = "id") Long id){
+    @DeleteMapping("/delete/{id}")
+    @ResponseBody
+    public Result<String> delete(@PathVariable Integer id){
         if (virtualTablesService.removeById(id)){
             return new Result<String>(ResultEnum.SECCUSS);
         }else {
