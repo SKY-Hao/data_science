@@ -1,5 +1,7 @@
 package com.redoop.science.controller;
 
+import com.alibaba.fastjson.JSONException;
+import com.alibaba.fastjson.JSONObject;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.redoop.science.entity.RealDb;
@@ -7,10 +9,7 @@ import com.redoop.science.entity.SysUser;
 import com.redoop.science.entity.VirtualTables;
 import com.redoop.science.service.IRealDbService;
 import com.redoop.science.service.IVirtualTablesService;
-import com.redoop.science.utils.HttpClient;
-import com.redoop.science.utils.Result;
-import com.redoop.science.utils.ResultEnum;
-import com.redoop.science.utils.SessionUtils;
+import com.redoop.science.utils.*;
 import okhttp3.HttpUrl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -40,6 +39,7 @@ public class JobController {
     @PostMapping("/script")
     @ResponseBody
     public Result<String> script(@RequestParam(value = "sql") String sql) {
+        Result<String> stringResult = new Result<>(ResultEnum.FAIL);
         String result = "";
         try {
              String runSql = parseSql(sql);
@@ -57,7 +57,13 @@ public class JobController {
             e.printStackTrace();
         }
         System.out.println("resultresultresult>>>>>"+result);
-        return new Result<String>(ResultEnum.SECCUSS,result);
+
+        if(JsonUtil.isJSONValid(result)){
+            stringResult = new Result<String>(ResultEnum.SECCUSS,result);
+        }else{
+            stringResult = new Result<String>(ResultEnum.FAIL,result);
+        }
+        return stringResult;
     }
 
     @PostMapping("/save")
@@ -94,8 +100,8 @@ public class JobController {
 
     public String parseSql(String sql) {
         //将所有'替换为` 避免误操作
-        String sqlStr = sql.replaceAll("'", "`");
-        String copySql = sqlStr;
+//        String sqlStr = sql.replaceAll("'", "`");
+        String copySql = sql;
         StringBuilder returnSql = new StringBuilder();
         //获取使用库
         String[] tables = copySql.split("`");
