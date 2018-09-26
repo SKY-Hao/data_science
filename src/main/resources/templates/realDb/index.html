@@ -70,7 +70,6 @@
 							<div class="col-md-3 col-xs-6" th:if="${list != null}" th:each="item : ${list}">
 								<div class="product">
 									<div class="product-img">
-										<!--<img src="/img/logoList.jpg">-->
 										<img th:src="${item.logo}">
 									</div>
 									<div class="product-body" >
@@ -102,7 +101,7 @@
 						<!-- /store products -->
 
 						<!-- store bottom filter -->
-						<div class="store-filter clearfix">
+						<div class="store-filter clearfix" style="text-align: center;">
 							<div id="page" class="pagination"></div>
 						</div>
 						<!-- /store bottom filter -->

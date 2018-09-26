@@ -6,7 +6,7 @@
 		<meta name="viewport" content="width=device-width, initial-scale=1">
 		 <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
 
-		<title>查询首页</title>
+		<title>分析</title>
 
  		<!-- Google font -->
  		<link href="https://fonts.googleapis.com/css?family=Montserrat:400,500,700" rel="stylesheet">
@@ -57,7 +57,7 @@
 									</div>
 									<div class="product-body">
 										<!--<p class="product-category" th:text=""></p>-->
-										<h3 class="product-name">新建空白查询</h3>
+										<h3 class="product-name">新建分析</h3>
 										<div class="product-btns">
 											<button class="add-to-wishlist" onclick="toAdd()"><i class="fa fa-plus"></i><span class="tooltipp">新增</span></button>
 										</div>
@@ -65,7 +65,7 @@
 								</div>
 							</div>
 							<!-- product -->
-							<div class="col-md-3 col-xs-6" th:if="${items != null}" th:each="item : ${items}">
+							<div class="col-md-3 col-xs-6" th:if="${list != null}" th:each="item : ${list}">
 								<div class="product">
 									<div class="product-img">
 										<img src="/img/logoList.jpg" alt="">
@@ -122,35 +122,16 @@
 		page: '<li class="page"><a href="javascript:void(0);">{{page}}</a></li>',
 		onPageChange: function (num,type) {
             if(type=="change"){
-                window.location.href="/virtual/"+num;
+                location.href="/analysis/"+num;
             }
 		}
 	});
 	function toAdd() {
-		window.location.href="/virtual/add";
+		location.href="/analysis/add";
 	}
-	function toEdit(id) {
-		window.location.href="/virtual/edit/"+id;
-	}
-	function toDel(id) {
-
-		$.ajax({
-			url: "/virtual/delete/"+id,
-			type:"DELETE",
-			dataType:"json",
-			success: function(data){
-				if(data.code==200){
-					layer.msg("删除成功");
-                    window.location.reload()
- 				}else if (data.code==500){
-					layer.alert("删除失败")
-				}
-			},
-			error: function () {
-
-			}
-		});
-	}
+    function toDel(id) {
+        location.href="/analysis/delete/"+id;
+    }
 	/*]]>*/
 </script>
 </body>

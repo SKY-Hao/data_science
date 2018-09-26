@@ -18,7 +18,7 @@ import java.util.Map;
  * @Time: 2018/9/21 11:05
  * @Description:
  */
-@WebFilter(filterName = "sessionFilter",urlPatterns = {"/run/*","/real/*","/real-db-tables/*","/virtual/*"})
+@WebFilter(filterName = "sessionFilter",urlPatterns = {"/run/*","/real/*","/real-db-tables/*","/virtual/*","/analysis/*"})
 public class SessionFilter implements Filter {
     //标示符：表示当前用户未登录(可根据自己项目需要改为json样式)
     String NO_LOGIN = "您还未登录";

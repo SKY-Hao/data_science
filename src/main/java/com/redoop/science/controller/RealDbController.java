@@ -8,6 +8,7 @@ import com.redoop.science.entity.VirtualTables;
 import com.redoop.science.service.IRealDbService;
 import com.redoop.science.utils.Result;
 import com.redoop.science.utils.ResultEnum;
+import com.redoop.science.utils.SessionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -48,6 +49,7 @@ public class RealDbController {
         page.setCurrent(num);
         page.setDesc("ID");
         IPage<RealDb> pages = realDbService.page(page,null);
+        model.addAttribute("nickName", SessionUtils.getUserNickName(request));
         model.addAttribute("list", pages.getRecords());
         model.addAttribute("activeType", 2);
         model.addAttribute("pageNum", num);
@@ -56,18 +58,6 @@ public class RealDbController {
         model.addAttribute("total", pages.getTotal());
         return new ModelAndView("/realDb/index");
     }
-    /*@GetMapping
-    public ModelAndView index(Model model,Page page){
-        LambdaQueryWrapper<RealDb> wrapper = new LambdaQueryWrapper<>();
-        //IPage<VirtualTables> page = new Page<>();
-        IPage<RealDb> pages = realDbService.page(page,null);
-        model.addAttribute("list", pages.getRecords());
-        model.addAttribute("pages", pages.getPages()+1);
-        model.addAttribute("total", pages.getTotal());
-
-        return new ModelAndView("/realDb/index");
-    }*/
-
 
     /**
      * 去添加数据源
@@ -75,10 +65,10 @@ public class RealDbController {
      * @return
      */
     @RequestMapping(value = "/toAdd", method = RequestMethod.GET)
-    public ModelAndView form( Model model) {
+    public ModelAndView form( Model model,HttpServletRequest request) {
 
         model.addAttribute("realDb", new RealDb());
-
+        model.addAttribute("nickName", SessionUtils.getUserNickName(request));
         return new ModelAndView("/realDb/add");
 
     }
@@ -114,14 +104,13 @@ public class RealDbController {
      * @return
      */
     @RequestMapping(value = "/toEdit/{id}",method = RequestMethod.GET)
-    public ModelAndView toEdit(Model model,@PathVariable(value = "id") String id) {
+    public ModelAndView toEdit(Model model,@PathVariable(value = "id") String id,HttpServletRequest request) {
         RealDb realDb = realDbService.getById(id);
         if (realDb!=null){
             model.addAttribute("realDb", realDb);
-
+            model.addAttribute("nickName", SessionUtils.getUserNickName(request));
             return new ModelAndView("/realDb/update");
         }else {
-            //model.addAttribute("message","信息无效");
             return new ModelAndView("/error/500");
         }
     }
@@ -133,14 +122,13 @@ public class RealDbController {
      * @return
      */
     @RequestMapping(value = "/toList/{id}",method = RequestMethod.GET)
-    public ModelAndView toList(Model model,@PathVariable(value = "id") String id) {
+    public ModelAndView toList(Model model,@PathVariable(value = "id") String id,HttpServletRequest request) {
         RealDb realDb = realDbService.getById(id);
         if (realDb!=null){
             model.addAttribute("realDb", realDb);
-
+            model.addAttribute("nickName", SessionUtils.getUserNickName(request));
             return new ModelAndView("/realDb/update");
         }else {
-            //model.addAttribute("message","信息无效");
             return new ModelAndView("/error/500");
         }
     }
