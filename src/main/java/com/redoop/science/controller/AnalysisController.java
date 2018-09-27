@@ -2,14 +2,16 @@ package com.redoop.science.controller;
 
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.redoop.science.entity.Analysis;
-import com.redoop.science.entity.VirtualTables;
+import com.redoop.science.entity.RealDb;
+import com.redoop.science.entity.SysUser;
 import com.redoop.science.service.IAnalysisService;
-import com.redoop.science.utils.Result;
-import com.redoop.science.utils.ResultEnum;
-import com.redoop.science.utils.SessionUtils;
+import com.redoop.science.service.IRealDbService;
+import com.redoop.science.utils.*;
+import okhttp3.HttpUrl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -17,7 +19,9 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpServletRequest;
-import java.util.List;
+import java.io.IOException;
+import java.time.LocalDateTime;
+import java.util.*;
 
 /**
  * <p>
@@ -30,9 +34,11 @@ import java.util.List;
 @Controller
 @RequestMapping("/analysis")
 public class AnalysisController {
+
     @Autowired
     private IAnalysisService analysisService;
-
+    @Autowired
+    private IRealDbService realDbService;
 
     /**
      * 分析列表List
@@ -58,34 +64,79 @@ public class AnalysisController {
         return new ModelAndView("/analysis/index");
     }
 
-
-
-
     @GetMapping("/add")
     public ModelAndView add(Model model,HttpServletRequest request){
-
         //getZtree(model);
         model.addAttribute("nickName", SessionUtils.getUserNickName(request));
         return new ModelAndView("/analysis/update");
     }
 
-
+    /**
+     * 保存
+     * @param request
+     * @param id
+     * @param sql
+     * @param sqlName
+     * @return
+     */
     @PostMapping("/save")
-    public Result<String> save(Analysis analysis){
-        if (analysisService.save(analysis)){
+    @ResponseBody
+    public Result save(HttpServletRequest request, @RequestParam(name = "id",required = false) Long id,
+                       @RequestParam(name = "sql") String sql,
+                       @RequestParam(value = "sqlName") String  sqlName) {
+        Analysis analysis = null;
+        SysUser sysUser = SessionUtils.getUser(request);
+        QueryWrapper queryWrapper = new QueryWrapper();
+        queryWrapper.eq("NAME",sqlName);
+
+        if(id!=null){
+            analysis = analysisService.getById(id);
+        }else{
+            Analysis analy  = analysisService.getOne(queryWrapper);
+            if(analy!=null){
+                return new Result(ResultEnum.REPEAT);
+            }else{
+                analysis = new Analysis();
+                analysis.setCreateDate(new Date());
+                analysis.setCreatorId(sysUser.getId());
+                analysis.setCreatorName(sysUser.getNickName());
+            }
+        }
+        analysis.setName(sqlName);
+        analysis.setFinallyCode(sql);
+        analysis.setOperationTime(new Date());
+        analysis.setOperationId(sysUser.getId());
+        if (analysisService.saveOrUpdate(analysis)){
             return new Result<String>(ResultEnum.SECCUSS);
         }else {
             return new Result<String>(ResultEnum.FAIL);
         }
     }
-    @PostMapping("/update")
-    public Result<String> update(Analysis analysis){
-        if (analysisService.updateById(analysis)){
-            return new Result<String>(ResultEnum.SECCUSS);
-        }else {
-            return new Result<String>(ResultEnum.FAIL);
+
+    /**
+     * 修改
+     * @param model
+     * @param id
+     * @param request
+     * @return
+     */
+    @GetMapping("/edit/{id}")
+    public ModelAndView edit(Model model,@PathVariable(value = "id") String id,HttpServletRequest request){
+
+        Analysis analysis = analysisService.getById(id);
+        if(analysis!=null){
+            model.addAttribute("analysis", analysis);
+            //返回值
+            //getZtree(model);
+            model.addAttribute("nickName", SessionUtils.getUserNickName(request));
+            return new ModelAndView("/analysis/update");
+        }else{
+            model.addAttribute("message","不存在查询信息");
+            return new ModelAndView("/error/500");
         }
+
     }
+
 
     /**
      * 删除
@@ -101,4 +152,106 @@ public class AnalysisController {
             return String.valueOf(new Result<String>(ResultEnum.FAIL));
         }
     }
+
+
+    /**
+     * 执行sql查询
+     * @param sql
+     * @return
+     */
+    @PostMapping("/script")
+    @ResponseBody
+    public Result<String> script(@RequestParam(value = "sql") String sql) {
+        Result<String> stringResult = new Result<>(ResultEnum.FAIL);
+        String result = "";
+        try {
+            String runSql = parseSql(sql);
+            HttpUrl url = new HttpUrl.Builder()
+                    .scheme("http")
+                    .host("192.168.0.122")
+                    .port(9003)
+                    .addPathSegments("run\\script")
+                    .addQueryParameter("sql", runSql)
+                    .build();
+            String sqlResult = HttpClient.httpPost(url, "");
+            result = sqlResult;
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        System.out.println("resultresultresult>>>>>"+result);
+
+        if(JsonUtil.isJSONValid(result)){
+            stringResult = new Result<String>(ResultEnum.SECCUSS,result);
+        }else{
+            stringResult = new Result<String>(ResultEnum.FAIL,result);
+        }
+        return stringResult;
+    }
+
+    /**
+     * 解析sql
+     * @param sql
+     * @return
+     */
+    public String parseSql(String sql) {
+        //将所有'替换为` 避免误操作
+//        String sqlStr = sql.replaceAll("'", "`");
+        String copySql = sql;
+        StringBuilder returnSql = new StringBuilder();
+        //获取使用库
+        //String[] tables = copySql.split("`");
+        //Set<String> tableNames = new HashSet<>();
+        Set<String> dbNames = new HashSet<>();
+       /* for (String table : tables) {
+            if (table.indexOf(".") != -1) {
+                String dbName = table.split(".")[0];
+                tableNames.add("`"+table+"`");
+                dbNames.add(dbName);
+            }
+        }*/
+        Map<String, RealDb> realDbs = new HashMap<>();
+        for (String dbname : dbNames) {
+
+            LambdaQueryWrapper queryWrapper = new LambdaQueryWrapper();
+            queryWrapper.eq("NIKE_NAME", dbname);
+            RealDb realDb = realDbService.getOne(queryWrapper);
+            if (realDb != null) {
+                realDbs.put(dbname, realDb);
+                switch (realDb.getDbType()) {
+                    case 1:
+//                        mysql
+                        returnSql.append("connect jdbc where driver=\"com.mysql.jdbc.Driver\" " +
+                                "and url=\"jdbc:mysql://" + realDb.getIp() + ":" + realDb.getPort() + "/" + realDb.getName() + "?serverTimezone=Asia/Shanghai&useUnicode=true&characterEncoding=utf8&autoReconnect=true&rewriteBatchedStatements=TRUE&useSSL=false\" " +
+                                "and driver=\"com.mysql.jdbc.Driver\" " +
+                                "and user=\"" + realDb.getDbName() + "\" " +
+                                "and password=\"" + realDb.getDbPassword() + "\" " +
+                                "as " + realDb.getNikeName() + "; ");
+                        break;
+                    case 2:
+//                        oracle
+                        returnSql.append("connect jdbc where   " +
+                                " truncate=\"true\" " +
+                                " and url=\"jdbc:oracle:thin:@//" + realDb.getIp() + ":" + realDb.getPort() + "/" + realDb.getName() +"\" " +
+                                " and driver=\"oracle.jdbc.driver.OracleDriver\" " +
+                                " and user=\""+ realDb.getDbName() + "\" " +
+                                " and password=\"" + realDb.getDbPassword() +"\" " +
+                                " as "+ realDb.getNikeName() + "; ");
+                        break;
+
+                }
+            }
+        }
+        Map<String,String> replaceTableNames = new HashMap<>();
+
+        for(String map : replaceTableNames.keySet()){
+            copySql.replaceAll(map,replaceTableNames.get(map));
+        }
+        returnSql.append(copySql);
+
+        return returnSql.toString();
+    }
+
+
+
+
 }

@@ -56,7 +56,7 @@ public class SysUserController {
         queryWrapper.eq("USERNAME",usernameTrim);
         SysUser user = sysUserService.getOne(queryWrapper);
         if(user==null){
-            return new Result<String>(ResultEnum.NOT_FOUND);
+            return new Result<String>(ResultEnum.NOT_NULL);
         }else if(passwordTrim.equals(user.getPassword())){
             SessionUtils.setUser(request,user);
             return new Result<String>(ResultEnum.SECCUSS);

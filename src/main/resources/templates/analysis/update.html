@@ -6,7 +6,7 @@
     <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
 
     <title>分析更新</title>
-
+    <link rel="shortcut icon" href="/img/icon/logo.ico">
     <!-- Google font -->
     <link href="https://fonts.googleapis.com/css?family=Montserrat:400,500,700" rel="stylesheet">
 
@@ -37,6 +37,28 @@
             width: 100%;
             height: 300px;
         }
+        .div-table {
+            display: table;
+            width: auto;
+            background-color: #eee;
+            border: 1px solid #666666;
+            border-spacing: 5px; /* cellspacing:poor IE support for  this */
+        }
+
+        .div-table-row {
+            display: table-row;
+            width: auto;
+            clear: both;
+        }
+
+        .div-table-col {
+            float: left; /* fix for  buggy browsers */
+            display: table-column;
+            width: 200px;
+            background-color: #ccc;
+            border-right: antiquewhite solid;
+            text-align: left;
+        }
     </style>
 </head>
 <body>
@@ -48,29 +70,29 @@
         <!-- row -->
         <div class="row">
             <!-- ASIDE -->
-            <div id="aside" class="col-md-3">
-                <!-- aside Widget -->
+            <!--<div id="aside" class="col-md-3">
+                &lt;!&ndash; aside Widget &ndash;&gt;
                 <div class="aside">
                     <h3 class="aside-title">未定义</h3>
                     <div>
                         <ul id="treeReal" class="ztree"></ul>
                     </div>
                 </div>
-                <!-- /aside Widget -->
+                &lt;!&ndash; /aside Widget &ndash;&gt;
 
-                <!-- aside Widget -->
+                &lt;!&ndash; aside Widget &ndash;&gt;
                 <div class="aside">
                     <h3 class="aside-title">未定义</h3>
                     <div>
                         <ul id="treeVirtual" class="ztree"></ul>
                     </div>
                 </div>
-                <!-- /aside Widget -->
-            </div>
+                &lt;!&ndash; /aside Widget &ndash;&gt;
+            </div>-->
             <!-- /ASIDE -->
 
             <!-- STORE -->
-            <div id="store" class="col-md-9">
+            <div id="store" class="col-md-9" style="width: 100%">
                 <div class="row">
                     <div id="editor"></div>
                 </div>
@@ -80,6 +102,9 @@
                     <input id="id" type="hidden"/><br/>
                     <button id="runButton" onclick="submitRunSQL()" class="btn btn-run waves-effect">查询</button>
                     <button id="saveButton" onclick="submitSaveSQL()" class="btn btn-run waves-effect">保存</button>
+
+                </div>
+                <div class="div-table" id="divTable">
 
                 </div>
             </div>
@@ -102,23 +127,26 @@
 <script type="text/javascript" src="/js/jquery.zoom.min.js"></script>
 <script type="text/javascript" src="/js/ace/ace.js"></script>
 <script type="text/javascript" src="/js/ace/ext-language_tools.js"></script>
+
 <script th:inline="javascript">
     /*<![CDATA[*/
 
+
+    //编辑器
     ace.require("ace/ext/language_tools");
     var editor = ace.edit('editor');
-    var virtualCode = "";
-    var virtual = [[${virtual}]];
-    if (virtual != null) {
-        virtualCode = virtual.code;
-        $("#sqlName").val(virtual.name);
-        $("#id").val(virtual.id);
+    var analysisCode = "";
+    //修改回显
+    var analysis = [[${analysis}]];
+    if (analysis != null) {
+        analysisCode = analysis.finallyCode;
+        $("#sqlName").val(analysis.name);
+        $("#id").val(analysis.id);
     }
 
     editorInit(editor);
 
     function editorInit(editor) {
-
 
         editor.setOptions({
             enableBasicAutocompletion: true,
@@ -129,15 +157,104 @@
         editor.getSession().setMode("ace/mode/sql");
         editor.setHighlightActiveLine(true);
         editor.setFontSize(16);
-        editor.execCommand('find');
-        if (virtualCode != null && virtualCode != "") {
-            editor.setValue(virtualCode);
+        if (analysisCode != null && analysisCode != "") {
+            editor.setValue(analysisCode);
         } else {
             editor.setValue("欢迎使用");
         }
     }
 
     /*]]>*/
+</script>
+
+<script type="text/javascript">
+    //查询
+    const columns = [];
+    // use keys to get column
+    const tableData = [];
+    function submitRunSQL() {
+        var sql = editor.getValue();
+        var sqlName = $("#sqlName").val();
+        if (sql == null || sql == "") {
+            layer.msg("请输入sql");
+            return;
+        }
+        if (sqlName == null || sqlName == "") {
+            layer.msg("请输入sql name");
+            return;
+        }
+        $.post("/analysis/script", {"sql": sql, "sqlName": sqlName}, function (result) {
+
+            if(result.code==200){
+                let data = JSON.parse(result.content);
+
+                //alert(result.content);
+
+                console.log(data);
+                let keys = [];
+                let basket = {};
+
+                //collect all keys
+                for(let i in data){
+                    for (let key in data[i]) {
+                        if (!basket[key]) {
+                            keys.push(key);
+                            basket[key] = true
+                        }
+                    }
+                }
+
+                let html = "<div class=\"div-table-row\">";
+                for (let column in keys) {
+                    html+="<div class=\"div-table-col\">"+keys[column]+"</div>";
+
+                }
+                html+="</div>";
+                for (let i in data) {
+                    let items = data[i];
+                    html+="<div class=\"div-table-row\">";
+                    for (let item in items) {
+                        html+="<div class=\"div-table-col\">"+items[item]+"</div>";
+                    }
+                    html+="</div>";
+                }
+                $("#divTable").empty();
+                $("#divTable").append(html);
+            }else{
+                layer.alert(result.content);
+            }
+
+        });
+    }
+
+
+    //保存
+    function submitSaveSQL() {
+        var sql = editor.getValue();
+        var sqlName = $("#sqlName").val();
+        var id = $("#id").val();
+        if (sql == null || sql == "") {
+            layer.msg("请输入sql");
+            return;
+        }
+        if (sqlName == null || sqlName == "") {
+            layer.msg("请输入sql name");
+            return;
+        }
+        $.post("/analysis/save", {"sql": sql, "sqlName": sqlName, "id": id}, function (result) {
+            if (result.code == 200) {
+                layer.msg("保存成功");
+            } else if (result.code == 1001) {
+                layer.alert(result.msg + ",请重新输入");
+
+            }
+        });
+    }
+
+
+
+
+
 </script>
 
 
