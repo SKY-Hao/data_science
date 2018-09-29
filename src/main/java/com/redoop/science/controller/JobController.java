@@ -14,6 +14,7 @@ import okhttp3.HttpUrl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import javax.activation.DataSource;
 import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
 import java.time.LocalDateTime;
@@ -56,7 +57,7 @@ public class JobController {
         } catch (IOException e) {
             e.printStackTrace();
         }
-        System.out.println("resultresultresult>>>>>"+result);
+//        System.out.println("resultresultresult>>>>>"+result);
 
         if(JsonUtil.isJSONValid(result)){
             stringResult = new Result<String>(ResultEnum.SECCUSS,result);
@@ -91,6 +92,7 @@ public class JobController {
         virtualTables.setCode(sql);
         virtualTables.setOperationTime(LocalDateTime.now());
         virtualTables.setOperationId(sysUser.getId());
+        virtualTables.setName(sqlName);
         if (virtualTablesService.saveOrUpdate(virtualTables)){
             return new Result<String>(ResultEnum.SECCUSS);
         }else {
