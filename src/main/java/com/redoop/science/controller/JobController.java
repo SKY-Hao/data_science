@@ -173,10 +173,10 @@ public class JobController {
             replaceTableNames.put("`"+tableName+"`",dbName[1]);
             switch (realDb.getDbType()) {
                 case 1:
-                    returnSql.append("load jdbc."+dbName[0]+" as "+dbName[1]+";");
+                    returnSql.append("load jdbc.`"+tableName+"` as "+dbName[1]+";");
                     break;
                 case 2:
-                    returnSql.append("load jdbc."+dbName[0]+" as "+dbName[1]+";");
+                    returnSql.append("load jdbc.`"+tableName+"` as "+dbName[1]+";");
                     break;
                 case 3:
                     returnSql.append("");
