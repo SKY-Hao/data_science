@@ -4,11 +4,6 @@ import org.junit.runner.RunWith;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 
-import java.sql.*;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 
 /**
  * Created by Administrator on 2018/9/19.
@@ -19,7 +14,7 @@ import java.util.Map;
 public class RealDConnect {
 
   public static void main(String[] args) {
-      Connection conn = null;
+     /* Connection conn = null;
         //String className = "oracle.jdbc.driver.OracleDriver";
         //String url = "jdbc:oracle:thin:@192.168.1.150:1521:orcl";
 
@@ -46,9 +41,31 @@ public class RealDConnect {
             e.printStackTrace();
         }
 
+*/
 
 
-    }
+
+           // String  requestStr="[{\"id\":1,\"name\":\"张三\",\"age\":11,\"address\":\"beijing\"},{\"id\":2,\"name\":\"lisi\",\"age\":22,\"address\":\"济南\"},{\"id\":3,\"name\":\"王五\",\"age\":33,\"address\":\"nanjing\"},{\"id\":5,\"name\":\"asa\",\"age\":12,\"address\":\"gaungs\"},{\"id\":6,\"name\":\"成功\",\"age\":55,\"address\":\"成功\"},{\"id\":7,\"name\":\"你猜\",\"age\":12,\"address\":\"你猜不出\"}]";
+
+
+            //JSONArray jsonArray= JSONArray.fromObject(requestStr);
+            //JSONObject jsonObject = null;
+
+             // if (jsonArray.size()>100){
+               //   for(int i=0;i<3;i++) {
+                //      jsonObject = jsonArray.getJSONObject(i);
+               //       System.out.println("getJsonObj>>>>>>>>>>>>>"+jsonObject);
+                //  }
+              //}
+
+             /* System.out.println("jsonArray>>>>>>>>>>>>>"+jsonArray.size());
+              System.out.println("jsonArray>>>>>>>>>>>>>"+jsonArray);
+              System.out.println("getJsonObj>>>>>>>>>>>>>"+jsonObject);*/
+
+
+
+
+  }
 
 
 
