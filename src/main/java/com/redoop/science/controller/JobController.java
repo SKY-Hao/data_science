@@ -143,11 +143,23 @@ public class JobController {
                         break;
                     case 3:
 //                        PGsql
-                        returnSql.append("");
+                        returnSql.append("connect jdbc where  " +
+                                "truncate=\"true\"" +
+                                "and url=\"jdbc:postgresql://" + realDb.getIp() + ":" + realDb.getPort() + "/" + realDb.getName() + "?socketTimeout=1&connectTimeout=1\"" +
+                                "and driver=\"org.postgresql.Driver\"" +
+                                "and user=\"" + realDb.getDbName() + "\" " +
+                                "and password=\"" + realDb.getDbPassword() + "\" " +
+                                "as " + realDb.getNikeName() + "; ");
                         break;
                     case 4:
 //                        sqlserver
-                        returnSql.append("");
+                        returnSql.append("connect jdbc where  " +
+                                "truncate=\"true\"" +
+                                "and url=\"jdbc:sqlserver://" + realDb.getIp() + ":" + realDb.getPort() + ";databaseName=" + realDb.getName() + ";\"" +
+                                "and driver=\"com.microsoft.sqlserver.jdbc.SQLServerDriver\"" +
+                                "and user=\"" + realDb.getDbName() + "\" " +
+                                "and password=\"" + realDb.getDbPassword() + "\" " +
+                                "as " + realDb.getNikeName() + "; ");
                         break;
                     case 5:
 //                        hive
@@ -179,10 +191,10 @@ public class JobController {
                     returnSql.append("load jdbc.`"+tableName+"` as "+dbName[1]+";");
                     break;
                 case 3:
-                    returnSql.append("");
+                    returnSql.append("load jdbc.`"+tableName+"` as "+dbName[1]+";");
                     break;
                 case 4:
-                    returnSql.append("");
+                    returnSql.append("load jdbc.`"+tableName+"` as "+dbName[1]+";");
                     break;
                 case 5:
                     returnSql.append("");
