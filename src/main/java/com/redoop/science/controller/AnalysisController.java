@@ -1,6 +1,9 @@
 package com.redoop.science.controller;
 
 
+import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONArray;
+import com.alibaba.fastjson.JSONObject;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
@@ -178,6 +181,7 @@ public class AnalysisController {
         } catch (IOException e) {
             e.printStackTrace();
         }
+
         System.out.println("resultresultresult>>>>>"+result);
 
         if(JsonUtil.isJSONValid(result)){

@@ -42,6 +42,7 @@ spring:
       url: jdbc:mysql://localhost:3306/data_science?serverTimezone=Asia/Shanghai&useUnicode=true&characterEncoding=utf8&autoReconnect=true&rewriteBatchedStatements=TRUE&useSSL=false&allowPublicKeyRetrieval=true
       username: root
       password: root
+#      password: Redoop123$%^
 #      username: root
 #      password: Alansun&**@7882
       #\u76D1\u63A7
