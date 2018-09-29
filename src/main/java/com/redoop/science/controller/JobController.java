@@ -1,8 +1,5 @@
 package com.redoop.science.controller;
 
-import com.alibaba.fastjson.JSONException;
-import com.alibaba.fastjson.JSONObject;
-import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.redoop.science.entity.RealDb;
 import com.redoop.science.entity.SysUser;
@@ -11,10 +8,11 @@ import com.redoop.science.service.IRealDbService;
 import com.redoop.science.service.IVirtualTablesService;
 import com.redoop.science.utils.*;
 import okhttp3.HttpUrl;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
-import javax.activation.DataSource;
 import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
 import java.time.LocalDateTime;
@@ -31,7 +29,7 @@ import java.util.Set;
 @RestController
 @RequestMapping("/run")
 public class JobController {
-
+    Logger logger = LoggerFactory.getLogger(getClass());
     @Autowired
     private IRealDbService realDbService;
     @Autowired
@@ -57,8 +55,7 @@ public class JobController {
         } catch (IOException e) {
             e.printStackTrace();
         }
-//        System.out.println("resultresultresult>>>>>"+result);
-
+        logger.info("sql查询返回结果>>>>>>>"+result);
         if(JsonUtil.isJSONValid(result)){
             stringResult = new Result<String>(ResultEnum.SECCUSS,result);
         }else{
@@ -111,19 +108,19 @@ public class JobController {
         Set<String> dbNames = new HashSet<>();
         for (String table : tables) {
             if (table.indexOf(".") != -1) {
-                String dbName = table.split(".")[0];
-                tableNames.add("`"+table+"`");
+                String dbName = table.split("\\.")[0];
+                tableNames.add(table);
                 dbNames.add(dbName);
             }
         }
         Map<String, RealDb> realDbs = new HashMap<>();
-        for (String dbname : dbNames) {
+        for (String dbName : dbNames) {
 
-            LambdaQueryWrapper queryWrapper = new LambdaQueryWrapper();
-            queryWrapper.eq("NIKE_NAME", dbname);
+            QueryWrapper queryWrapper = new QueryWrapper();
+            queryWrapper.eq("NIKE_NAME", dbName);
             RealDb realDb = realDbService.getOne(queryWrapper);
             if (realDb != null) {
-                realDbs.put(dbname, realDb);
+                realDbs.put(dbName, realDb);
                 switch (realDb.getDbType()) {
                     case 1:
 //                        mysql
@@ -171,9 +168,9 @@ public class JobController {
         }
         Map<String,String> replaceTableNames = new HashMap<>();
         for (String tableName : tableNames) {
-            String[] dbName = tableName.split(".");
+            String[] dbName = tableName.split("\\.");
             RealDb realDb = realDbs.get(dbName[0]);
-            replaceTableNames.put(tableName,dbName[1]);
+            replaceTableNames.put("`"+tableName+"`",dbName[1]);
             switch (realDb.getDbType()) {
                 case 1:
                     returnSql.append("load jdbc."+tableName+" as "+dbName[1]+";");
@@ -195,11 +192,12 @@ public class JobController {
                     break;
             }
         }
+        String repSql = "";
         for(String map : replaceTableNames.keySet()){
-            copySql.replaceAll(map,replaceTableNames.get(map));
+            repSql=copySql.replaceAll(map.trim(),replaceTableNames.get(map));
         }
-        returnSql.append(copySql);
-
+        returnSql.append(repSql);
+        logger.info("查询sql>>>>"+returnSql.toString());
         return returnSql.toString();
     }
 }
