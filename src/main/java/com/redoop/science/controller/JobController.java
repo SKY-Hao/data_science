@@ -182,31 +182,33 @@ public class JobController {
         for (String tableName : tableNames) {
             String[] dbName = tableName.split("\\.");
             RealDb realDb = realDbs.get(dbName[0]);
-            replaceTableNames.put("`"+tableName+"`",dbName[1]);
-            switch (realDb.getDbType()) {
-                case 1:
-                    returnSql.append("load jdbc.`"+tableName+"` as "+dbName[1]+";");
-                    break;
-                case 2:
-                    returnSql.append("load jdbc.`"+tableName+"` as "+dbName[1]+";");
-                    break;
-                case 3:
-                    returnSql.append("load jdbc.`"+tableName+"` as "+dbName[1]+";");
-                    break;
-                case 4:
-                    returnSql.append("load jdbc.`"+tableName+"` as "+dbName[1]+";");
-                    break;
-                case 5:
-                    returnSql.append("");
-                    break;
-                case 6:
-                    returnSql.append("");
-                    break;
+            if (realDb != null) {
+                replaceTableNames.put("`"+tableName+"`",dbName[1]);
+                switch (realDb.getDbType()) {
+                    case 1:
+                        returnSql.append("load jdbc.`"+tableName+"` as "+dbName[1]+";");
+                        break;
+                    case 2:
+                        returnSql.append("load jdbc.`"+tableName+"` as "+dbName[1]+";");
+                        break;
+                    case 3:
+                        returnSql.append("load jdbc.`"+tableName+"` as "+dbName[1]+";");
+                        break;
+                    case 4:
+                        returnSql.append("load jdbc.`"+tableName+"` as "+dbName[1]+";");
+                        break;
+                    case 5:
+                        returnSql.append("");
+                        break;
+                    case 6:
+                        returnSql.append("");
+                        break;
+                }
             }
         }
-        String repSql = "";
+        String repSql = copySql;
         for(String map : replaceTableNames.keySet()){
-            repSql=copySql.replaceAll(map.trim(),replaceTableNames.get(map));
+            repSql=repSql.replaceAll(map.trim(),replaceTableNames.get(map));
         }
         returnSql.append(repSql);
         logger.info("查询sql>>>>"+returnSql.toString());
