@@ -32,14 +32,14 @@ mybatis-plus:
     jdbc-type-for-null: 'null'
 spring:
   application:
-    name: baby-ate
+    name: data-science
   datasource:
-    name: baby-ate
+    name: data-science
     type: com.alibaba.druid.pool.DruidDataSource
     druid:
       driver-class-name: com.mysql.cj.jdbc.Driver
       #\u57FA\u672C\u5C5E\u6027
-      url: jdbc:mysql://localhost:3306/data_science?serverTimezone=Asia/Shanghai&useUnicode=true&characterEncoding=utf8&autoReconnect=true&rewriteBatchedStatements=TRUE&useSSL=false&allowPublicKeyRetrieval=true
+      url: jdbc:mysql://127.0.0.1:3306/data_science?serverTimezone=Asia/Shanghai&useUnicode=true&characterEncoding=utf8&autoReconnect=true&rewriteBatchedStatements=TRUE&useSSL=false&allowPublicKeyRetrieval=true
       username: root
       password: root
 #      password: Redoop123$%^
@@ -75,8 +75,6 @@ spring:
       namespace: redoop:session
     timeout: 1h
   redis:
-    host: localhost # Redis server host.
+    host: 127.0.0.1 # Redis server host.
     password:
     port: 6379
-server:
-  session:

@@ -66,7 +66,7 @@ public class RealDbServiceImpl extends ServiceImpl<RealDbMapper, RealDb> impleme
     public List<RealDb> selectDatabase() {
 
        String JDBC_DRIVER = "com.mysql.jdbc.Driver";
-       String DB_URL = "jdbc:mysql://localhost/data_science?serverTimezone=UTC&useUnicode=true&characterEncoding=utf8&autoReconnect=true&rewriteBatchedStatements=TRUE&useSSL=false&allowPublicKeyRetrieval=true";
+       String DB_URL = "jdbc:mysql://127.0.0.1/data_science?serverTimezone=UTC&useUnicode=true&characterEncoding=utf8&autoReconnect=true&rewriteBatchedStatements=TRUE&useSSL=false&allowPublicKeyRetrieval=true";
 
        String USER = "root";
        String PASS = "root";
