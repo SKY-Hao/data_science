@@ -108,7 +108,7 @@
                     <input id="id" type="hidden"/><br/>
                     <button id="runButton" onclick="submitRunSQL()" class="btn btn-run waves-effect">查询</button>
                     <button id="saveButton" onclick="submitSaveSQL()" class="btn btn-run waves-effect">保存</button>
-
+                    <button id="save" onclick="saveSQL()" class="btn btn-run waves-effect">下载</button>
                 </div>
                 <div class="div-table" id="divTable">
                     <!--<div class="div-table-row">
@@ -267,6 +267,19 @@
             }
         });
     }
+    /**
+     * 导出
+     */
+    function saveSQL() {
+        var sql = editor.getValue();
+       var sqlName = $("#sqlName").val();
+        if (sqlName == null || sqlName == "") {
+            layer.msg("sqlName找不到");
+            return;
+        }
+        location.href="/run/download/"+sqlName;
+    }
+
 </script>
 
 <script src="/js/mould/select/edit.js"></script>

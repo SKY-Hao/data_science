@@ -8,13 +8,16 @@ import com.redoop.science.service.IRealDbService;
 import com.redoop.science.service.IVirtualTablesService;
 import com.redoop.science.utils.*;
 import okhttp3.HttpUrl;
+import org.apache.commons.io.FileUtils;
+import org.json.JSONException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
-import java.io.IOException;
+import javax.servlet.http.HttpServletResponse;
+import java.io.*;
 import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -37,11 +40,14 @@ public class JobController {
 
     @PostMapping("/script")
     @ResponseBody
-    public Result<String> script(@RequestParam(value = "sql") String sql) {
+    public Result<String> script(HttpServletRequest request,@RequestParam(value = "sql") String sql,@RequestParam(value = "sqlName") String  sqlName) throws Exception {
         Result<String> stringResult = new Result<>(ResultEnum.FAIL);
         String result = "";
+
+       // String fileName = sqlName;
+
         try {
-             String runSql = parseSql(sql);
+            String runSql = ParseSql.parseSql(sql);
             HttpUrl url = new HttpUrl.Builder()
                     .scheme("http")
 //                    .host("127.0.0.1")
@@ -58,6 +64,14 @@ public class JobController {
         logger.info("sql查询返回结果>>>>>>>"+result);
         if(JsonUtil.isJSONValid(result)){
             stringResult = new Result<String>(ResultEnum.SECCUSS,result);
+
+            //查询结果(json),将json保持为csv文件(upload/files/*.csv)
+            FileUtils.writeStringToFile(new File("upload/files/"+sqlName+".csv"),  PoiUtils.json_to_csv(result));
+            /*保存json格式文件
+            DownLoadFiles down = new DownLoadFiles();
+            String   filePath ="upload/files/";
+            down.createJsonFile(result,filePath, fileName,null);*/
+
         }else{
             stringResult = new Result<String>(ResultEnum.FAIL,result);
         }
@@ -97,121 +111,44 @@ public class JobController {
         }
     }
 
-    public String parseSql(String sql) {
-        //将所有'替换为` 避免误操作
-//        String sqlStr = sql.replaceAll("'", "`");
-        String copySql = sql;
-        StringBuilder returnSql = new StringBuilder();
-        //获取使用库
-        String[] tables = copySql.split("`");
-        Set<String> tableNames = new HashSet<>();
-        Set<String> dbNames = new HashSet<>();
-        for (String table : tables) {
-            if (table.indexOf(".") != -1) {
-                String dbName = table.split("\\.")[0];
-                tableNames.add(table);
-                dbNames.add(dbName);
-            }
-        }
-        Map<String, RealDb> realDbs = new HashMap<>();
-        for (String dbName : dbNames) {
 
-            QueryWrapper queryWrapper = new QueryWrapper();
-            queryWrapper.eq("NIKE_NAME", dbName);
-            RealDb realDb = realDbService.getOne(queryWrapper);
-            if (realDb != null) {
-                realDbs.put(dbName, realDb);
-                switch (realDb.getDbType()) {
-                    case 1:
-//                        mysql
-                        returnSql.append("connect jdbc where driver=\"com.mysql.jdbc.Driver\" " +
-                                "and url=\"jdbc:mysql://" + realDb.getIp() + ":" + realDb.getPort() + "/" + realDb.getName() + "?serverTimezone=Asia/Shanghai&useUnicode=true&characterEncoding=utf8&autoReconnect=true&rewriteBatchedStatements=TRUE&useSSL=false\" " +
-                                "and driver=\"com.mysql.jdbc.Driver\" " +
-                                "and user=\"" + realDb.getDbName() + "\" " +
-                                "and password=\"" + realDb.getDbPassword() + "\" " +
-                                "as " + realDb.getNikeName() + "; ");
-                        break;
-                    case 2:
-//                        oracle
-                        returnSql.append("connect jdbc where   " +
-                                " truncate=\"true\" " +
-                                " and url=\"jdbc:oracle:thin:@//" + realDb.getIp() + ":" + realDb.getPort() + "/" + realDb.getName() +"\" " +
-                                " and driver=\"oracle.jdbc.driver.OracleDriver\" " +
-                                " and user=\""+ realDb.getDbName() + "\" " +
-                                " and password=\"" + realDb.getDbPassword() +"\" " +
-                                " as "+ realDb.getNikeName() + "; ");
-                        break;
-                    case 3:
-//                        PGsql
-                        returnSql.append("connect jdbc where  " +
-                                "truncate=\"true\"" +
-                                "and url=\"jdbc:postgresql://" + realDb.getIp() + ":" + realDb.getPort() + "/" + realDb.getName() + "?socketTimeout=1&connectTimeout=1\"" +
-                                "and driver=\"org.postgresql.Driver\"" +
-                                "and user=\"" + realDb.getDbName() + "\" " +
-                                "and password=\"" + realDb.getDbPassword() + "\" " +
-                                "as " + realDb.getNikeName() + "; ");
-                        break;
-                    case 4:
-//                        sqlserver
-                        returnSql.append("connect jdbc where  " +
-                                "truncate=\"true\"" +
-                                "and url=\"jdbc:sqlserver://" + realDb.getIp() + ":" + realDb.getPort() + ";databaseName=" + realDb.getName() + ";\"" +
-                                "and driver=\"com.microsoft.sqlserver.jdbc.SQLServerDriver\"" +
-                                "and user=\"" + realDb.getDbName() + "\" " +
-                                "and password=\"" + realDb.getDbPassword() + "\" " +
-                                "as " + realDb.getNikeName() + "; ");
-                        break;
-                    case 5:
-//                        hive
-                        returnSql.append("");
-                        break;
-                    case 6:
-//                        redis
-                        returnSql.append("");
-                        break;
-                    case 7:
-//                        kafka
-                        returnSql.append("load kafka.`` options `kafka.bootstrap.servers`=\""+realDb.getIp()+":"+realDb.getPort()+"\" " +
-                                "and `subscribe`=\""+realDb.getName()+"\" " +
-                                "as "+realDb.getNikeName()+";");
-                        break;
-                }
-            }
-        }
-        Map<String,String> replaceTableNames = new HashMap<>();
-        for (String tableName : tableNames) {
-            String[] dbName = tableName.split("\\.");
-            RealDb realDb = realDbs.get(dbName[0]);
-            if (realDb != null) {
-                replaceTableNames.put("`"+tableName+"`",dbName[1]);
-                switch (realDb.getDbType()) {
-                    case 1:
-                        returnSql.append("load jdbc.`"+tableName+"` as "+dbName[1]+";");
-                        break;
-                    case 2:
-                        returnSql.append("load jdbc.`"+tableName+"` as "+dbName[1]+";");
-                        break;
-                    case 3:
-                        returnSql.append("load jdbc.`"+tableName+"` as "+dbName[1]+";");
-                        break;
-                    case 4:
-                        returnSql.append("load jdbc.`"+tableName+"` as "+dbName[1]+";");
-                        break;
-                    case 5:
-                        returnSql.append("");
-                        break;
-                    case 6:
-                        returnSql.append("");
-                        break;
-                }
-            }
-        }
-        String repSql = copySql;
-        for(String map : replaceTableNames.keySet()){
-            repSql=repSql.replaceAll(map.trim(),replaceTableNames.get(map));
-        }
-        returnSql.append(repSql);
-        logger.info("查询sql>>>>"+returnSql.toString());
-        return returnSql.toString();
-    }
+
+    /**
+     * 下载文件
+     * @param response
+     * @param sqlName
+     * @return
+     */
+   @RequestMapping("/download/{sqlName}")
+   @ResponseBody
+   public Result downloadFile(HttpServletResponse response, @PathVariable("sqlName") String sqlName) {
+       String fileName = "upload/files/"+sqlName+".csv";
+       File file = new File(fileName);
+       if (!file.exists()) {
+           return new Result(ResultEnum.EXIST,"文件不存在");
+       }
+
+       response.reset();
+       response.setHeader("Content-Disposition", "attachment;fileName=" + fileName);
+
+       try {
+           InputStream inStream = new FileInputStream(fileName);
+           OutputStream os = response.getOutputStream();
+
+           byte[] buff = new byte[1024*1024];
+           int len = -1;
+           while ((len = inStream.read(buff)) > 0) {
+               os.write(buff, 0, len);
+           }
+           os.flush();
+           os.close();
+
+           inStream.close();
+       } catch (Exception e) {
+           e.printStackTrace();
+           return new Result(ResultEnum.EXIST,"下载失败");
+       }
+       return new Result<String>(ResultEnum.SECCUSS);
+   }
+
 }
