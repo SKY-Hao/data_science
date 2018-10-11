@@ -1,7 +1,6 @@
 package com.redoop.science.service;
 
 import com.baomidou.mybatisplus.extension.service.IService;
-import com.redoop.science.entity.Analysis;
 import com.redoop.science.entity.AnalysisTables;
 
 /**

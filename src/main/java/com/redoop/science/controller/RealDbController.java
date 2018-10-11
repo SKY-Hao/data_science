@@ -4,7 +4,6 @@ package com.redoop.science.controller;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.redoop.science.entity.RealDb;
-import com.redoop.science.entity.VirtualTables;
 import com.redoop.science.service.IRealDbService;
 import com.redoop.science.utils.Result;
 import com.redoop.science.utils.ResultEnum;

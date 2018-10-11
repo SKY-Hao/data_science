@@ -3,7 +3,6 @@ package com.redoop.science.controller;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
-import com.redoop.science.entity.RealDb;
 import com.redoop.science.entity.SysUser;
 import com.redoop.science.service.ISysUserService;
 import com.redoop.science.utils.Result;
@@ -11,19 +10,13 @@ import com.redoop.science.utils.ResultEnum;
 import com.redoop.science.utils.SessionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.ui.Model;
-import org.springframework.validation.BindingResult;
-import org.springframework.validation.ObjectError;
-import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpSession;
-import javax.validation.Valid;
 import java.util.List;
-import java.util.Map;
 
 /**
  * <p>

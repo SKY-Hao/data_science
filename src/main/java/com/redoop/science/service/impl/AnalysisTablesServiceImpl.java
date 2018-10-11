@@ -1,11 +1,8 @@
 package com.redoop.science.service.impl;
 
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
-import com.redoop.science.entity.Analysis;
 import com.redoop.science.entity.AnalysisTables;
-import com.redoop.science.mapper.AnalysisMapper;
 import com.redoop.science.mapper.AnalysisTablesMapper;
-import com.redoop.science.service.IAnalysisService;
 import com.redoop.science.service.IAnalysisTablesService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;

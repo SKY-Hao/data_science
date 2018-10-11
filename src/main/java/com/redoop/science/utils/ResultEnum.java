@@ -1,6 +1,5 @@
 package com.redoop.science.utils;
 
-import lombok.Data;
 
 /**
  * @Author: Alan

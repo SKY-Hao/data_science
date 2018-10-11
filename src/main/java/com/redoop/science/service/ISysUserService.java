@@ -3,7 +3,6 @@ package com.redoop.science.service;
 import com.redoop.science.entity.SysUser;
 import com.baomidou.mybatisplus.extension.service.IService;
 
-import javax.validation.Valid;
 import javax.validation.constraints.NotEmpty;
 
 /**

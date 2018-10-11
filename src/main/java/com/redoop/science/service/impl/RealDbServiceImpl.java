@@ -1,6 +1,5 @@
 package com.redoop.science.service.impl;
 
-import com.redoop.science.constant.DBEnum;
 import com.redoop.science.entity.RealDb;
 import com.redoop.science.mapper.RealDbMapper;
 import com.redoop.science.service.IRealDbService;
@@ -8,7 +7,6 @@ import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import javax.xml.bind.SchemaOutputResolver;
 import java.sql.*;
 import java.util.*;
 import java.util.Date;

@@ -1,7 +1,6 @@
 package com.redoop.science.controller;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
-import com.redoop.science.entity.RealDb;
 import com.redoop.science.entity.SysUser;
 import com.redoop.science.entity.VirtualTables;
 import com.redoop.science.service.IRealDbService;
@@ -9,7 +8,6 @@ import com.redoop.science.service.IVirtualTablesService;
 import com.redoop.science.utils.*;
 import okhttp3.HttpUrl;
 import org.apache.commons.io.FileUtils;
-import org.json.JSONException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,10 +17,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.*;
 import java.time.LocalDateTime;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Map;
-import java.util.Set;
 
 /**
  * @Author: Alan

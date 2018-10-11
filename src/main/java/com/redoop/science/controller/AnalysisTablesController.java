@@ -2,9 +2,7 @@ package com.redoop.science.controller;
 
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
-import com.redoop.science.entity.Analysis;
 import com.redoop.science.entity.AnalysisTables;
-import com.redoop.science.service.IAnalysisService;
 import com.redoop.science.service.IAnalysisTablesService;
 import com.redoop.science.utils.Result;
 import com.redoop.science.utils.ResultEnum;
