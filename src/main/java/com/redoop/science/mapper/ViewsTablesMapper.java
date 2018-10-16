@@ -16,4 +16,6 @@ public interface ViewsTablesMapper extends BaseMapper<ViewsTables> {
 
     @Select("select a.id  ,a.name as tablesName, b.* from views_tables a LEFT JOIN views b on a.VIEWS_ID = b.VID")
     List<ViewsTables> allList();
+    @Select("select * from views_tables where VIEWS_ID=#{viewsId}")
+    List<ViewsTables> findByViewsId(String viewsId);
 }

@@ -20,8 +20,6 @@ import java.util.List;
 @Data
 @EqualsAndHashCode(callSuper = false)
 @Accessors(chain = true)
-@Setter
-@Getter
 public class Views  implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -30,7 +28,7 @@ public class Views  implements Serializable {
      * 编号
      */
     @TableField("VID")
-    private Integer Vid;
+    private Integer vId;
 
     /**
      * 名称
@@ -75,7 +73,4 @@ public class Views  implements Serializable {
     private Date operationTime;
 
 
-    //一对多(视图表)
-    //private List<ViewsTables> viewsTablesList;
-    private ViewsTables viewsTables;
 }

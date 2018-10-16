@@ -2,20 +2,41 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.redoop.science.mapper.ViewsMapper">
 
-<!--
-    <id property="vid" column="vid" />
-    <result property="name" column="name" />
-    <result property="name" column="name" />
-    <result property="name" column="name" />
-    <result property="name" column="name" />
-    <result property="name" column="name" />
-    <result property="name" column="name" />
+    <resultMap id="viewsResult" type="com.redoop.science.entity.Views">
+        <id property="vId" column="VID"/>
+        <result property="name" column="NAME"/>
+        <result property="remark" column="REMARK"/>
+        <result property="creatorId" column="CREATOR_ID"/>
+        <result property="creatorName" column="CREATOR_NAME"/>
+        <result property="createDate" column="CREATE_DATE"/>
+        <result property="operationId" column="OPERATION_ID"/>
+        <result property="operationTime" column="OPERATION_TIME"/>
 
-    <collection property="" ofType="com.redoop.science.entity.ViewsTables">
-        <id property="id" column=""/>
-        <result property="" column=""/>
-        <result property="" column=""/>
-        <result property="" column="" />
-    </collection>-->
+
+
+    </resultMap>
+
+    <resultMap id="viewsTablesResult" type="com.redoop.science.dto.ViewsDto" extends="viewsResult">
+
+        <collection property="viewsTablesList" ofType="com.redoop.science.entity.ViewsTables"
+                    select="com.redoop.science.mapper.ViewsTablesMapper.findByViewsId" javaType="ArrayList" column="vId">
+
+        </collection>
+    </resultMap>
+    <!--视图表集合 -->
+
+    
+    <select id="allList" resultMap="viewsResult">
+        select a.id  as id ,a.name as tablesName, b.* from views_tables a LEFT JOIN views b on a.VIEWS_ID = b.VID;
+    </select>
+
+    <select id="findViewsTables" resultType="list" resultMap="viewsTablesResult" parameterType="map">
+      SELECT * FROM views
+<!--        <where>
+            <if test="">AND  </if>
+        </where>-->
+    </select>
+
+
 
 </mapper>

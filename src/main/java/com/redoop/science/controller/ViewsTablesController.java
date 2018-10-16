@@ -2,13 +2,16 @@ package com.redoop.science.controller;
 
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.redoop.science.constant.DBEnum;
+import com.redoop.science.dto.ViewsDto;
 import com.redoop.science.entity.RealDb;
 import com.redoop.science.entity.Views;
 import com.redoop.science.entity.ViewsTables;
 import com.redoop.science.entity.VirtualTables;
+import com.redoop.science.mapper.ViewsMapper;
 import com.redoop.science.service.IViewsService;
 import com.redoop.science.service.IViewsTablesService;
 import com.redoop.science.utils.*;
@@ -42,6 +45,8 @@ public class ViewsTablesController {
 
     @Autowired
     private IViewsService viewsService;
+    @Autowired
+    private ViewsMapper viewsMapper;
 
     private String id;
     private String name;
@@ -85,30 +90,38 @@ public class ViewsTablesController {
         //  获取ztree json
         // 获取真实库ztreejson
 
-        List<ViewsTables> views =  viewsTablesService.allList();
+//        List<ViewsTables> viewsTables =  viewsTablesService.allList();
+        List<ViewsDto> views =  viewsMapper.findViewsTables();
         System.out.println(views);
 
         List<Map<String,Object>> realZList = new ArrayList<>();
-        for (ViewsTables v :views)
+        for (ViewsDto v :views)
         {
+
+//          List<ViewsTables> viewsTables =  v.getViewsTablesList();
             Map<String,Object> zMap = new HashMap<>();
             //第一节点
             zMap.put("pId",0);
             zMap.put("name",v.getName());
             zMap.put("icon","/img/icon/db.png");
-            zMap.put("id",v.getName());
+            zMap.put("id",v.getVId());
             realZList.add(zMap);
-        }
-/*
-        for (Views v: views){
-            Map<String,Object> zMap = new HashMap<>();
-            zMap.put("pId",v.getViewsTablesList());
-            zMap.put("name",v.getName());
-           // zMap.put("icon","/img/icon/db.png");
-            zMap.put("id",v.getVid()+10);
-            realZList.add(zMap);
-        }*/
 
+            /*QueryWrapper<ViewsTables> queryWrapper = new QueryWrapper<>();
+            queryWrapper.eq("VIEWS_ID",v.getVid());
+            viewsTablesService.list(queryWrapper);*/
+
+            for (ViewsTables viewsTables : v.getViewsTablesList()){
+                Map<String,Object> z2Map = new HashMap<>();
+                z2Map.put("pId",viewsTables.getViewsId());
+                z2Map.put("name",viewsTables.getName());
+                z2Map.put("icon","/img/icon/db.png");
+                z2Map.put("id",viewsTables.getId()+10000);
+                realZList.add(z2Map);
+            }
+        }
+
+        System.out.println("realZList>>>>>"+realZList);
         //返回值
         model.addAttribute("realZList", realZList);
 
