@@ -31,6 +31,8 @@ mybatis-plus:
     #配置JdbcTypeForNull, oracle数据库必须配置
     jdbc-type-for-null: 'null'
 spring:
+## server port
+
   application:
     name: data-science
   datasource:

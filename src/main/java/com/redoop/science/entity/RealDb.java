@@ -107,14 +107,14 @@ public class RealDb implements Serializable {
     /**
      * 数据库用户
      */
-    @NotEmpty(message="数据库用户不能空")
+    //@NotEmpty(message="数据库用户不能空")
     @TableField("DB_NAME")
     private String dbName;
 
     /**
      * 数据库用户密码
      */
-    @NotEmpty(message="数据库密码不能空")
+    //@NotEmpty(message="数据库密码不能空")
     @TableField("DB_PASSWORD")
     private String dbPassword;
 

@@ -12,7 +12,9 @@ public enum  DBEnum {
     SQLSERVER(4,"sqlserver"),
     HIVE(5,"hive"),
     REDIS(6,"redis"),
-    KAFKA(7,"kafka");
+    KAFKA(7,"kafka"),
+    PHOENIX(8,"phoenix");
+
 
     private Integer dbType;
     private String name;

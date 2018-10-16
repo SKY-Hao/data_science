@@ -110,6 +110,16 @@ public class ParseSql {
                                 "and `subscribe`=\""+realDb.getName()+"\" " +
                                 "as "+realDb.getNikeName()+";");
                         break;
+                    case 8:
+//                        phoenix
+                        returnSql.append("connect jdbc where  " +
+                                "truncate=\"true\"" +
+                                "and url=\"jdbc:phoenix://" + realDb.getIp() + ":" + realDb.getPort() + ";databaseName=" + realDb.getName() + ";\"" +
+                                "and driver=\"org.apache.phoenix.jdbc.PhoenixDriver\"" +
+                                "and user=\"" + realDb.getDbName() + "\" " +
+                                "and password=\"" + realDb.getDbPassword() + "\" " +
+                                "as " + realDb.getNikeName() + "; ");
+                        break;
                 }
             }
         }
@@ -137,6 +147,12 @@ public class ParseSql {
                         break;
                     case 6:
                         returnSql.append("");
+                        break;
+                    case 7:
+                        returnSql.append("");
+                        break;
+                    case 8:
+                        returnSql.append("load jdbc.`"+tableName+"` as "+dbName[1]+";");
                         break;
                 }
             }
