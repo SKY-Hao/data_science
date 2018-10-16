@@ -10,7 +10,7 @@ Target Server Type    : MYSQL
 Target Server Version : 50721
 File Encoding         : 65001
 
-Date: 2018-09-26 11:00:55
+Date: 2018-10-16 15:29:02
 */
 
 SET FOREIGN_KEY_CHECKS=0;
@@ -31,7 +31,7 @@ CREATE TABLE `analysis` (
   `CODE` varchar(4000) DEFAULT NULL COMMENT '编辑器中_保存之前内容',
   `FINALLY_CODE` varchar(4000) DEFAULT NULL COMMENT '编辑器_保存之后内容',
   PRIMARY KEY (`ID`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='分析';
+) ENGINE=InnoDB AUTO_INCREMENT=34 DEFAULT CHARSET=utf8 COMMENT='分析';
 
 -- ----------------------------
 -- Table structure for analysis_table
@@ -72,7 +72,7 @@ CREATE TABLE `real_db` (
   `DB_PASSWORD` varchar(15) COLLATE utf8_bin DEFAULT NULL COMMENT '数据库用户密码',
   `LOGO` varchar(50) COLLATE utf8_bin DEFAULT NULL COMMENT '数据库类型图片;根据类型选择',
   PRIMARY KEY (`ID`)
-) ENGINE=InnoDB AUTO_INCREMENT=192 DEFAULT CHARSET=utf8 COLLATE=utf8_bin ROW_FORMAT=DYNAMIC COMMENT='实体数据源库';
+) ENGINE=InnoDB AUTO_INCREMENT=198 DEFAULT CHARSET=utf8 COLLATE=utf8_bin ROW_FORMAT=DYNAMIC COMMENT='实体数据源库';
 
 -- ----------------------------
 -- Table structure for real_db_tables
@@ -111,6 +111,41 @@ CREATE TABLE `sys_user` (
 ) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8 COLLATE=utf8_bin ROW_FORMAT=DYNAMIC;
 
 -- ----------------------------
+-- Table structure for views
+-- ----------------------------
+DROP TABLE IF EXISTS `views`;
+CREATE TABLE `views` (
+  `VID` int(11) NOT NULL AUTO_INCREMENT COMMENT '编号',
+  `NAME` varchar(30) DEFAULT NULL COMMENT '名称',
+  `REMARK` varchar(200) DEFAULT NULL COMMENT '注释',
+  `CREATOR_ID` int(11) DEFAULT NULL COMMENT '创建人标号',
+  `CREATOR_NAME` varchar(30) DEFAULT NULL COMMENT '创建人姓名',
+  `CREATE_DATE` datetime DEFAULT NULL COMMENT '创建日期',
+  `OPERATION_ID` int(11) DEFAULT NULL COMMENT '操作人编号',
+  `OPERATION_TIME` datetime DEFAULT NULL COMMENT '操作时间',
+  PRIMARY KEY (`VID`)
+) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=utf8 COMMENT='视图库';
+
+-- ----------------------------
+-- Table structure for views_tables
+-- ----------------------------
+DROP TABLE IF EXISTS `views_tables`;
+CREATE TABLE `views_tables` (
+  `ID` int(11) NOT NULL AUTO_INCREMENT COMMENT '编号',
+  `NAME` varchar(30) COLLATE utf8_bin DEFAULT NULL COMMENT '视图表名称',
+  `REMARK` varchar(200) COLLATE utf8_bin DEFAULT NULL COMMENT '注释',
+  `CREATOR_ID` int(11) DEFAULT NULL COMMENT '创建人编号',
+  `CREATOR_NAME` varchar(30) COLLATE utf8_bin DEFAULT NULL COMMENT '创建人姓名',
+  `CREATE_DATE` datetime DEFAULT NULL COMMENT '创建日期',
+  `OPERATION_ID` int(11) DEFAULT NULL COMMENT '操作人编号',
+  `OPERATION_TIME` datetime DEFAULT NULL COMMENT '操作时间',
+  `CODE` varchar(4000) COLLATE utf8_bin DEFAULT NULL COMMENT '编辑器保存内容',
+  `VIEWS_ID` int(11) NOT NULL COMMENT '视图库ID',
+  `VIEWS_NAME` varchar(30) COLLATE utf8_bin DEFAULT NULL COMMENT '视图库名称',
+  PRIMARY KEY (`ID`) USING BTREE
+) ENGINE=InnoDB AUTO_INCREMENT=18 DEFAULT CHARSET=utf8 COLLATE=utf8_bin ROW_FORMAT=DYNAMIC COMMENT='视图表';
+
+-- ----------------------------
 -- Table structure for virtual_tables
 -- ----------------------------
 DROP TABLE IF EXISTS `virtual_tables`;
@@ -127,4 +162,4 @@ CREATE TABLE `virtual_tables` (
   `DB_NAME` varchar(4000) COLLATE utf8_bin DEFAULT NULL COMMENT '真实库名称',
   `CODE` varchar(4000) COLLATE utf8_bin DEFAULT NULL COMMENT '查询内容',
   PRIMARY KEY (`ID`) USING BTREE
-) ENGINE=InnoDB AUTO_INCREMENT=150 DEFAULT CHARSET=utf8 COLLATE=utf8_bin ROW_FORMAT=DYNAMIC COMMENT='虚拟表';
+) ENGINE=InnoDB AUTO_INCREMENT=159 DEFAULT CHARSET=utf8 COLLATE=utf8_bin ROW_FORMAT=DYNAMIC COMMENT='虚拟表';
