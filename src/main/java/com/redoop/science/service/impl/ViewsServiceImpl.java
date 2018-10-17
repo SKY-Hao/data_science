@@ -1,6 +1,7 @@
 package com.redoop.science.service.impl;
 
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.redoop.science.dto.ViewsDto;
 import com.redoop.science.entity.Views;
 import com.redoop.science.entity.ViewsTables;
 import com.redoop.science.mapper.ViewsMapper;
@@ -29,7 +30,12 @@ public class ViewsServiceImpl extends ServiceImpl<ViewsMapper, Views> implements
 
 
     @Override
-    public List<Views> allList() {
-        return viewsMapper.allList();
+    public List<ViewsDto> getViewsTables() {
+        return viewsMapper.findViewsTables();
+    }
+
+    @Override
+    public Views getByName(String name) {
+        return viewsMapper.findByName(name);
     }
 }

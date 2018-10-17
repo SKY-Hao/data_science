@@ -3,7 +3,7 @@
 <mapper namespace="com.redoop.science.mapper.ViewsMapper">
 
     <resultMap id="viewsResult" type="com.redoop.science.entity.Views">
-        <id property="vId" column="VID"/>
+        <id property="id" column="ID"/>
         <result property="name" column="NAME"/>
         <result property="remark" column="REMARK"/>
         <result property="creatorId" column="CREATOR_ID"/>
@@ -12,25 +12,31 @@
         <result property="operationId" column="OPERATION_ID"/>
         <result property="operationTime" column="OPERATION_TIME"/>
 
-
-
     </resultMap>
+
+   <!-- <resultMap type="com.redoop.science.dto.ViewsDto" id="viewsTablesResult"
+               extends="viewsResult">
+        &lt;!&ndash; collection中不是javaType而是ofType,通过property也知道是list，即多个。
+        extends属性，即在父resultMap的基础上再加上子resultMap的结果，在这里即再加上部门的信息。 &ndash;&gt;
+        <collection property="viewsTablesList" ofType="com.redoop.science.entity.ViewsTables">
+            <id property="id" column="ID"  />
+            <result property="name" column="NAME"/>
+        </collection>
+
+    </resultMap>-->
 
     <resultMap id="viewsTablesResult" type="com.redoop.science.dto.ViewsDto" extends="viewsResult">
 
         <collection property="viewsTablesList" ofType="com.redoop.science.entity.ViewsTables"
-                    select="com.redoop.science.mapper.ViewsTablesMapper.findByViewsId" javaType="ArrayList" column="vId">
-
+                    select="com.redoop.science.mapper.ViewsTablesMapper.findByViewsId" javaType="ArrayList" column="id">
         </collection>
     </resultMap>
     <!--视图表集合 -->
 
-    
-    <select id="allList" resultMap="viewsResult">
-        select a.id  as id ,a.name as tablesName, b.* from views_tables a LEFT JOIN views b on a.VIEWS_ID = b.VID;
-    </select>
+
 
     <select id="findViewsTables" resultType="list" resultMap="viewsTablesResult" parameterType="map">
+
       SELECT * FROM views
 <!--        <where>
             <if test="">AND  </if>

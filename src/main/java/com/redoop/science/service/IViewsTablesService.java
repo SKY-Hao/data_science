@@ -1,10 +1,7 @@
 package com.redoop.science.service;
 
 import com.baomidou.mybatisplus.extension.service.IService;
-import com.redoop.science.entity.AnalysisTables;
 import com.redoop.science.entity.ViewsTables;
-
-import java.util.List;
 
 /**
  * <p>
@@ -17,5 +14,5 @@ import java.util.List;
 public interface IViewsTablesService extends IService<ViewsTables> {
 
 
-    List<ViewsTables> allList();
+
 }

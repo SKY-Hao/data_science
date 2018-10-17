@@ -7,8 +7,6 @@ import com.redoop.science.service.IViewsTablesService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
-
 /**
  * <p>
  * 视图表 服务实现类
@@ -22,8 +20,6 @@ public class ViewsTablesServiceImpl extends ServiceImpl<ViewsTablesMapper, Views
 
     @Autowired
     ViewsTablesMapper tablesMapper;
-    @Override
-    public List<ViewsTables> allList() {
-        return tablesMapper.allList();
-    }
+
+
 }

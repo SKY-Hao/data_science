@@ -8,6 +8,7 @@ import lombok.Setter;
 import lombok.experimental.Accessors;
 
 import java.io.Serializable;
+import java.time.LocalDateTime;
 import java.util.Date;
 import java.util.List;
 
@@ -27,8 +28,8 @@ public class Views  implements Serializable {
     /**
      * 编号
      */
-    @TableField("VID")
-    private Integer vId;
+    @TableField("ID")
+    private Integer id;
 
     /**
      * 名称
@@ -58,7 +59,7 @@ public class Views  implements Serializable {
      * 创建日期
      */
     @TableField("CREATE_DATE")
-    private Date createDate;
+    private LocalDateTime createDate;
 
     /**
      * 操作人编号

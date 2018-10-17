@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
 
-    <title>分析更新</title>
+    <title>视图表查看</title>
     <link rel="shortcut icon" href="/img/icon/logo.ico">
     <!-- Google font -->
     <link href="https://fonts.googleapis.com/css?family=Montserrat:400,500,700" rel="stylesheet">
@@ -25,6 +25,7 @@
 
     <!-- Custom stlylesheet -->
     <link type="text/css" rel="stylesheet" href="/css/style.css"/>
+    <link rel="stylesheet" href="/css/zTreeStyle/zTreeStyle.css" type="text/css">
     <link href=/css/mlsql/app.61ee2da75fc002e22f47d5f70b881c8d.css rel=stylesheet>
     <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
     <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
@@ -75,7 +76,7 @@
                 <div class="aside">
                     <h3 class="aside-title">视图</h3>
                     <div>
-                        <ul id="treeViews" class="ztree"></ul>
+                        <ul id="treeReal" class="ztree"></ul>
                     </div>
                 </div>
                 <!-- /aside Widget -->
@@ -88,10 +89,29 @@
                     <div id="editor"></div>
                 </div>
                 <div>
-                    <input id="sqlName" placeholder="请填写sql name"/><br/>
+                    <!--<input id="sqlName" placeholder="请填写sql name" th:value="${viewsLists.name}"/>
+                    &lt;!&ndash;<input id="viewsName" placeholder="请输入新的视图库名称"/>&ndash;&gt;
+
+                    <select class="form-control" name="vId" id="vId" style=" margin-top: 10px;">
+                        <option th:value="0">请选择类型</option>
+                        <option th:selected="${viewsLists.viewsId eq list.id}"  th:each="list:${select}" th:value="${list.id}" th:text="${list.name }"></option>
+                    </select>
+
+
+                    <input id="id" type="text" th:value="${viewsLists.id}"/><br/>-->
+                    <input id="sqlName" placeholder="请填写sql name" />
+
+                    <select class="form-control" name="vId" id="vId" style=" margin-top: 10px;">
+                        <option th:value="0">请选择类型</option>
+                        <option th:selected="${viewsLists.viewsId eq list.id}"  th:each="list:${select}" th:value="${list.id}" th:text="${list.name }"></option>
+                    </select>
+
+
                     <input id="id" type="hidden"/><br/>
+
                     <button id="runButton" onclick="submitRunSQL()" class="btn btn-run waves-effect">查询</button>
-                    <button id="saveButton" onclick="submitSaveSQL()" class="btn btn-run waves-effect">保存</button>
+                    <!--<button id="saveButton" onclick="submitSaveSQL()" class="btn btn-run waves-effect">保存</button>
+                    <button id="saveViewButton" onclick="submitView()" class="btn btn-run waves-effect">添加视图库</button>-->
                 </div>
                 <div class="div-table" id="divTable">
                 </div>
@@ -128,20 +148,24 @@
         }
     };
     // zTree 的数据属性，深入使用请参考 API 文档（zTreeNode 节点数据详解）
-    var realNodes = [[${realZList}]];
-    $.fn.zTree.init($("#treeViews"), setting, realNodes);
+    var viewNodes = [[${realZList}]];
+    $.fn.zTree.init($("#treeReal"), setting, viewNodes);
     ace.require("ace/ext/language_tools");
 
     //编辑器
     ace.require("ace/ext/language_tools");
     var editor = ace.edit('editor');
-    var analysisCode = "";
+    var viewsTablesCode = "";
     //修改回显
-    var analysis = [[${analysis}]];
-    if (analysis != null) {
-        analysisCode = analysis.finallyCode;
-        $("#sqlName").val(analysis.name);
-        $("#id").val(analysis.id);
+    var viewsTables = [[${viewsLists}]];
+    if (viewsTables != null) {
+
+        viewsTablesCode = viewsTables.code;
+
+        $("#sqlName").val(viewsTables.name);
+        $("#id").val(viewsTables.id);
+
+
     }
 
     editorInit(editor);
@@ -157,8 +181,8 @@
         editor.getSession().setMode("ace/mode/sql");
         editor.setHighlightActiveLine(true);
         editor.setFontSize(16);
-        if (analysisCode != null && analysisCode != "") {
-            editor.setValue(analysisCode);
+        if (viewsTablesCode != null && viewsTablesCode != "") {
+            editor.setValue(viewsTablesCode);
         } else {
             editor.setValue("欢迎使用");
         }
@@ -228,11 +252,13 @@
     }
 
 
-    //保存
+ /*   //保存
     function submitSaveSQL() {
         var sql = editor.getValue();
         var sqlName = $("#sqlName").val();
         var id = $("#id").val();
+        var vId = $("#vId").val();
+       /!* var viewsName = $("#viewsName").val();*!/
         if (sql == null || sql == "") {
             layer.msg("请输入sql");
             return;
@@ -241,15 +267,29 @@
             layer.msg("请输入sql name");
             return;
         }
-        $.post("/viewsTables/save", {"sql": sql, "sqlName": sqlName, "id": id}, function (result) {
+        $.post(
+            "/viewsTables/save",
+            {
+                "sql": sql,
+                "sqlName": sqlName,
+                "id": id,
+                "vId": vId,
+               /!* "viewsName": viewsName*!/
+            },
+            function (result) {
             if (result.code == 200) {
                 layer.msg("保存成功");
-            } else if (result.code == 1001) {
+            } else if (result.code == 1001 || result.code == 1003) {
                 layer.alert(result.msg + ",请重新输入");
-
             }
         });
-    }
+    }*/
+
+
+    //新增视图库
+   /* function submitView() {
+        location.href="/views/addView"
+    }*/
 
 
 </script>

@@ -6,7 +6,7 @@
 		<meta name="viewport" content="width=device-width, initial-scale=1">
 		 <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
 
-		<title>视图列表</title>
+		<title>视图库</title>
 		<link rel="shortcut icon" href="/img/icon/logo.ico">
  		<!-- Google font -->
  		<link href="https://fonts.googleapis.com/css?family=Montserrat:400,500,700" rel="stylesheet">
@@ -57,7 +57,7 @@
 									</div>
 									<div class="product-body">
 										<!--<p class="product-category" th:text=""></p>-->
-										<h3 class="product-name">新建空白查询</h3>
+										<h3 class="product-name">新建视图库</h3>
 										<div class="product-btns">
 											<button class="add-to-wishlist" onclick="toAdd()"><i class="fa fa-plus"></i><span class="tooltipp">新增</span></button>
 										</div>
@@ -122,20 +122,20 @@
 		page: '<li class="page"><a href="javascript:void(0);">{{page}}</a></li>',
 		onPageChange: function (num,type) {
             if(type=="change"){
-                window.location.href="/viewsTables/"+num;
+                window.location.href="/views/"+num;
             }
 		}
 	});
 	function toAdd() {
-		window.location.href="/viewsTables/add";
+		window.location.href="/views/addView";
 	}
-	function toEdit(id) {
-		window.location.href="/viewsTables/edit/"+id;
-	}
-	function toDel(id) {
+    function toEdit(id) {
+        window.location.href="/views/edit/"+id;
+    }
 
+	function toDel(id) {
 		$.ajax({
-			url: "/viewsTables/delete/"+id,
+			url: "/views/delete/"+id,
 			type:"DELETE",
 			dataType:"json",
 			success: function(data){

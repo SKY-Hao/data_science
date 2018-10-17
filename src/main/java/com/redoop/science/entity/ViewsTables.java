@@ -8,6 +8,7 @@ import lombok.Setter;
 import lombok.experimental.Accessors;
 
 import java.io.Serializable;
+import java.time.LocalDateTime;
 import java.util.Date;
 
 /**
@@ -59,7 +60,7 @@ public class ViewsTables implements Serializable {
      * 创建日期
      */
     @TableField("CREATE_DATE")
-    private Date createDate;
+    private LocalDateTime createDate;
 
     /**
      * 操作人编号
@@ -71,7 +72,7 @@ public class ViewsTables implements Serializable {
      * 操作时间
      */
     @TableField("OPERATION_TIME")
-    private Date operationTime;
+    private LocalDateTime operationTime;
 
     /**
      * 编辑器保存内容
@@ -83,7 +84,7 @@ public class ViewsTables implements Serializable {
      * 视图库id
      */
     @TableField("VIEWS_ID")
-    private String viewsId;
+    private Integer viewsId;
 
 
     /**

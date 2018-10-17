@@ -2,18 +2,30 @@ package com.redoop.science.controller;
 
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
-import com.redoop.science.entity.Views;
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.redoop.science.dto.ViewsDto;
+import com.redoop.science.entity.*;
+import com.redoop.science.mapper.ViewsMapper;
 import com.redoop.science.service.IViewsService;
-import com.redoop.science.utils.Result;
-import com.redoop.science.utils.ResultEnum;
+import com.redoop.science.service.IViewsTablesService;
+import com.redoop.science.utils.*;
+import jdk.management.resource.internal.inst.SocketOutputStreamRMHooks;
+import okhttp3.HttpUrl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.ModelAndView;
 
+import javax.servlet.http.HttpServletRequest;
+import java.io.IOException;
+import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * <p>
@@ -27,38 +39,118 @@ import java.util.List;
 @RequestMapping("/views")
 public class ViewsController {
     @Autowired
-    private IViewsService iViewsService;
+    private IViewsTablesService viewsTablesService;
 
-    @GetMapping
-    public String index(Model model){
-        LambdaQueryWrapper<Views> wrapper = new LambdaQueryWrapper<>();
-        List<Views> list = iViewsService.list(wrapper);
-        model.addAttribute("list", list);
-        return "";
+    @Autowired
+    private IViewsService viewsService;
+
+    @GetMapping("/{num}")
+    public ModelAndView index(Model model, @PathVariable Long num, HttpServletRequest request){
+        Page<Views> page = new Page<>();
+        page.setSize(11L);
+        page.setCurrent(num);
+        page.setDesc("ID");
+        IPage<Views> pages = viewsService.page(page,null);
+        model.addAttribute("nickName", SessionUtils.getUserNickName(request));
+        model.addAttribute("items", pages.getRecords());
+        model.addAttribute("activeType", 5);
+        model.addAttribute("pageNum", num);
+        model.addAttribute("views", new Views());
+        model.addAttribute("pages", pages.getPages());
+        model.addAttribute("total", pages.getTotal());
+
+        return new ModelAndView("/views/viewsIndex");
     }
 
-    @PostMapping("/save")
-    public Result<String> save(Views Views){
-        if (iViewsService.save(Views)){
+
+
+    @GetMapping("/addView")
+    public ModelAndView addView(Model model,HttpServletRequest request){
+
+        model.addAttribute("nickName", SessionUtils.getUserNickName(request));
+        return new ModelAndView("/views/viewsAdd");
+    }
+
+    /**
+     * 保存视图库
+     * @param request
+     * @param id
+     * @param viewsName
+     * @return
+     */
+    @PostMapping("/saveView")
+    @ResponseBody
+    public Result saveView(HttpServletRequest request,@RequestParam(name = "id",required = false) Long id,  @RequestParam(value = "viewsName") String viewsName) {
+
+        Views views = null;
+        SysUser sysUser = SessionUtils.getUser(request);
+        QueryWrapper queryWrapper = new QueryWrapper();
+        queryWrapper.eq("NAME",viewsName);
+
+        if(id!=null){
+            views = viewsService.getById(id);
+        }else{
+            Views virtualTable  = viewsService.getOne(queryWrapper);
+            if(virtualTable!=null){
+                return new Result(ResultEnum.REPEAT_VIEW,"名称已存在，请使用其他名称");
+            }else{
+                views = new Views();
+                views.setName(viewsName);
+                views.setCreateDate(LocalDateTime.now());
+                views.setCreatorId(sysUser.getId());
+                views.setCreatorName(sysUser.getNickName());
+            }
+        }
+
+        if (viewsService.save(views)){
+            return new Result<String>(ResultEnum.SECCUSS);
+        }else {
+            return new Result<String>(ResultEnum.FAIL);
+        }
+
+
+    }
+    @DeleteMapping("/delete/{id}")
+    @ResponseBody
+    public Result<String> delete(@PathVariable Integer id){
+        if (viewsService.removeById(id)){
             return new Result<String>(ResultEnum.SECCUSS);
         }else {
             return new Result<String>(ResultEnum.FAIL);
         }
     }
-    @PostMapping("/update")
-    public Result<String> update(Views Views){
-        if (iViewsService.updateById(Views)){
-            return new Result<String>(ResultEnum.SECCUSS);
+    @RequestMapping(value = "/edit/{id}",method = RequestMethod.GET)
+    public ModelAndView edit(Model model,@PathVariable(value = "id") String id,HttpServletRequest request) {
+
+        Views views = viewsService.getById(id);
+        if (views!=null){
+            model.addAttribute("views", views);
+            model.addAttribute("nickName", SessionUtils.getUserNickName(request));
+            return new ModelAndView("/views/viewsUpdate");
         }else {
-            return new Result<String>(ResultEnum.FAIL);
+            return new ModelAndView("/error/500");
         }
     }
-    @PostMapping("/delete")
-    public Result<String> delete(Long id){
-        if (iViewsService.removeById(id)){
+
+    @PostMapping("/updateSave")
+    @ResponseBody
+    public Result updateSave(HttpServletRequest request,@RequestParam(name = "id",required = false) Long id,  @RequestParam(value = "viewsName") String name) {
+
+        Views views = viewsService.getById(id);
+        System.out.println("aaaaaa============="+views);
+        System.out.println("bbbbb=============="+name);
+        System.out.println("ccccccc============="+views.getName());
+        Views views1 = viewsService.getByName(name);
+
+        if (views.getName().equals(name)|| views1 ==null){
+            viewsService.updateById(views1);
             return new Result<String>(ResultEnum.SECCUSS);
-        }else {
-            return new Result<String>(ResultEnum.FAIL);
-        }
+        } else {
+                return new Result<String>(ResultEnum.REPEAT_VIEW);
+            }
+
     }
+
+
+
 }
