@@ -2,7 +2,12 @@ package com.redoop.science.utils;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.redoop.science.entity.RealDb;
+import com.redoop.science.entity.Views;
+import com.redoop.science.entity.ViewsTables;
 import com.redoop.science.service.IRealDbService;
+import com.redoop.science.service.IViewsService;
+import com.redoop.science.service.IViewsTablesService;
+import com.sun.scenario.effect.impl.sw.sse.SSEBlend_SRC_OUTPeer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,6 +28,8 @@ public class ParseSql {
     Logger logger = LoggerFactory.getLogger(getClass());
     @Autowired
     private   IRealDbService realDbService;
+    @Autowired
+    private IViewsTablesService viewsTablesService;
 
     private static ParseSql parseSqlUtils;
 
@@ -30,6 +37,7 @@ public class ParseSql {
     public void init() {
         parseSqlUtils = this;
         parseSqlUtils.realDbService = this.realDbService;
+        parseSqlUtils.viewsTablesService = this.viewsTablesService;
     }
 
     public static String parseSql(String sql) {
@@ -161,8 +169,65 @@ public class ParseSql {
         for(String map : replaceTableNames.keySet()){
             repSql=repSql.replaceAll(map.trim(),replaceTableNames.get(map));
         }
-        returnSql.append(repSql);
+        if (repSql.indexOf(";") != -1) {
+            returnSql.append(repSql);
+        }
+        System.out.println("returnSql.append(repSql);>>>>>>==="+returnSql);
         //logger.info("查询sql>>>>"+returnSql.toString());
         return returnSql.toString();
     }
+
+
+
+
+    public static String viewParseSql(String sql) {
+
+        String copySql = sql;
+        if(copySql.indexOf("`") != -1) {
+            String realDbSql = parseSql(copySql);
+            System.out.println("realDbSql>>>>++++++==="+realDbSql);
+            copySql=realDbSql;
+        }
+
+        StringBuffer returnSql = new StringBuffer();
+
+        String[] codes = copySql.split(" ");
+
+        Set<String> tableNames = new HashSet<>();
+        Map<String,String> viwesNames = new HashMap<>();
+        for (String table : codes) {
+            if (table.indexOf("%.") != -1) {
+
+                String dbNames = table.split("'")[1];
+                String dbName = dbNames.split("\\.")[0];
+                String tableName = dbNames.split("\\.")[1];
+
+                viwesNames.put(table,tableName);
+                tableNames.add(tableName);
+            }
+        }
+
+        Map<String,String> replaceTableNames = new HashMap<>();
+        for (String dbName : tableNames){
+            System.out.println("dbName>>>>>>>>>>"+dbName);
+            String code  = parseSqlUtils.viewsTablesService.getByName(dbName);
+            String sqlCode = parseSql(code);
+            System.out.println("sqlCode=========="+sqlCode);
+            returnSql.append(sqlCode);
+        }
+        String repSql = copySql;
+        for(String map : viwesNames.keySet()){
+            repSql=repSql.replaceAll(map.trim(),viwesNames.get(map));
+        }
+        returnSql.append(repSql);
+
+        //logger.info("查询sql>>>>"+returnSql.toString());
+        return returnSql.toString();
+    }
+
+
+
+
+
+
 }

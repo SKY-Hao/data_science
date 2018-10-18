@@ -33,9 +33,4 @@ public class ViewsServiceImpl extends ServiceImpl<ViewsMapper, Views> implements
     public List<ViewsDto> getViewsTables() {
         return viewsMapper.findViewsTables();
     }
-
-    @Override
-    public Views getByName(String name) {
-        return viewsMapper.findByName(name);
-    }
 }

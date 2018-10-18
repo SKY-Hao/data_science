@@ -14,5 +14,5 @@ import com.redoop.science.entity.ViewsTables;
 public interface IViewsTablesService extends IService<ViewsTables> {
 
 
-
+    String getByName(String dbName);
 }

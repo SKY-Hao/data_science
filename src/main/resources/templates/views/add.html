@@ -279,8 +279,10 @@
             function (result) {
             if (result.code == 200) {
                 layer.msg("保存成功");
-            } else if (result.code == 1001 || result.code == 1003) {
+            } else if (result.code == 1001) {
                 layer.alert(result.msg + ",请重新输入");
+            }else if (result.code == 1004){
+                layer.alert(result.msg );
             }
         });
     }

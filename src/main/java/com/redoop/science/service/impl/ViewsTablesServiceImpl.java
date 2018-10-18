@@ -21,5 +21,8 @@ public class ViewsTablesServiceImpl extends ServiceImpl<ViewsTablesMapper, Views
     @Autowired
     ViewsTablesMapper tablesMapper;
 
-
+    @Override
+    public String getByName(String dbName) {
+        return tablesMapper.findByName(dbName);
+    }
 }

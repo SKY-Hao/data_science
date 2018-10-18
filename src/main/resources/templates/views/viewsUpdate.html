@@ -35,7 +35,7 @@
 
 <!-- SECTION -->
 <div style="text-align: center; margin-left: 24%;margin-top: 13%;">
-    <input id="id" type="text" th:value="${views.id}"/><br/>
+    <input id="id" type="hidden" th:value="${views.id}"/><br/>
     <div class="form-horizontal" role="form">
         <div class="form-group">
             <label class="col-sm-2 control-label">视图库</label>
@@ -49,8 +49,8 @@
 <div style="text-align: center; margin-left: 6%;">
 
 
-    <button id="saveButton" onclick="submitSaveSQL()" class="btn btn-danger">保存</button>
-    <button id="returnButton" onclick="returnSQL()" class="btn btn-warning">返回</button>
+    <!--<button id="saveButton" onclick="submitSaveSQL()" class="btn btn-danger">保存</button>-->
+    <button id="returnButton" onclick="returnSQL()" class="btn btn-warning" style=" margin-left: 6%;">返回</button>
 </div>
 <!-- /SECTION -->
 
@@ -75,7 +75,8 @@
         }
         $.post(
             "/views/updateSave",
-            {"id":id , "viewsName": viewsName},
+            {"id":id ,
+                "viewsName": viewsName},
             function (result) {
                 if (result.code == 200) {
                     layer.msg("保存成功");

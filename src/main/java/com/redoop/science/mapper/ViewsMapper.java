@@ -18,6 +18,4 @@ public interface ViewsMapper extends BaseMapper<Views> {
 
     List<ViewsDto> findViewsTables();
 
-    @Select("select NAME from views where NAME = #{name}")
-    Views findByName(String name);
 }

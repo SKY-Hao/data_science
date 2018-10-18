@@ -18,5 +18,6 @@ public interface ViewsTablesMapper extends BaseMapper<ViewsTables> {
     @Select("select * from views_tables where VIEWS_ID=#{viewsId}")
     List<ViewsTables> findByViewsId(String viewsId);
 
-
+    @Select("select CODE from views_tables where NAME=#{dbName}")
+    String findByName(String dbName);
 }

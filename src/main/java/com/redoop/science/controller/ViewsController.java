@@ -132,25 +132,28 @@ public class ViewsController {
         }
     }
 
-    @PostMapping("/updateSave")
+   /* @PostMapping("/updateSave")
     @ResponseBody
-    public Result updateSave(HttpServletRequest request,@RequestParam(name = "id",required = false) Long id,  @RequestParam(value = "viewsName") String name) {
+    public Result updateSave(HttpServletRequest request,
+                             @RequestParam(name = "id",required = false) Long id,
+                             @RequestParam(value = "viewsName") String name) {
 
         Views views = viewsService.getById(id);
         System.out.println("aaaaaa============="+views);
         System.out.println("bbbbb=============="+name);
         System.out.println("ccccccc============="+views.getName());
-        Views views1 = viewsService.getByName(name);
+        //Views views1 = viewsService.getByName(name);
 
-        if (views.getName().equals(name)|| views1 ==null){
-            viewsService.updateById(views1);
+        if (views.getName().equals(name)){
+            views.setName(name);
+            viewsService.updateById(views);
             return new Result<String>(ResultEnum.SECCUSS);
         } else {
                 return new Result<String>(ResultEnum.REPEAT_VIEW);
             }
 
     }
-
+*/
 
 
 }
