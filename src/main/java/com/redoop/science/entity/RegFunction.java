@@ -8,6 +8,9 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.experimental.Accessors;
 
+import javax.validation.constraints.Max;
+import javax.validation.constraints.NotEmpty;
+
 /**
  * <p>
  * 注册函数
@@ -33,12 +36,15 @@ public class RegFunction implements Serializable {
      * 名称
      */
     @TableField("NAME")
+    @NotEmpty
+    @Max(value = 50,message = "函数名不得超过50个字符")
     private String name;
 
     /**
      * 函数
      */
     @TableField("CODE")
+    @NotEmpty
     private String code;
 
     /**
