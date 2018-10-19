@@ -73,8 +73,8 @@
 									<div class="product-body">
 										<h3 class="product-name"><a href="#" th:text="${item.name}"></a></h3>
 										<div class="product-btns">
-											<button class="add-to-wishlist" th:onclick="'javascript:toEdit('+${item.id}+')'" ><i class="fa fa-edit"></i><span class="tooltipp">修改</span></button>
-											<button class="add-to-compare" th:onclick="'javascript:toDel('+${item.id}+')'"><i class="fa fa-remove"></i><span class="tooltipp">删除</span></button>
+											<!--<button class="add-to-wishlist" th:onclick="'javascript:toEdit('+${item.id}+')'" ><i class="fa fa-edit"></i><span class="tooltipp">修改</span></button>-->
+											<button class="add-to-compare"  th:onclick="'javascript:toDel('+${item.id}+')'"><i class="fa fa-remove"></i><span class="tooltipp">删除</span></button>
 											<button class="quick-view" th:onclick="'javascript:toEdit('+${item.id}+')'"><i class="fa fa-eye"></i><span class="tooltipp">查看</span></button>
 										</div>
 									</div>
@@ -133,24 +133,28 @@
         window.location.href="/views/edit/"+id;
     }
 
-	function toDel(id) {
-		$.ajax({
-			url: "/views/delete/"+id,
-			type:"DELETE",
-			dataType:"json",
-			success: function(data){
-				if(data.code==200){
-					layer.msg("删除成功");
-                    window.location.reload()
- 				}else if (data.code==500){
-					layer.alert("删除失败")
-				}
-			},
-			error: function () {
-			}
-		});
-	}
-	/*]]>*/
+function toDel(id) {
+    //alert("谨慎操作,删除之后视图表也将清空");
+    $.ajax({
+        url: "/views/delete/"+id,
+        type:"DELETE",
+        dataType:"json",
+        success: function(data){
+            if(data.code==200){
+                layer.msg("删除成功");
+                setTimeout(function(){  //使用  setTimeout（）方法设定定时2000毫秒
+                    window.location.reload();//页面刷新
+                },3000);
+            }else if (data.code==500){
+                layer.alert("删除失败")
+            }
+        },
+        error: function () {
+        }
+    });
+}
+
+    /*]]>*/
 </script>
 </body>
 </html>

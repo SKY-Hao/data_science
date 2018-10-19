@@ -40,9 +40,12 @@ public enum ResultEnum {
     /**
      * 视图库名称重复
      */
-    REPEAT_VIEW(1003,"视图库名称重复");
+    REPEAT_VIEW(1003,"视图库名称重复"),
 
-
+    /**
+     * 没有视图库
+     */
+    NOT_VIEW(1004,"目前没有视图库，请创建视图库");
 
 
     private int code;

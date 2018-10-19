@@ -41,7 +41,7 @@ public class JobController {
        // String fileName = sqlName;
 
         try {
-            String runSql = ParseSql.parseSql(sql);
+            String runSql = ParseSql.viewParseSql(sql);
             HttpUrl url = new HttpUrl.Builder()
                     .scheme("http")
 //                    .host("127.0.0.1")
@@ -74,7 +74,9 @@ public class JobController {
 
     @PostMapping("/save")
     @ResponseBody
-    public Result save(HttpServletRequest request, @RequestParam(name = "id",required = false) Long id, @RequestParam(name = "sql") String sql, @RequestParam(value = "sqlName") String  sqlName) {
+    public Result save(HttpServletRequest request,
+                       @RequestParam(name = "id",required = false) Long id,
+                       @RequestParam(name = "sql") String sql, @RequestParam(value = "sqlName") String  sqlName) {
         VirtualTables virtualTables = null;
         SysUser sysUser = SessionUtils.getUser(request);
         QueryWrapper queryWrapper = new QueryWrapper();

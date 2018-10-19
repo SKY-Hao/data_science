@@ -101,7 +101,7 @@ public class ViewsTablesController {
     @PostMapping("/save")
     @ResponseBody
     public Result save(HttpServletRequest request,
-                       @RequestParam(name = "id",required = false) Long id,
+                       @RequestParam(name = "id",required = false) Integer id,
                        @RequestParam(name = "sql") String sql,
                        @RequestParam(value = "sqlName") String  sqlName,
                        @RequestParam(name = "vId") Integer vId/*,
@@ -122,6 +122,7 @@ public class ViewsTablesController {
         }else{
 
             ViewsTables virtualTable  = viewsTablesService.getOne(queryWrapper);
+
             if(virtualTable!=null){
                 return new Result(ResultEnum.REPEAT,"名称已存在，请使用其他名称");
             }else{
@@ -129,6 +130,9 @@ public class ViewsTablesController {
                 tables.setCreateDate(LocalDateTime.now());
                 tables.setCreatorId(sysUser.getId());
                 tables.setCreatorName(sysUser.getNickName());
+            }
+            if (vId == null || vId ==0){
+                return new Result(ResultEnum.NOT_VIEW,"目前没有视图库，请创建视图库");
             }
 
             /*if (vId==null || vId == 0 ){

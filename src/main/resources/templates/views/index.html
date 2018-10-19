@@ -57,7 +57,7 @@
 									</div>
 									<div class="product-body">
 										<!--<p class="product-category" th:text=""></p>-->
-										<h3 class="product-name">新建空白查询</h3>
+										<h3 class="product-name">新建视图表</h3>
 										<div class="product-btns">
 											<button class="add-to-wishlist" onclick="toAdd()"><i class="fa fa-plus"></i><span class="tooltipp">新增</span></button>
 										</div>
@@ -73,7 +73,7 @@
 									<div class="product-body">
 										<h3 class="product-name"><a href="#" th:text="${item.name}"></a></h3>
 										<div class="product-btns">
-											<button class="add-to-wishlist" th:onclick="'javascript:toEdit('+${item.id}+')'" ><i class="fa fa-edit"></i><span class="tooltipp">修改</span></button>
+											<!--<button class="add-to-wishlist" th:onclick="'javascript:toEdit('+${item.id}+')'" ><i class="fa fa-edit"></i><span class="tooltipp">修改</span></button>-->
 											<button class="add-to-compare" th:onclick="'javascript:toDel('+${item.id}+')'"><i class="fa fa-remove"></i><span class="tooltipp">删除</span></button>
 											<button class="quick-view" th:onclick="'javascript:toEdit('+${item.id}+')'"><i class="fa fa-eye"></i><span class="tooltipp">查看</span></button>
 										</div>

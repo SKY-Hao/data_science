@@ -19,5 +19,4 @@ public interface IViewsService extends IService<Views> {
 
     List<ViewsDto> getViewsTables();
 
-    Views getByName(String name);
 }
