@@ -13,4 +13,5 @@ import com.baomidou.mybatisplus.extension.service.IService;
  */
 public interface IRegFunctionService extends IService<RegFunction> {
 
+    String getByName(String name);
 }

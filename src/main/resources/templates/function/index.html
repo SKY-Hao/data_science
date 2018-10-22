@@ -122,20 +122,20 @@
 		page: '<li class="page"><a href="javascript:void(0);">{{page}}</a></li>',
 		onPageChange: function (num,type) {
             if(type=="change"){
-                window.location.href="/virtual/"+num;
+                window.location.href="/function/"+num;
             }
 		}
 	});
 	function toAdd() {
-		window.location.href="/virtual/add";
+		window.location.href="/function/add";
 	}
 	function toEdit(id) {
-		window.location.href="/virtual/edit/"+id;
+		window.location.href="/function/edit/"+id;
 	}
 	function toDel(id) {
 
 		$.ajax({
-			url: "/virtual/delete/"+id,
+			url: "/function/delete/"+id,
 			type:"DELETE",
 			dataType:"json",
 			success: function(data){

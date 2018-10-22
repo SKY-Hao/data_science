@@ -7,9 +7,11 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.redoop.science.entity.RegFunction;
 import com.redoop.science.entity.SysUser;
 import com.redoop.science.service.IRegFunctionService;
-import com.redoop.science.utils.Result;
-import com.redoop.science.utils.ResultEnum;
-import com.redoop.science.utils.SessionUtils;
+import com.redoop.science.utils.*;
+import okhttp3.HttpUrl;
+import org.apache.commons.io.FileUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.ui.Model;
 import org.springframework.validation.annotation.Validated;
@@ -19,6 +21,8 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpServletRequest;
+import java.io.File;
+import java.io.IOException;
 import java.time.LocalDateTime;
 
 /**
@@ -32,6 +36,8 @@ import java.time.LocalDateTime;
 @Controller
 @RequestMapping("/function")
 public class RegFunctionController {
+    Logger logger = LoggerFactory.getLogger(getClass());
+
     @Autowired
     private IRegFunctionService regFunctionService;
     @GetMapping("/{num}")
@@ -43,7 +49,7 @@ public class RegFunctionController {
         IPage<RegFunction> pages = regFunctionService.page(page, null);
         model.addAttribute("nickName", SessionUtils.getUserNickName(request));
         model.addAttribute("items", pages.getRecords());
-        model.addAttribute("activeType", 1);
+        model.addAttribute("activeType", 6);
         model.addAttribute("pageNum", num);
         model.addAttribute("pages", pages.getPages());
         model.addAttribute("total", pages.getTotal());
@@ -83,7 +89,7 @@ public class RegFunctionController {
         }
     }
 
-    @PostMapping("/save")
+   /* @PostMapping("/save")
     @ResponseBody
     public Result<String> save(@RequestBody @Validated RegFunction regFunction, HttpServletRequest request) {
         SysUser loginUser = SessionUtils.getUser(request);
@@ -109,6 +115,69 @@ public class RegFunctionController {
         } else {
             return new Result<String>(ResultEnum.FAIL);
         }
-    }
+    }*/
+   @PostMapping("/save")
+   @ResponseBody
+   public Result<String> save(@RequestParam(name = "id",required = false) Long id,
+                              @RequestParam(name = "code") String code,
+                              @RequestParam(value = "name") String  name,
+                              HttpServletRequest request) {
+       RegFunction regFunction = null;
+       SysUser loginUser = SessionUtils.getUser(request);
+
+       QueryWrapper<RegFunction> wrapper = new QueryWrapper<>();
+       wrapper.eq("NAME", name);
+       RegFunction regFunctionCheckName = regFunctionService.getOne(wrapper);
+       if (regFunctionCheckName != null) {
+           //名称重复
+           return new Result<String>(ResultEnum.REPEAT);
+       }
+       regFunction  = new RegFunction();
+       regFunction.setCreateDate(LocalDateTime.now());
+       regFunction.setCreatorId(loginUser.getId());
+       regFunction.setCreatorName(loginUser.getNickName());
+       regFunction.setCode(code);
+       regFunction.setName(name);
+       if (regFunctionService.saveOrUpdate(regFunction)) {
+           //注册函数
+           return new Result<String>(ResultEnum.SECCUSS);
+       } else {
+           return new Result<String>(ResultEnum.FAIL);
+       }
+   }
+
+
+/*
+    @PostMapping("/script")
+    @ResponseBody
+    public Result<String> script(HttpServletRequest request,@RequestParam(value = "sql") String sql,@RequestParam(value = "sqlName") String  sqlName) throws Exception {
+        Result<String> stringResult = new Result<>(ResultEnum.FAIL);
+        String result = "";
+
+        try {
+            String runSql = ParseSql.funParseSql(sql);
+            HttpUrl url = new HttpUrl.Builder()
+                    .scheme("http")
+                    .host("192.168.0.163")
+                    .port(9003)
+                    .addPathSegments("run\\script")
+                    .addQueryParameter("sql", runSql)
+                    .build();
+            String sqlResult = HttpClient.httpPost(url, "");
+            result = sqlResult;
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        logger.info("sql查询返回结果>>>>>>>"+result);
+        if(JsonUtil.isJSONValid(result)){
+            stringResult = new Result<String>(ResultEnum.SECCUSS,result);
+            FileUtils.writeStringToFile(new File("upload/files/"+sqlName+".csv"),  PoiUtils.json_to_csv(result));
+
+        }else{
+            stringResult = new Result<String>(ResultEnum.FAIL,result);
+        }
+        return stringResult;
+    }*/
+
 
 }

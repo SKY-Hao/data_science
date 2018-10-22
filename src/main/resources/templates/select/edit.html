@@ -234,7 +234,8 @@
                     let items = data[i];
                     html+="<div class=\"div-table-row\">";
                     for (let item in items) {
-                        html+="<div class=\"div-table-col\">"+items[item]+"</div>";
+//                        debugger
+                        html+="<div class=\"div-table-col\">"+JSON.stringify(items[item])+"</div>";
                     }
                     html+="</div>";
                 }

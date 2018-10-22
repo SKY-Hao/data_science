@@ -4,6 +4,7 @@ import com.redoop.science.entity.RegFunction;
 import com.redoop.science.mapper.RegFunctionMapper;
 import com.redoop.science.service.IRegFunctionService;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 /**
@@ -17,4 +18,11 @@ import org.springframework.stereotype.Service;
 @Service
 public class RegFunctionServiceImpl extends ServiceImpl<RegFunctionMapper, RegFunction> implements IRegFunctionService {
 
+    @Autowired
+    RegFunctionMapper regFunctionMapper;
+
+    @Override
+    public String getByName(String name) {
+        return regFunctionMapper.findByName(name);
+    }
 }

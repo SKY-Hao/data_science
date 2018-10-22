@@ -2,6 +2,7 @@ package com.redoop.science.mapper;
 
 import com.redoop.science.entity.RegFunction;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
+import org.apache.ibatis.annotations.Select;
 
 /**
  * <p>
@@ -13,4 +14,6 @@ import com.baomidou.mybatisplus.core.mapper.BaseMapper;
  */
 public interface RegFunctionMapper extends BaseMapper<RegFunction> {
 
+    @Select("select CODE from reg_function where NAME =#{name} ")
+    String findByName(String name);
 }

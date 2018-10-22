@@ -70,39 +70,12 @@
     <div class="container">
         <!-- row -->
         <div class="row">
-            <!-- ASIDE -->
-            <div id="aside" class="col-md-3">
-                <!-- aside Widget -->
-                <div class="aside">
-                    <h3 class="aside-title">真实库</h3>
-                    <div>
-                        <ul id="treeReal" class="ztree"></ul>
-                    </div>
-                </div>
-                <!-- /aside Widget -->
-
-                <!-- aside Widget -->
-                <div class="aside">
-                    <h3 class="aside-title">虚拟库</h3>
-                    <div>
-                        <ul id="treeVirtual" class="ztree"></ul>
-                    </div>
-                </div>
-                <!-- /aside Widget -->
-            </div>
-            <!-- /ASIDE -->
-
             <!-- STORE -->
-            <div id="store" class="col-md-9">
+            <div id="store" style="width: 100%" class="col-md-9">
                 <div class="row">
                     <div id="editor"></div>
                 </div>
                 <div>
-
-                    <!--<input id="sqlName" th:value="${virtual.name}" placeholder="请填写sql name"/><br/>
-                    <input id="id" type="hidden" th:value="${virtual.id}" placeholder="请填写sql name"/><br/>
-                    <button id="runButton" onclick="submitRunSQL()" class="btn btn-run waves-effect">查询</button>
-                    <button id="saveButton"  onclick="submitSaveSQL()" class="btn btn-run waves-effect">保存</button>-->
 
                     <input id="sqlName" placeholder="请填写sql name"/><br/>
                     <input id="id" type="hidden"/><br/>
@@ -111,12 +84,6 @@
                     <button id="save" onclick="saveSQL()" class="btn btn-run waves-effect">下载</button>
                 </div>
                 <div class="div-table" id="divTable">
-                    <!--<div class="div-table-row">
-                        <div class="div-table-col" th:for="(item,index) in columns">{{item}}</div>
-                    </div>
-                    <div class="div-table-row" v-for="(items,index) in tableData">
-                        <div class="div-table-col" v-for="(item,index) in items">{{item}}</div>
-                    </div>-->
                 </div>
             </div>
             <!-- /STORE -->
@@ -222,8 +189,6 @@
                     }
                 }
 
-
-
                 let html = "<div class=\"div-table-row\">";
                 for (let column in keys) {
                     html+="<div class=\"div-table-col\">"+keys[column]+"</div>";
@@ -248,6 +213,7 @@
     }
 
     function submitSaveSQL() {
+        //debugger;
         var sql = editor.getValue();
         var sqlName = $("#sqlName").val();
         var id = $("#id").val();
@@ -262,7 +228,7 @@
         $.post("/function/save", {"code": sql, "name": sqlName, "id": id}, function (result) {
             if (result.code == 200) {
                 layer.msg("保存成功");
-            } else if (result.code == 300) {
+            } else if (result.code == 1001) {
                 layer.alert(result.msg)
             }
         });

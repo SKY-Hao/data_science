@@ -41,11 +41,11 @@ public class JobController {
        // String fileName = sqlName;
 
         try {
-            String runSql = ParseSql.viewParseSql(sql);
+            String runSql = ParseSql.parse(sql);
             HttpUrl url = new HttpUrl.Builder()
                     .scheme("http")
 //                    .host("127.0.0.1")
-                    .host("192.168.0.122")
+                    .host("192.168.0.163")
                     .port(9003)
                     .addPathSegments("run\\script")
                     .addQueryParameter("sql", runSql)

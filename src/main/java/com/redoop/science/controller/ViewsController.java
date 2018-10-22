@@ -1,18 +1,13 @@
 package com.redoop.science.controller;
 
 
-import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
-import com.redoop.science.dto.ViewsDto;
 import com.redoop.science.entity.*;
-import com.redoop.science.mapper.ViewsMapper;
 import com.redoop.science.service.IViewsService;
 import com.redoop.science.service.IViewsTablesService;
 import com.redoop.science.utils.*;
-import jdk.management.resource.internal.inst.SocketOutputStreamRMHooks;
-import okhttp3.HttpUrl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -20,12 +15,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpServletRequest;
-import java.io.IOException;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 
 /**
  * <p>

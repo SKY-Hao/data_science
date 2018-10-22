@@ -11,29 +11,22 @@ import java.util.Set;
 public class Test {
     @org.junit.Test
     public void test(){
-        String sql = "select * from %.`db1.test` as a;";
+        //String sql = "select * from #.`db.test` as a;";
+        String sql = "select bayes_predict(features) as predict_label, label  from data as result;";
         String[] codes = sql.split(" ");
-        String[] ccc={"select","*","from","%.`db1.test`","as","a;"};
+     //String name ="bayes_predict";
         Set<String> tableNames = new HashSet<>();
         // Set<String> viwesNames = new HashSet<>();
         for (String table : codes) {
-            if (table.indexOf("%.") != -1) {
+            if (table.indexOf(")") != -1) {
                 //  %.`db1.test`
 
-                String dbNames = table.split("`")[1];
-                String dbName = dbNames.split("\\.")[0];
-                String tableName = dbNames.split("\\.")[1];
-               // String[] dbNddames = table.split("`");
-                //String dbNames = dbNddames[1];
-                //String dbNames = table.split("`")
-               /* String[] xx={"%.","db1.test"};
-                String[] xxx={"select * from %.`","db1.test`","as a;"};
-                for(String sss:dbNddames){
+               // String dbNames = table.split("`")[1];
+                String dbName = table.split("\\(")[0];
+               // String tableName = dbName.split("\\)")[0];
 
-                    System.out.println("dbNddames>>>>>"+sss);
-                }*/
-
-                System.out.println("dbNames======"+dbNames+",dbName====="+dbName+",tableName===="+tableName);
+                System.out.println("ddbName====="+dbName);
+              //  System.out.println("ddbName====="+tableName);
 //                tableNames.add(table);
             }
         }
