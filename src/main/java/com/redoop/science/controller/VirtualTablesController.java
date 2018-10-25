@@ -4,9 +4,14 @@ package com.redoop.science.controller;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.redoop.science.constant.DBEnum;
+import com.redoop.science.dto.ViewsDto;
 import com.redoop.science.entity.RealDb;
+import com.redoop.science.entity.RegFunction;
+import com.redoop.science.entity.ViewsTables;
 import com.redoop.science.entity.VirtualTables;
 import com.redoop.science.service.IRealDbService;
+import com.redoop.science.service.IRegFunctionService;
+import com.redoop.science.service.IViewsService;
 import com.redoop.science.service.IVirtualTablesService;
 import com.redoop.science.utils.Result;
 import com.redoop.science.utils.ResultEnum;
@@ -39,6 +44,11 @@ public class VirtualTablesController {
     private IVirtualTablesService virtualTablesService;
     @Autowired
     private IRealDbService realDbService;
+
+    @Autowired
+    private IViewsService viewsService;
+    @Autowired
+    private IRegFunctionService regFunctionService;
 
     /**
      * 数据源列表分类
@@ -128,9 +138,58 @@ public class VirtualTablesController {
             zMap.put("id",virtualTables.getId()+10);
             virtualZList.add(zMap);
         }
+
+        //获取视图库
+        List<ViewsDto> views =  viewsService.getViewsTables();
+
+        List<Map<String,Object>> viewsZList = new ArrayList<>();
+        for (ViewsDto v :views)
+        {
+
+            Map<String,Object> zMap = new HashMap<>();
+            //第一节点
+            zMap.put("pId",0);
+            zMap.put("name",v.getName());
+            zMap.put("icon","/img/icon/view.png");
+            zMap.put("id",v.getId());
+            viewsZList.add(zMap);
+
+            for (ViewsTables viewsTables : v.getViewsTablesList()){
+                Map<String,Object> z2Map = new HashMap<>();
+                z2Map.put("pId",viewsTables.getViewsId());
+                z2Map.put("name",viewsTables.getName());
+                z2Map.put("icon","/img/icon/viewTable.png");
+                z2Map.put("id",viewsTables.getId()+10000);
+                viewsZList.add(z2Map);
+            }
+        }
+
+
+        //函数树
+        List<Map<String,Object>> funZList = new ArrayList<>();
+        Map<String,Object> fMap = new HashMap<>();
+        fMap.put("pId",0);
+        fMap.put("name","函数库");
+        fMap.put("icon","/img/icon/db.png");
+        fMap.put("id",1);
+        funZList.add(fMap);
+        List<RegFunction> regFunctionList = regFunctionService.list(null);
+        for (RegFunction regFunction:regFunctionList){
+            Map<String,Object> fMap2 = new HashMap<>();
+            fMap2.put("pId",1);
+            fMap2.put("name",regFunction.getName());
+            fMap2.put("icon","/img/icon/table.png");
+            fMap2.put("id",regFunction.getId()+10);
+            funZList.add(fMap2);
+        }
+
+
         //返回值
         model.addAttribute("realZList", realZList);
         model.addAttribute("virtualZList", virtualZList);
+        model.addAttribute("viewsZList", viewsZList);
+        model.addAttribute("funZList", funZList);
+
         return model;
     }
 

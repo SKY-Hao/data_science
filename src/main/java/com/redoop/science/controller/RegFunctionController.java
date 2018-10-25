@@ -89,33 +89,6 @@ public class RegFunctionController {
         }
     }
 
-   /* @PostMapping("/save")
-    @ResponseBody
-    public Result<String> save(@RequestBody @Validated RegFunction regFunction, HttpServletRequest request) {
-        SysUser loginUser = SessionUtils.getUser(request);
-
-        QueryWrapper<RegFunction> wrapper = new QueryWrapper<>();
-        wrapper.eq("NAME", regFunction.getName());
-        RegFunction regFunctionCheckName = regFunctionService.getOne(wrapper);
-        if (regFunctionCheckName != null) {
-            return new Result<String>(ResultEnum.REPEAT);
-        } else {
-            regFunction.setOperationId(loginUser.getId());
-            regFunction.setOperationTime(LocalDateTime.now());
-            if (regFunction.getId() == null) {
-                regFunction.setCreateDate(LocalDateTime.now());
-                regFunction.setCreatorId(loginUser.getId());
-                regFunction.setCreatorName(loginUser.getNickName());
-            }
-        }
-        if (regFunctionService.saveOrUpdate(regFunction)) {
-            //注册函数
-
-            return new Result<String>(ResultEnum.SECCUSS);
-        } else {
-            return new Result<String>(ResultEnum.FAIL);
-        }
-    }*/
    @PostMapping("/save")
    @ResponseBody
    public Result<String> save(@RequestParam(name = "id",required = false) Long id,
@@ -147,37 +120,6 @@ public class RegFunctionController {
    }
 
 
-/*
-    @PostMapping("/script")
-    @ResponseBody
-    public Result<String> script(HttpServletRequest request,@RequestParam(value = "sql") String sql,@RequestParam(value = "sqlName") String  sqlName) throws Exception {
-        Result<String> stringResult = new Result<>(ResultEnum.FAIL);
-        String result = "";
-
-        try {
-            String runSql = ParseSql.funParseSql(sql);
-            HttpUrl url = new HttpUrl.Builder()
-                    .scheme("http")
-                    .host("192.168.0.163")
-                    .port(9003)
-                    .addPathSegments("run\\script")
-                    .addQueryParameter("sql", runSql)
-                    .build();
-            String sqlResult = HttpClient.httpPost(url, "");
-            result = sqlResult;
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        logger.info("sql查询返回结果>>>>>>>"+result);
-        if(JsonUtil.isJSONValid(result)){
-            stringResult = new Result<String>(ResultEnum.SECCUSS,result);
-            FileUtils.writeStringToFile(new File("upload/files/"+sqlName+".csv"),  PoiUtils.json_to_csv(result));
-
-        }else{
-            stringResult = new Result<String>(ResultEnum.FAIL,result);
-        }
-        return stringResult;
-    }*/
 
 
 }

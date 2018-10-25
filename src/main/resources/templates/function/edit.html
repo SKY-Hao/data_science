@@ -81,7 +81,7 @@
                     <input id="id" type="hidden"/><br/>
                     <button id="runButton" onclick="submitRunSQL()" class="btn btn-run waves-effect">查询</button>
                     <button id="saveButton" onclick="submitSaveSQL()" class="btn btn-run waves-effect">保存</button>
-                    <button id="save" onclick="saveSQL()" class="btn btn-run waves-effect">下载</button>
+                   <!-- <button id="save" onclick="saveSQL()" class="btn btn-run waves-effect">下载</button>-->
                 </div>
                 <div class="div-table" id="divTable">
                 </div>
@@ -171,7 +171,7 @@
             layer.msg("请输入sql name");
             return;
         }
-        $.post("/function/script", {"sql": sql, "sqlName": sqlName}, function (result) {
+        $.post("/run/script", {"sql": sql, "sqlName": sqlName}, function (result) {
 
             if(result.code==200){
                 let data = JSON.parse(result.content);
@@ -199,7 +199,7 @@
                     let items = data[i];
                     html+="<div class=\"div-table-row\">";
                     for (let item in items) {
-                        html+="<div class=\"div-table-col\">"+items[item]+"</div>";
+                        html+="<div class=\"div-table-col\">"+JSON.stringify(items[item])+"</div>";
                     }
                     html+="</div>";
                 }
@@ -236,7 +236,7 @@
     /**
      * 导出
      */
-    function saveSQL() {
+   /* function saveSQL() {
         var sql = editor.getValue();
        var sqlName = $("#sqlName").val();
         if (sqlName == null || sqlName == "") {
@@ -244,7 +244,7 @@
             return;
         }
         location.href="/function/download/"+sqlName;
-    }
+    }*/
 
 </script>
 
