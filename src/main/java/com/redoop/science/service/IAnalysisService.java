@@ -14,4 +14,5 @@ import com.redoop.science.entity.Analysis;
 public interface IAnalysisService extends IService<Analysis> {
 
 
+    String getId(Integer id);
 }

@@ -17,6 +17,9 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.*;
 import java.time.LocalDateTime;
+import java.util.Enumeration;
+import java.util.Map;
+import java.util.Set;
 
 /**
  * @Author: Alan
@@ -28,20 +31,26 @@ import java.time.LocalDateTime;
 public class JobController {
     Logger logger = LoggerFactory.getLogger(getClass());
     @Autowired
-    private IRealDbService realDbService;
-    @Autowired
     private IVirtualTablesService virtualTablesService;
 
     @PostMapping("/script")
     @ResponseBody
     public Result<String> script(HttpServletRequest request,@RequestParam(value = "sql") String sql,@RequestParam(value = "sqlName") String  sqlName) throws Exception {
+
+
+      /*  String webUrl = request.getRequestURL()+"?sql="+sql+"&sqlName="+sqlName;
+
+        System.out.println(webUrl);
+
+        System.out.println("=========----------------------------------------============");*/
+
         Result<String> stringResult = new Result<>(ResultEnum.FAIL);
         String result = "";
-
        // String fileName = sqlName;
 
         try {
             String runSql = ParseSql.parse(sql);
+            System.out.println("runSql========="+runSql);
             HttpUrl url = new HttpUrl.Builder()
                     .scheme("http")
 //                    .host("127.0.0.1")

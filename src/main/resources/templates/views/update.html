@@ -207,7 +207,7 @@
             layer.msg("请输入sql name");
             return;
         }
-        $.post("/viewsTables/script", {"sql": sql, "sqlName": sqlName}, function (result) {
+        $.post("/run/script", {"sql": sql, "sqlName": sqlName}, function (result) {
 
             if(result.code==200){
                 let data = JSON.parse(result.content);

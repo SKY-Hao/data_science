@@ -186,7 +186,7 @@ public class ParseSql {
         if (repSql.indexOf(";") != -1) {
             returnSql.append(repSql);
         }
-        System.out.println("returnSql.append(repSql);>>>>>>===" + returnSql);
+        System.out.println("returnSql.append(repSql)>>>>>>===" + returnSql);
         //logger.info("查询sql>>>>"+returnSql.toString());
         return returnSql.toString();
     }
@@ -224,15 +224,15 @@ public class ParseSql {
                 tableNames.add(tableName);
             }
         }
-        System.out.println("tableNames=======" + tableNames);
-        System.out.println("viwesNames=======" + viwesNames);
+       /* System.out.println("tableNames=======" + tableNames);
+        System.out.println("viwesNames=======" + viwesNames);*/
 
         Map<String, String> replaceTableNames = new HashMap<>();
         for (String dbName : tableNames) {
-            System.out.println("dbName>>>>>>>>>>" + dbName);
+           // System.out.println("dbName>>>>>>>>>>" + dbName);
             String code = parseSqlUtils.viewsTablesService.getByName(dbName);
             String sqlCode = parseSql(code);
-            System.out.println("sqlCode==========" + sqlCode);
+            System.out.println("view_sqlCode==========" + sqlCode);
             returnSql.append(sqlCode);
         }
         String repSql = copySql;
@@ -241,7 +241,7 @@ public class ParseSql {
         }
         returnSql.append(repSql);
 
-        System.out.println("repSqlrepSql>>>>>>>>>>>>>>>>>>" + repSql);
+        System.out.println("view_repSqlrepSql====" + repSql);
         return returnSql.toString();
     }
 

@@ -108,7 +108,6 @@ public class ViewsTablesController {
                        @RequestParam(value = "viewsName") String viewsName*/) {
 
 
-        //Views views = null;
         ViewsTables tables = null;
 
         SysUser sysUser = SessionUtils.getUser(request);
@@ -118,7 +117,6 @@ public class ViewsTablesController {
 
         if(id!=null){
             tables = viewsTablesService.getById(id);
-            // views = viewsService.getById(id);
         }else{
 
             ViewsTables virtualTable  = viewsTablesService.getOne(queryWrapper);
@@ -135,20 +133,6 @@ public class ViewsTablesController {
                 return new Result(ResultEnum.NOT_VIEW,"目前没有视图库，请创建视图库");
             }
 
-            /*if (vId==null || vId == 0 ){
-                QueryWrapper queryWrapper1 = new QueryWrapper();
-                queryWrapper1.eq("NAME",viewsName);
-                Views views1 = viewsService.getOne(queryWrapper1);
-                if (views1 != null){
-                    return new Result(ResultEnum.REPEAT_VIEW,"名称已存在，请使用其他名称");
-                }else {
-                    views = new Views();
-                    views.setName(viewsName);
-                    //boolean ccc = viewsService.save(views);
-                    viewsService.save(views);
-                    tables.setViewsId(views.getId());
-                }
-            }*/
         }
 
         if (vId!=0){
@@ -243,10 +227,10 @@ public class ViewsTablesController {
 
     /**
      * 执行sql查询
-     * @param sql
+     *
      * @return
      */
-    @PostMapping("/script")
+    /*@PostMapping("/script")
     @ResponseBody
     public Result<String> script(@RequestParam(value = "sql") String sql) {
         Result<String> stringResult = new Result<>(ResultEnum.FAIL);
@@ -274,7 +258,7 @@ public class ViewsTablesController {
             stringResult = new Result<String>(ResultEnum.FAIL,result);
         }
         return stringResult;
-    }
+    }*/
 
     @DeleteMapping("/delete/{id}")
     @ResponseBody

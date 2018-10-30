@@ -80,7 +80,7 @@ public class AnalysisController {
      */
     @PostMapping("/save")
     @ResponseBody
-    public Result save(HttpServletRequest request, @RequestParam(name = "id",required = false) Long id,
+    public Result saveOrUpdate(HttpServletRequest request, @RequestParam(name = "id",required = false) Long id,
                        @RequestParam(name = "sql") String sql,
                        @RequestParam(value = "sqlName") String  sqlName) {
         Analysis analysis = null;
@@ -101,6 +101,8 @@ public class AnalysisController {
                 analysis.setCreatorName(sysUser.getNickName());
             }
         }
+        analysis.setCode(ParseSql.parse(sql));
+        System.out.println("分析analysis.getCode()====="+analysis.getCode());
         analysis.setName(sqlName);
         analysis.setFinallyCode(sql);
         analysis.setOperationTime(new Date());
@@ -158,7 +160,7 @@ public class AnalysisController {
      * @param sql
      * @return
      */
-    @PostMapping("/script")
+  /*  @PostMapping("/script")
     @ResponseBody
     public Result<String> script(@RequestParam(value = "sql") String sql) {
         Result<String> stringResult = new Result<>(ResultEnum.FAIL);
@@ -167,7 +169,7 @@ public class AnalysisController {
             String runSql = ParseSql.parseSql(sql);
             HttpUrl url = new HttpUrl.Builder()
                     .scheme("http")
-                    .host("192.168.0.122")
+                    .host("192.168.0.163")
                     .port(9003)
                     .addPathSegments("run\\script")
                     .addQueryParameter("sql", runSql)
@@ -181,11 +183,14 @@ public class AnalysisController {
         System.out.println("resultresultresult>>>>>"+result);
 
         if(JsonUtil.isJSONValid(result)){
+
             stringResult = new Result<String>(ResultEnum.SECCUSS,result);
         }else{
             stringResult = new Result<String>(ResultEnum.FAIL,result);
         }
         return stringResult;
-    }
+    }*/
+
+
 
 }

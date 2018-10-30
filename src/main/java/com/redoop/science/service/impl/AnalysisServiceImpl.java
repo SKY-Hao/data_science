@@ -23,5 +23,8 @@ public class AnalysisServiceImpl extends ServiceImpl<AnalysisMapper, Analysis> i
     @Autowired
     AnalysisMapper analysisMapper;
 
-
+    @Override
+    public String getId(Integer id) {
+        return analysisMapper.findByCode(id);
+    }
 }
