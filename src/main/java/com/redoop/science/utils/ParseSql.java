@@ -187,7 +187,6 @@ public class ParseSql {
             returnSql.append(repSql);
         }
         System.out.println("returnSql.append(repSql)>>>>>>===" + returnSql);
-        //logger.info("查询sql>>>>"+returnSql.toString());
         return returnSql.toString();
     }
 
@@ -201,12 +200,6 @@ public class ParseSql {
     public static String viewParseSql(String sql) {
 
         String copySql = sql;
-     /*   if(copySql.indexOf("`") != -1) {
-            String realDbSql = parseSql(copySql);
-            System.out.println("realDbSql>>>>++++++==="+realDbSql);
-            copySql=realDbSql;
-        }
-*/
         StringBuffer returnSql = new StringBuffer();
 
         String[] codes = copySql.split(" ");
@@ -224,15 +217,11 @@ public class ParseSql {
                 tableNames.add(tableName);
             }
         }
-       /* System.out.println("tableNames=======" + tableNames);
-        System.out.println("viwesNames=======" + viwesNames);*/
 
         Map<String, String> replaceTableNames = new HashMap<>();
         for (String dbName : tableNames) {
-           // System.out.println("dbName>>>>>>>>>>" + dbName);
             String code = parseSqlUtils.viewsTablesService.getByName(dbName);
             String sqlCode = parseSql(code);
-            System.out.println("view_sqlCode==========" + sqlCode);
             returnSql.append(sqlCode);
         }
         String repSql = copySql;
@@ -255,17 +244,6 @@ public class ParseSql {
     public static String funParseSql(String sql) {
 
         String copySql = sql;
-     /*   if(copySql.indexOf("`") != -1) {
-            String realDbSql = parseSql(copySql);
-          //  System.out.println("realDbSql>>>>++++++==="+realDbSql);
-           return realDbSql;
-        } else{
-            if(copySql.indexOf("%.") != -1) {
-                String realDbSql = viewParseSql(copySql);
-             //   System.out.println("realDbSql>>>>++++++==="+realDbSql);
-            return   realDbSql;
-            }
-        }*/
 
         StringBuffer returnSql = new StringBuffer();
         String[] codes = copySql.split(" ");
@@ -275,17 +253,13 @@ public class ParseSql {
         for (String table : codes) {
             if (table.indexOf(")") != -1) {
 
-                //String dbName = table.split("\\.")[1];
                 String dbName = table.split("\\(")[0];
                 tableNames.add(dbName);
-                //  System.out.println("table============"+dbName);
             }
         }
         for (String dbName : tableNames) {
-            // System.out.println("dbName>>>>>>>>>>"+dbName);
             String code = parseSqlUtils.regFunctionService.getByName(dbName);
             String sqlCode = parseSql(code);
-           // System.out.println("sqlCode==========" + sqlCode);
             returnSql.append(sqlCode);
         }
         String repSql = copySql;

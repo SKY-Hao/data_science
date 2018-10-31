@@ -106,10 +106,9 @@
                         <option th:selected="${viewsLists.viewsId eq list.id}"  th:each="list:${select}" th:value="${list.id}" th:text="${list.name }"></option>
                     </select>
 
-
                     <input id="id" type="hidden"/><br/>
 
-                    <button id="runButton" onclick="submitRunSQL()" class="btn btn-run waves-effect">查询</button>
+                    <button id="runButton" onclick="submitRunSQL()" class="btn btn-info">查询</button>
                     <!--<button id="saveButton" onclick="submitSaveSQL()" class="btn btn-run waves-effect">保存</button>
                     <button id="saveViewButton" onclick="submitView()" class="btn btn-run waves-effect">添加视图库</button>-->
                 </div>

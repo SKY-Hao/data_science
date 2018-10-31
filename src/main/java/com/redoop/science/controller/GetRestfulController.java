@@ -21,7 +21,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.*;
 import java.time.LocalDateTime;
-import java.util.Date;
+import java.util.*;
 
 /**
  * @Author: Admin
@@ -40,32 +40,34 @@ public class GetRestfulController {
     @GetMapping("/analysis/{id}")
     @ResponseBody
     public Result<String> script(
-            HttpServletRequest request,@PathVariable Integer id) throws Exception {
+            HttpServletRequest request, @PathVariable Integer id,String...parms) throws Exception {
+
+        String sql =null;
 
         Result<String> stringResult = new Result<>(ResultEnum.FAIL);
         String result = "";
-            try {
-                String sql = analysisService.getId(id);
-                String runSql = ParseSql.parse(sql);
-                HttpUrl url = new HttpUrl.Builder()
-                        .scheme("http")
-                        .host("192.168.0.163")
-                        .port(9003)
-                        .addPathSegments("run\\script")
-                        .addQueryParameter("sql", runSql)
-                        .build();
-                String sqlResult = HttpClient.httpPost(url, "");
-                result = sqlResult;
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-            logger.info("sql查询返回结果>>>>>>>" + result);
-            if (JsonUtil.isJSONValid(result)) {
-                stringResult = new Result<String>(ResultEnum.SECCUSS, result);
-            } else {
-                stringResult = new Result<String>(ResultEnum.FAIL, result);
-            }
-            return stringResult;
+        try {
+             sql = analysisService.getId(id);
+            String runSql = ParseSql.parse(sql);
+            HttpUrl url = new HttpUrl.Builder()
+                    .scheme("http")
+                    .host("192.168.0.122")
+                    .port(9003)
+                    .addPathSegments("run\\script")
+                    .addQueryParameter("sql", runSql)
+                    .build();
+            String sqlResult = HttpClient.httpPost(url, "");
+            result = sqlResult;
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        logger.info("sql查询返回结果>>>>>>>" + result);
+        if (JsonUtil.isJSONValid(result)) {
+            stringResult = new Result<String>(ResultEnum.SECCUSS, result);
+        } else {
+            stringResult = new Result<String>(ResultEnum.FAIL, result);
+        }
+        return stringResult;
     }
 
 
