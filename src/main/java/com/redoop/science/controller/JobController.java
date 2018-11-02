@@ -38,12 +38,6 @@ public class JobController {
     public Result<String> script(HttpServletRequest request,@RequestParam(value = "sql") String sql,@RequestParam(value = "sqlName") String  sqlName) throws Exception {
 
 
-      /*  String webUrl = request.getRequestURL()+"?sql="+sql+"&sqlName="+sqlName;
-
-        System.out.println(webUrl);
-
-        System.out.println("=========----------------------------------------============");*/
-
         Result<String> stringResult = new Result<>(ResultEnum.FAIL);
         String result = "";
        // String fileName = sqlName;
@@ -53,7 +47,7 @@ public class JobController {
             HttpUrl url = new HttpUrl.Builder()
                     .scheme("http")
 //                    .host("127.0.0.1")
-                    .host("192.168.0.122")
+                    .host("192.168.0.163")
                     .port(9003)
                     .addPathSegments("run\\script")
                     .addQueryParameter("sql", runSql)

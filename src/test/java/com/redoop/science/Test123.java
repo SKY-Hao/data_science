@@ -8,7 +8,7 @@ import java.util.Set;
  * @Time: 2018/9/29 10:37
  * @Description:
  */
-public class Test {
+public class Test123 {
     @org.junit.Test
     public void test(){
         //String sql = "select * from #.`db.test` as a;";

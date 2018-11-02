@@ -40,18 +40,34 @@ public class GetRestfulController {
     @GetMapping("/analysis/{id}")
     @ResponseBody
     public Result<String> script(
-            HttpServletRequest request, @PathVariable Integer id,String...parms) throws Exception {
+            HttpServletRequest request, @PathVariable Integer id,@RequestParam Map<String, String> parms) throws Exception {
+
 
         String sql =null;
 
         Result<String> stringResult = new Result<>(ResultEnum.FAIL);
         String result = "";
+
+
         try {
-             sql = analysisService.getId(id);
+
+            sql = analysisService.getId(id);
+            for (String key :parms.keySet()){
+
+                sql = sql.replaceAll("&"+key, parms.get(key));
+
+                System.out.println("key===="+key);
+                System.out.println("parm.keySet()======="+parms.keySet());
+                System.out.println("parm.get(key)======="+ parms.get(key));
+            }
+
+
+
             String runSql = ParseSql.parse(sql);
+
             HttpUrl url = new HttpUrl.Builder()
                     .scheme("http")
-                    .host("192.168.0.122")
+                    .host("192.168.0.163")
                     .port(9003)
                     .addPathSegments("run\\script")
                     .addQueryParameter("sql", runSql)

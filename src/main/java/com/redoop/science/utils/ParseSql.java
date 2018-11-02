@@ -225,6 +225,7 @@ public class ParseSql {
             returnSql.append(sqlCode);
         }
         String repSql = copySql;
+        System.out.println("copySql==========="+copySql);
         for (String map : viwesNames.keySet()) {
             repSql = repSql.replaceAll(map.trim(), viwesNames.get(map));
         }
