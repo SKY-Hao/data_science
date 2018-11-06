@@ -1,6 +1,6 @@
 package com.redoop.science.utils;
 
-import com.redoop.science.entity.SysUser;
+import com.redoop.science.entity.SysUserDetails;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -45,7 +45,7 @@ public class SessionUtils {
      * @param request
      * @param user
      */
-    public static void setUser(HttpServletRequest request,SysUser user){
+    public static void setUser(HttpServletRequest request, SysUserDetails user){
         request.getSession(true).setAttribute(SESSION_USER, user);
     }
 
@@ -53,10 +53,10 @@ public class SessionUtils {
     /**
      * 从session中获取用户信息
      * @param request
-     * @return SysUser
+     * @return SysUserDetails
      */
-    public static SysUser getUser(HttpServletRequest request){
-        return (SysUser)request.getSession(true).getAttribute(SESSION_USER);
+    public static SysUserDetails getUser(HttpServletRequest request){
+        return (SysUserDetails)request.getSession(true).getAttribute(SESSION_USER);
     }
     /**
      * 从session中获取用户昵称
@@ -64,15 +64,15 @@ public class SessionUtils {
      * @return String
      */
     public static String getUserNickName(HttpServletRequest request){
-        SysUser sysUser = (SysUser)request.getSession(true).getAttribute(SESSION_USER);
-        return sysUser.getNickName();
+        SysUserDetails sysUserDetails = (SysUserDetails)request.getSession(true).getAttribute(SESSION_USER);
+        return sysUserDetails.getNickname();
     }
 
 
     /**
      * 从session中获取用户信息
      * @param request
-     * @return SysUser
+     * @return SysUserDetails
      */
     public static void removeUser(HttpServletRequest request){
         removeAttr(request, SESSION_USER);

@@ -29,4 +29,8 @@ public class Result<T> implements Serializable {
         this.msg = msg;
         this.content = content;
     }
+    public Result(Integer code,String msg) {
+        this.code = getCode();
+        this.msg = getMsg();
+    }
 }

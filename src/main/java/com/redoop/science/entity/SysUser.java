@@ -22,7 +22,6 @@ import javax.validation.constraints.NotEmpty;
 @Data
 @EqualsAndHashCode(callSuper = false)
 @Accessors(chain = true)
-
 public class SysUser implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -94,6 +93,12 @@ public class SysUser implements Serializable {
     @NotEmpty(message="密码不能为空")
     @TableField("PASSWORD")
     private String password;
+
+    /**
+     * 用户状态 0-正常启用 1-停用 2-删除
+     */
+    @TableField("STATUS")
+    private Integer status;
 
     public Integer getId() {
         return id;

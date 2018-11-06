@@ -1,5 +1,8 @@
 package com.redoop.science;
 
+import org.junit.Test;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+
 import java.util.HashSet;
 import java.util.Set;
 
@@ -8,8 +11,8 @@ import java.util.Set;
  * @Time: 2018/9/29 10:37
  * @Description:
  */
-public class Test {
-    @org.junit.Test
+public class Test123 {
+    @Test
     public void test(){
         //String sql = "select * from #.`db.test` as a;";
         String sql = "select bayes_predict(features) as predict_label, label  from data as result;";
@@ -30,5 +33,10 @@ public class Test {
 //                tableNames.add(table);
             }
         }
+    }
+    @Test
+    public void testBc(){
+        BCryptPasswordEncoder bCryptPasswordEncoder = new BCryptPasswordEncoder();
+        System.out.println(bCryptPasswordEncoder.encode("admin")+"----------"+bCryptPasswordEncoder.encode("admin").length());
     }
 }

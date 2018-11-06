@@ -111,7 +111,7 @@ public class ViewsTablesController {
         //Views views = null;
         ViewsTables tables = null;
 
-        SysUser sysUser = SessionUtils.getUser(request);
+        SysUserDetails sysUser = SessionUtils.getUser(request);
 
         QueryWrapper queryWrapper = new QueryWrapper();
         queryWrapper.eq("NAME",sqlName);
@@ -129,7 +129,7 @@ public class ViewsTablesController {
                 tables = new ViewsTables();
                 tables.setCreateDate(LocalDateTime.now());
                 tables.setCreatorId(sysUser.getId());
-                tables.setCreatorName(sysUser.getNickName());
+                tables.setCreatorName(sysUser.getNickname());
             }
             if (vId == null || vId ==0){
                 return new Result(ResultEnum.NOT_VIEW,"目前没有视图库，请创建视图库");

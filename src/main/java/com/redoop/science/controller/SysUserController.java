@@ -51,7 +51,7 @@ public class SysUserController {
         if(user==null){
             return new Result<String>(ResultEnum.NOT_NULL);
         }else if(passwordTrim.equals(user.getPassword())){
-            SessionUtils.setUser(request,user);
+//            SessionUtils.setUser(request,user);
             return new Result<String>(ResultEnum.SECCUSS);
         }else {
             return new Result<String>(ResultEnum.FAIL_PASSWORD);
