@@ -1,7 +1,7 @@
 package com.redoop.science.controller;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
-import com.redoop.science.entity.SysUser;
+import com.redoop.science.entity.SysUserDetails;
 import com.redoop.science.entity.VirtualTables;
 import com.redoop.science.service.IRealDbService;
 import com.redoop.science.service.IVirtualTablesService;
@@ -80,7 +80,7 @@ public class JobController {
                        @RequestParam(name = "id",required = false) Long id,
                        @RequestParam(name = "sql") String sql, @RequestParam(value = "sqlName") String  sqlName) {
         VirtualTables virtualTables = null;
-        SysUser sysUser = SessionUtils.getUser(request);
+        SysUserDetails sysUser = SessionUtils.getUser(request);
         QueryWrapper queryWrapper = new QueryWrapper();
         queryWrapper.eq("NAME",sqlName);
 
@@ -95,7 +95,7 @@ public class JobController {
                 virtualTables = new VirtualTables();
                 virtualTables.setCreateDate(LocalDateTime.now());
                 virtualTables.setCreatorId(sysUser.getId());
-                virtualTables.setCreatorName(sysUser.getNickName());
+                virtualTables.setCreatorName(sysUser.getNickname());
             }
         }
         virtualTables.setCode(sql);

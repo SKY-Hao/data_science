@@ -47,7 +47,6 @@ public class JaveSqlTest {
     private String user = "root";
     private String password = "root";
 
-    @org.junit.Test
     public void Test(){
         Connection conn = null;
         PreparedStatement pstm = null;

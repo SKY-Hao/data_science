@@ -73,7 +73,7 @@ public class ViewsController {
     public Result saveView(HttpServletRequest request,@RequestParam(name = "id",required = false) Long id,  @RequestParam(value = "viewsName") String viewsName) {
 
         Views views = null;
-        SysUser sysUser = SessionUtils.getUser(request);
+        SysUserDetails sysUser = SessionUtils.getUser(request);
         QueryWrapper queryWrapper = new QueryWrapper();
         queryWrapper.eq("NAME",viewsName);
 
@@ -88,7 +88,7 @@ public class ViewsController {
                 views.setName(viewsName);
                 views.setCreateDate(LocalDateTime.now());
                 views.setCreatorId(sysUser.getId());
-                views.setCreatorName(sysUser.getNickName());
+                views.setCreatorName(sysUser.getNickname());
             }
         }
 

@@ -6,6 +6,7 @@ import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.redoop.science.entity.RegFunction;
 import com.redoop.science.entity.SysUser;
+import com.redoop.science.entity.SysUserDetails;
 import com.redoop.science.service.IRegFunctionService;
 import com.redoop.science.utils.*;
 import okhttp3.HttpUrl;
@@ -96,7 +97,7 @@ public class RegFunctionController {
                               @RequestParam(value = "name") String  name,
                               HttpServletRequest request) {
        RegFunction regFunction = null;
-       SysUser loginUser = SessionUtils.getUser(request);
+       SysUserDetails loginUser = SessionUtils.getUser(request);
 
        QueryWrapper<RegFunction> wrapper = new QueryWrapper<>();
        wrapper.eq("NAME", name);
@@ -108,7 +109,7 @@ public class RegFunctionController {
        regFunction  = new RegFunction();
        regFunction.setCreateDate(LocalDateTime.now());
        regFunction.setCreatorId(loginUser.getId());
-       regFunction.setCreatorName(loginUser.getNickName());
+       regFunction.setCreatorName(loginUser.getNickname());
        regFunction.setCode(code);
        regFunction.setName(name);
        if (regFunctionService.saveOrUpdate(regFunction)) {
@@ -118,8 +119,4 @@ public class RegFunctionController {
            return new Result<String>(ResultEnum.FAIL);
        }
    }
-
-
-
-
 }

@@ -1,3 +1,4 @@
+
 mybatis-plus:
   mapper-locations: classpath*:/mapper/*.xml
     #实体扫描，多个package用逗号或者分号分隔
@@ -32,7 +33,6 @@ mybatis-plus:
     jdbc-type-for-null: 'null'
 spring:
 ## server port
-
   application:
     name: data-science
   datasource:
@@ -67,16 +67,28 @@ spring:
       max-pool-prepared-statement-per-connection-size: 20
   thymeleaf:
     cache: false
-    mode: LEGACYHTML5
+    mode: HTML
     encoding: utf-8
-    prefix: classpath:/templates
+    prefix: classpath:/templates/
   session:
     store-type: REDIS
     redis:
       flush-mode: ON_SAVE
-      namespace: redoop:session
     timeout: 1h
   redis:
     host: 127.0.0.1 # Redis server host.
     password:
     port: 6379
+#    cluster: #集群配置
+#      max-redirects: 3
+#      nodes:
+#      - 127.0.0.1:6379
+    lettuce:
+      pool:
+        max-active:  100 # 连接池最大连接数（使用负值表示没有限制）
+        max-idle: 100 # 连接池中的最大空闲连接
+        min-idle: 50 # 连接池中的最小空闲连接
+        max-wait: 1M # 连接池最大阻塞等待时间（使用负值表示没有限制）
+    timeout: 1M
+server:
+  port: 8088

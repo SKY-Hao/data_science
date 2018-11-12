@@ -6,6 +6,7 @@ import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.redoop.science.entity.Analysis;
 import com.redoop.science.entity.SysUser;
+import com.redoop.science.entity.SysUserDetails;
 import com.redoop.science.service.IAnalysisService;
 import com.redoop.science.service.IRealDbService;
 import com.redoop.science.utils.*;
@@ -84,7 +85,7 @@ public class AnalysisController {
                        @RequestParam(name = "sql") String sql,
                        @RequestParam(value = "sqlName") String  sqlName) {
         Analysis analysis = null;
-        SysUser sysUser = SessionUtils.getUser(request);
+        SysUserDetails sysUser = SessionUtils.getUser(request);
         QueryWrapper queryWrapper = new QueryWrapper();
         queryWrapper.eq("NAME",sqlName);
 
@@ -98,7 +99,7 @@ public class AnalysisController {
                 analysis = new Analysis();
                 analysis.setCreateDate(new Date());
                 analysis.setCreatorId(sysUser.getId());
-                analysis.setCreatorName(sysUser.getNickName());
+                analysis.setCreatorName(sysUser.getNickname());
             }
         }
         analysis.setCode(ParseSql.parse(sql));
