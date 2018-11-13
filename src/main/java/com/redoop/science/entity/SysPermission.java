@@ -4,6 +4,8 @@ import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableField;
 import java.io.Serializable;
+import java.util.List;
+
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.experimental.Accessors;
@@ -49,6 +51,49 @@ public class SysPermission implements Serializable {
      */
     @TableField("PID")
     private String pid;
+
+
+    //____________________后加____________________________
+    /**
+     * 父节点
+     */
+    @TableField("PARENT_ID")
+    private Long parentId;
+
+
+    /**
+     * 授权(多个用逗号分隔，如：user:list,user:create)
+     */
+    @TableField("PERMS")
+    private String perms;
+
+    /**
+     * 类型   0：目录   1：菜单   2：按钮
+     */
+    @TableField("TYPE")
+    private Integer type;
+
+    /**
+     * 菜单图标
+     */
+    @TableField("ICON")
+    private String icon;
+
+    /**
+     * 排序
+     */
+    @TableField("ORDER_NUM")
+    private Integer orderNum;
+
+
+    /**
+     * ztree属性
+     */
+    @TableField(exist=false)
+    private Boolean open;
+
+    @TableField(exist=false)
+    private List<?> list;
 
 
 }

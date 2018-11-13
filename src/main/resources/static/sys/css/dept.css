@@ -1,0 +1,27 @@
+body{
+    background: ivory;
+}
+.fixed-table-container {
+    margin-top: 1px;
+    margin-left: 100px;
+    margin-right: 100px;
+}
+#span{
+    margin-left: 100px;
+    background-color: lightsteelblue;
+    text-align: center;
+    margin-right: 100px;
+    border-radius: 4px;
+}
+#span01{
+    margin-left: 100px;
+    background-color: lightsteelblue;
+    text-align: center;
+    margin-right: 100px;
+    border-radius: 4px;
+}
+#span02{
+    background-color: lightsteelblue;
+    text-align: center;
+    border-radius: 4px;
+}

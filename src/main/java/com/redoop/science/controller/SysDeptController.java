@@ -1,20 +1,19 @@
 package com.redoop.science.controller;
 
-
-import com.baomidou.mybatisplus.core.metadata.IPage;
-import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
-import com.redoop.science.entity.Analysis;
+import com.redoop.science.entity.SysDept;
 import com.redoop.science.service.ISysDeptService;
-import com.redoop.science.utils.SessionUtils;
+import com.redoop.science.utils.R;
+import com.redoop.science.utils.Result;
+import com.redoop.science.utils.ResultEnum;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.servlet.ModelAndView;
+import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.annotation.*;
 
-import javax.servlet.http.HttpServletRequest;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * @author admin
@@ -23,18 +22,164 @@ import javax.servlet.http.HttpServletRequest;
  *   部门Controller
  */
 @Controller
-@RequestMapping("/sys-dept")
+@RequestMapping("/sys/dept")
 public class SysDeptController {
 
     @Autowired
     ISysDeptService deptService;
 
-    @GetMapping("/")
-    public ModelAndView index(Model model){
-
-        model.addAttribute("activeType", 7);
-
-        return new ModelAndView("/dept/sys");
+    @GetMapping("/list")
+    public String index(Map map){
+        List<SysDept> deptList = deptService.list(null);
+        for(SysDept sysDept : deptList){
+            SysDept parentDeptEntity =  deptService.getById(sysDept.getParentId());
+            if(parentDeptEntity != null){
+                sysDept.setParentName(parentDeptEntity.getName());
+            }
+        }
+        // model.addAttribute("deptList",deptList);
+        map.put("deptList",deptList);
+        return "/sys/dept";
     }
+
+
+    @RequestMapping("/lists")
+    @ResponseBody
+    public List<SysDept> list(Map map){
+        List<SysDept> deptList = deptService.list(null);
+
+        for(SysDept sysDept : deptList){
+            SysDept parentDeptEntity =  deptService.getById(sysDept.getParentId());
+            if(parentDeptEntity != null){
+                sysDept.setParentName(parentDeptEntity.getName());
+            }
+        }
+
+        System.out.println("deptList>>>>>>>>>"+deptList);
+        return deptList;
+    }
+    /**
+     * 选择部门(添加、修改菜单)
+     */
+    @RequestMapping("/select")
+    @ResponseBody
+    public Map select(Model model){
+        List<SysDept> deptList = deptService.list(null);
+        for(SysDept sysDept : deptList){
+            SysDept parentDeptEntity =  deptService.getById(sysDept.getParentId());
+            if(parentDeptEntity != null){
+                sysDept.setParentName(parentDeptEntity.getName());
+            }
+        }
+
+        System.out.println("选择部门(添加、修改菜单)deptList>>>>>>>>>>>>>>>>>>>>"+deptList);
+        //添加一级部门
+        SysDept root = new SysDept();
+            root.setId(0);
+            root.setName("一级部门");
+            root.setParentId(-1L);
+            root.setOpen(true);
+            deptList.add(root);
+        Map map = new HashMap();
+        map.put("deptList",deptList);
+        return map;
+    }
+
+
+    /**
+     * 上级部门Id(管理员则为0)
+     */
+    @GetMapping("/info")
+    @ResponseBody
+    public Map info(){
+        long id = 0;
+        List<SysDept> deptList = deptService.list(null);
+        for(SysDept sysDept : deptList){
+            SysDept parentDeptEntity =  deptService.getById(sysDept.getParentId());
+            if(parentDeptEntity != null){
+                sysDept.setParentName(parentDeptEntity.getName());
+            }
+        }
+
+        System.out.println("上级部门>>>>>>>>>>>>>>>>"+deptList);
+            Long parentId = null;
+            for(SysDept sysDeptEntity : deptList){
+                if(parentId == null){
+                    parentId = sysDeptEntity.getParentId();
+                    continue;
+                }
+                if(parentId > sysDeptEntity.getParentId().longValue()){
+                    parentId = sysDeptEntity.getParentId();
+                }
+            }
+        id = parentId;
+            Map map = new HashMap();
+            map.put("id",id);
+        return map;
+    }
+
+    /**
+     * 信息
+     */
+    @RequestMapping("/info/{id}")
+    @ResponseBody
+    public Map info(@PathVariable("id") Integer id){
+        SysDept dept = deptService.getById(id);
+        Map map = new HashMap();
+        map.put("dept",dept);
+        return map;
+    }
+
+    //保存
+
+    @PostMapping("/save")
+    @ResponseBody
+    public Result save(@RequestBody SysDept dept){
+
+        if ( deptService.save(dept)){
+            return new Result<String>(ResultEnum.SECCUSS);
+        }else {
+            return new Result<String>(ResultEnum.FAIL);
+        }
+    }
+
+    //修改
+
+    @RequestMapping("/update")
+    @ResponseBody
+    public Result update(@RequestBody SysDept dept){
+
+        if (  deptService.updateById(dept)){
+            return new Result<String>(ResultEnum.SECCUSS);
+        }else {
+            return new Result<String>(ResultEnum.FAIL);
+        }
+    }
+
+    //删除
+
+    @RequestMapping("/delete")
+    @ResponseBody
+    public Result delete(Integer id){
+        //判断是否有子部门
+        List<Integer> deptList = deptService.queryDetpIdList(id);
+        if(deptList.size() > 0){
+            return new Result<String>(ResultEnum.DELETE_CHILD);
+        }
+
+        if ( deptService.removeById(id)){
+            return new Result<String>(ResultEnum.SECCUSS);
+        }else {
+            return new Result<String>(ResultEnum.FAIL);
+        }
+    }
+
+
+
+
+
+
+
+
 
 }

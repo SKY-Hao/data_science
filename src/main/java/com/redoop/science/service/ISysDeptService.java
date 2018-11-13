@@ -3,6 +3,9 @@ package com.redoop.science.service;
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.redoop.science.entity.SysDept;
 
+import java.util.HashMap;
+import java.util.List;
+
 /**
  * <p>
  * 部门 服务类
@@ -13,4 +16,5 @@ import com.redoop.science.entity.SysDept;
  */
 public interface ISysDeptService extends IService<SysDept> {
 
+    List<Integer> queryDetpIdList(Integer id);
 }

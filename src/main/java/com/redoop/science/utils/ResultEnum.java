@@ -50,7 +50,9 @@ public enum ResultEnum {
      */
     NOT_VIEW(1004,"目前没有视图库，请创建视图库"),
 
-    NOT_SAVE(1005,"没有保存,请保存之后再查询");
+    NOT_SAVE(1005,"没有保存,请保存之后再查询"),
+
+    DELETE_CHILD(1006,"先删除子部门");
 
     private int code;
     private String msg;

@@ -24,16 +24,16 @@ import java.util.List;
 public class SysDept implements Serializable {
 
 	private static final long serialVersionUID = 1L;
-	
 
-	@TableId(value = "ID", type = IdType.AUTO)
+
+	@TableField("ID")
 	private Integer id;
 
 	/**
 	 *上级部门ID，一级部门为0
 	 */
 	@TableField("PID")
-	private Long PID;
+	private Long parentId;
 
 	/**
 	 * 名称
@@ -41,7 +41,11 @@ public class SysDept implements Serializable {
 	@TableField("NAME")
 	private String name;
 
-
+	/**
+	 *上级部门名称
+	 */
+	@TableField(exist=false)
+	private String parentName;
 	/**
 	 * 排序
 	 */
@@ -61,11 +65,7 @@ public class SysDept implements Serializable {
 	private Boolean open;
 
 
-	/**
-	 *上级部门名称
-	 */
-	@TableField(exist=false)
-	private String parentName;
+
 
 	@TableField(exist=false)
 	private List<?> list;

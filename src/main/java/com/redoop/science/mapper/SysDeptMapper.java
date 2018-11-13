@@ -2,6 +2,9 @@ package com.redoop.science.mapper;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.redoop.science.entity.SysDept;
+import org.apache.ibatis.annotations.Select;
+
+import java.util.List;
 
 /**
  * <p>
@@ -14,4 +17,6 @@ import com.redoop.science.entity.SysDept;
 public interface SysDeptMapper extends BaseMapper<SysDept> {
 
 
+    @Select("select ID from sys_dept where PID = #{deptId} and del_flag = 0")
+    List<Integer> getDetpIdList(Integer id);
 }

@@ -1,26 +1,15 @@
 package com.redoop.science.controller;
 
-import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
-import com.redoop.science.entity.Analysis;
-import com.redoop.science.entity.SysUser;
-import com.redoop.science.entity.VirtualTables;
 import com.redoop.science.service.IAnalysisService;
-import com.redoop.science.service.IVirtualTablesService;
 import com.redoop.science.utils.*;
 import okhttp3.HttpUrl;
-import org.apache.commons.io.FileUtils;
-import org.apache.ibatis.annotations.Delete;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 import java.io.*;
-import java.time.LocalDateTime;
 import java.util.*;
 
 /**
@@ -56,9 +45,9 @@ public class GetRestfulController {
 
                 sql = sql.replaceAll("&"+key, parms.get(key));
 
-                System.out.println("key===="+key);
+                /*System.out.println("key===="+key);
                 System.out.println("parm.keySet()======="+parms.keySet());
-                System.out.println("parm.get(key)======="+ parms.get(key));
+                System.out.println("parm.get(key)======="+ parms.get(key));*/
             }
 
 
