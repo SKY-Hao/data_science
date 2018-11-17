@@ -11,18 +11,24 @@
 <body style="background-color: aliceblue;">
 
 <div style="margin-top: 22%;    margin-left: 40%;">
-    <button type="button" class="btn btn-default" onclick="toDept()">
-        <i class="fa fa-edit"></i>
-        <span class="tooltipp">部门管理</span>
-    </button>
-    <button type="button" class="btn btn-default">
-        <i class="fa fa-edit"></i>
-        <span class="tooltipp">角色管理</span>
-    </button>
-    <button type="button" class="btn btn-default">
-        <i class="fa fa-edit"></i>
-        <span class="tooltipp">菜单管理</span>
-    </button>
+
+
+    <div th:if="${permissionList != null}" th:each="item : ${permissionList}">
+        <!--<button type="button" class="btn btn-default">
+            <a th:href="${item.url}">
+                    <span th:text="${item.name}"></span>
+            </a>
+        </button>-->
+            <a th:href="${item.url}">
+                <input type="button" th:value="${item.name}"></input>
+            </a>
+
+            <!--<a th:href="${item.url}">
+                   <span th:text="${item.name}"></span>
+               </a>-->
+    </div>
+
+
 </div>
 
 
@@ -30,12 +36,4 @@
 </body>
 <script type="text/javascript" src="/js/jquery.min.js"></script>
 <script type="text/javascript" src="/js/bootstrap.min.js"></script>
-<script th:inline="javascript">
-
-    function toDept() {
-        location.href="/sys/dept/list";
-    }
-
-
-</script>
 </html>

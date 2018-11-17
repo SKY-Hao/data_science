@@ -4,7 +4,10 @@ import com.redoop.science.entity.SysUserRole;
 import com.redoop.science.mapper.SysUserRoleMapper;
 import com.redoop.science.service.ISysUserRoleService;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 /**
  * <p>
@@ -17,4 +20,16 @@ import org.springframework.stereotype.Service;
 @Service
 public class SysUserRoleServiceImpl extends ServiceImpl<SysUserRoleMapper, SysUserRole> implements ISysUserRoleService {
 
+    @Autowired
+    SysUserRoleMapper sysUserRoleMapper;
+
+    @Override
+    public List<Long> queryRoleIdList(Long id) {
+        return sysUserRoleMapper.findById(id);
+    }
+
+    @Override
+    public void delete(Integer user_id) {
+        sysUserRoleMapper.deleteUserId(user_id);
+    }
 }

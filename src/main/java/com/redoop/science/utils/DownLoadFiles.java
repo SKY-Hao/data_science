@@ -33,11 +33,11 @@ public class DownLoadFiles {
 
             // 将格式化后的字符串写入文件
 //            PrintWriter pw = response.getWriter();
- //           pw.print(jsonString);
- //           pw.flush();
- //           pw.close();
+            //           pw.print(jsonString);
+            //           pw.flush();
+            //           pw.close();
 
-           Writer write = new OutputStreamWriter(new FileOutputStream(file), "UTF-8");
+            Writer write = new OutputStreamWriter(new FileOutputStream(file), "UTF-8");
             write.write(jsonString);
             write.flush();
             write.close();

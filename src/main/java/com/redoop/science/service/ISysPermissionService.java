@@ -3,6 +3,8 @@ package com.redoop.science.service;
 import com.redoop.science.entity.SysPermission;
 import com.baomidou.mybatisplus.extension.service.IService;
 
+import java.util.List;
+
 /**
  * <p>
  *  服务类
@@ -13,4 +15,9 @@ import com.baomidou.mybatisplus.extension.service.IService;
  */
 public interface ISysPermissionService extends IService<SysPermission> {
 
+    List<SysPermission> getNotButtonList();
+
+    List<SysPermission> getListParentId(Integer id);
+
+    List<SysPermission> getTpyeList();
 }

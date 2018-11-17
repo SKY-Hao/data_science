@@ -19,11 +19,11 @@ import java.io.Serializable;
 @Data
 @EqualsAndHashCode(callSuper = false)
 @Accessors(chain = true)
-public class SysDeptRole implements Serializable {
+public class SysRoleDept implements Serializable {
 
 	private static final long serialVersionUID = 1L;
 
-	@TableId(value = "ID", type = IdType.AUTO)
+	@TableField("ID")
 	private Integer id;
 
 	/**

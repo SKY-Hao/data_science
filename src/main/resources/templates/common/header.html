@@ -1,4 +1,5 @@
 <div th:fragment="header">
+
 <!-- HEADER -->
 <header>
     <!-- TOP HEADER -->
@@ -46,10 +47,13 @@
                     <!-- container -->
                     <div class="container">
                         <!-- responsive-nav -->
-                        <div id="responsive-nav">
+                        <div id="responsive-nav" >
                             <!-- NAV -->
                             <ul class="main-nav nav navbar-nav">
-                                <li th:class="${activeType eq 1}? 'active' : ''">
+                                <li th:if="${permissionList != null}" th:each="item : ${permissionList}">
+                                    <a  th:href="${item.url}" th:text="${item.name}"></a>
+                                </li>
+                                <!--<li th:class="${activeType eq 1}? 'active' : ''">
                                     <a href="/virtual/1">查询</a>
                                 </li>
                                 <li th:class="${activeType eq 4}? 'active' : ''">
@@ -69,7 +73,7 @@
                                 </li>
                                 <li th:class="${activeType eq 7}? 'active' : ''">
                                     <a href="/sys/manage" style="">系统管理</a>
-                                </li>
+                                </li>-->
                             </ul>
                             <!-- /NAV -->
                         </div>
@@ -98,12 +102,22 @@
         });
 
     });*/
-   $(function () {
+
+/*$(function () {
        $("#responsive-nav ul li  a").click(function () {
            $("#examtype a").each(function () {
                $(this).removeClass("cur");
            });
            $(this).attr('class', 'item cur');
        });
+});*/
+   $(document).ready(function(){
+       $("#responsive-nav ul li  a").each(function(){
+           $this = $(this);
+           if($this[0].href==String(window.location)){
+               $this.css({"a":"active" , "color":"red","text-decoration":"blink"});
+           }
+       });
    });
+
 </script>

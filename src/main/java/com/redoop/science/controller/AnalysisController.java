@@ -5,9 +5,11 @@ import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.redoop.science.entity.Analysis;
+import com.redoop.science.entity.SysPermission;
 import com.redoop.science.entity.SysUserDetails;
 import com.redoop.science.service.IAnalysisService;
 import com.redoop.science.service.IRealDbService;
+import com.redoop.science.service.ISysPermissionService;
 import com.redoop.science.utils.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -36,7 +38,8 @@ public class AnalysisController {
     private IAnalysisService analysisService;
     @Autowired
     private IRealDbService realDbService;
-
+    @Autowired
+    ISysPermissionService sysPermissionService;
     /**
      * 分析列表List
      * @param model
@@ -51,6 +54,10 @@ public class AnalysisController {
         page.setCurrent(num);
         page.setDesc("ID");
         IPage<Analysis> pages = analysisService.page(page,null);
+
+        List<SysPermission> permissionList = sysPermissionService.getTpyeList();
+
+        model.addAttribute("permissionList",permissionList);
         model.addAttribute("nickName", SessionUtils.getUserNickName(request));
         model.addAttribute("list", pages.getRecords());
         model.addAttribute("activeType", 3);

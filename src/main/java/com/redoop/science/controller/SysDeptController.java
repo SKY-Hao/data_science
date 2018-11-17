@@ -1,16 +1,20 @@
 package com.redoop.science.controller;
 
 import com.redoop.science.entity.SysDept;
+import com.redoop.science.entity.SysPermission;
 import com.redoop.science.service.ISysDeptService;
+import com.redoop.science.service.ISysPermissionService;
 import com.redoop.science.utils.R;
 import com.redoop.science.utils.Result;
 import com.redoop.science.utils.ResultEnum;
+import com.redoop.science.utils.SessionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletRequest;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -28,8 +32,11 @@ public class SysDeptController {
     @Autowired
     ISysDeptService deptService;
 
+    @Autowired
+    ISysPermissionService sysPermissionService;
+
     @GetMapping("/list")
-    public String index(Map map){
+    public String index(Map map,HttpServletRequest request){
         List<SysDept> deptList = deptService.list(null);
         for(SysDept sysDept : deptList){
             SysDept parentDeptEntity =  deptService.getById(sysDept.getParentId());
@@ -37,15 +44,19 @@ public class SysDeptController {
                 sysDept.setParentName(parentDeptEntity.getName());
             }
         }
-        // model.addAttribute("deptList",deptList);
+
+        List<SysPermission> permissionList = sysPermissionService.getTpyeList();
         map.put("deptList",deptList);
+        map.put("permissionList",permissionList);
+        map.put("nickName", SessionUtils.getUserNickName(request));
         return "/sys/dept";
     }
 
 
     @RequestMapping("/lists")
     @ResponseBody
-    public List<SysDept> list(Map map){
+    public List<SysDept> list(){
+
         List<SysDept> deptList = deptService.list(null);
 
         for(SysDept sysDept : deptList){
@@ -55,7 +66,6 @@ public class SysDeptController {
             }
         }
 
-        System.out.println("deptList>>>>>>>>>"+deptList);
         return deptList;
     }
     /**

@@ -5,9 +5,11 @@ import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.redoop.science.entity.RegFunction;
+import com.redoop.science.entity.SysPermission;
 import com.redoop.science.entity.SysUser;
 import com.redoop.science.entity.SysUserDetails;
 import com.redoop.science.service.IRegFunctionService;
+import com.redoop.science.service.ISysPermissionService;
 import com.redoop.science.utils.*;
 import okhttp3.HttpUrl;
 import org.apache.commons.io.FileUtils;
@@ -25,6 +27,7 @@ import javax.servlet.http.HttpServletRequest;
 import java.io.File;
 import java.io.IOException;
 import java.time.LocalDateTime;
+import java.util.List;
 
 /**
  * <p>
@@ -41,6 +44,10 @@ public class RegFunctionController {
 
     @Autowired
     private IRegFunctionService regFunctionService;
+
+    @Autowired
+    ISysPermissionService sysPermissionService;
+
     @GetMapping("/{num}")
     public ModelAndView index(Model model, @PathVariable Long num, HttpServletRequest request) {
         Page<RegFunction> page = new Page<>();
@@ -48,6 +55,8 @@ public class RegFunctionController {
         page.setCurrent(num);
         page.setDesc("ID");
         IPage<RegFunction> pages = regFunctionService.page(page, null);
+        List<SysPermission> permissionList = sysPermissionService.getTpyeList();
+        model.addAttribute("permissionList",permissionList);
         model.addAttribute("nickName", SessionUtils.getUserNickName(request));
         model.addAttribute("items", pages.getRecords());
         model.addAttribute("activeType", 6);

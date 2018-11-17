@@ -37,7 +37,7 @@ public class RealDConnect {
                 list.add(tblName);
             }
             System.out.println(list);
-        } catch (Exception e) {
+        } catch (RRException e) {
             e.printStackTrace();
         }
 

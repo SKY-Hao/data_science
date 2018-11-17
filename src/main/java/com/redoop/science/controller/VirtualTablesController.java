@@ -5,14 +5,8 @@ import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.redoop.science.constant.DBEnum;
 import com.redoop.science.dto.ViewsDto;
-import com.redoop.science.entity.RealDb;
-import com.redoop.science.entity.RegFunction;
-import com.redoop.science.entity.ViewsTables;
-import com.redoop.science.entity.VirtualTables;
-import com.redoop.science.service.IRealDbService;
-import com.redoop.science.service.IRegFunctionService;
-import com.redoop.science.service.IViewsService;
-import com.redoop.science.service.IVirtualTablesService;
+import com.redoop.science.entity.*;
+import com.redoop.science.service.*;
 import com.redoop.science.utils.Result;
 import com.redoop.science.utils.ResultEnum;
 import com.redoop.science.utils.SessionUtils;
@@ -50,6 +44,8 @@ public class VirtualTablesController {
     @Autowired
     private IRegFunctionService regFunctionService;
 
+    @Autowired
+    ISysPermissionService sysPermissionService;
     /**
      * 数据源列表分类
      * @param model
@@ -57,11 +53,15 @@ public class VirtualTablesController {
      */
     @GetMapping("/{num}")
     public ModelAndView index(Model model,@PathVariable Long num,HttpServletRequest request){
+
+
         Page<VirtualTables> page = new Page<>();
         page.setSize(11L);
         page.setCurrent(num);
         page.setDesc("ID");
         IPage<VirtualTables> pages = virtualTablesService.page(page,null);
+        List<SysPermission> permissionList = sysPermissionService.getTpyeList();
+        model.addAttribute("permissionList",permissionList);
         model.addAttribute("nickName", SessionUtils.getUserNickName(request));
         model.addAttribute("items", pages.getRecords());
         model.addAttribute("activeType", 1);

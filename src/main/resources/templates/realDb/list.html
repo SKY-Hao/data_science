@@ -117,7 +117,17 @@
 <script src="/js/nouislider.min.js"></script>
 <script src="/js/jquery.zoom.min.js"></script>
 <script src="/js/main.js"></script>
-
+<script th:inline="javascript">
+    $(document).ready(function () {
+        $("#responsive-nav ul li  a").each(function () {
+            $this = $(this);
+            if ($this[0].href == String(window.location)) {
+                $this.css({"a": "active", "color": "red", "text-decoration": "blink",
+                    "border-bottom":"2px solid #ff0000","padding-bottom": "0px"});
+            }
+        });
+    });
+</script>
 </body>
 
 </html>

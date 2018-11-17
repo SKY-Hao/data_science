@@ -9,6 +9,7 @@ import com.redoop.science.constant.DBEnum;
 import com.redoop.science.dto.ViewsDto;
 import com.redoop.science.entity.*;
 import com.redoop.science.mapper.ViewsMapper;
+import com.redoop.science.service.ISysPermissionService;
 import com.redoop.science.service.IViewsService;
 import com.redoop.science.service.IViewsTablesService;
 import com.redoop.science.utils.*;
@@ -44,7 +45,8 @@ public class ViewsTablesController {
     @Autowired
     private IViewsService viewsService;
 
-
+    @Autowired
+    ISysPermissionService sysPermissionService;
 
     /**
      * 视图表
@@ -60,6 +62,8 @@ public class ViewsTablesController {
         page.setCurrent(num);
         page.setDesc("ID");
         IPage<ViewsTables> pages = viewsTablesService.page(page,null);
+        List<SysPermission> permissionList = sysPermissionService.getTpyeList();
+        model.addAttribute("permissionList",permissionList);
         model.addAttribute("nickName", SessionUtils.getUserNickName(request));
         model.addAttribute("items", pages.getRecords());
         model.addAttribute("activeType", 4);

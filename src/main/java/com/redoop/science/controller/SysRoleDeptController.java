@@ -1,8 +1,7 @@
 package com.redoop.science.controller;
 
 
-import com.redoop.science.entity.SysDeptRole;
-import com.redoop.science.service.ISysDeptRoleService;
+import com.redoop.science.service.ISysRoleDeptService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -15,9 +14,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
  */
 @Controller
 @RequestMapping("/sys-dept-role")
-public class SysDeptRoleController {
+public class SysRoleDeptController {
 
     @Autowired
-    ISysDeptRoleService deptRoleService;
+    ISysRoleDeptService roleDeptService;
 
 }

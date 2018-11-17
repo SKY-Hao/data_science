@@ -27,8 +27,6 @@
 		<!-- Custom stlylesheet -->
 		<link type="text/css" rel="stylesheet" href="/css/style.css"/>
 
-
-
 		<!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
 		<!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
 		<!--[if lt IE 9]>
@@ -139,6 +137,15 @@
     function toEdit(id) {
         location.href="/analysis/edit/"+id;
     }
+    $(document).ready(function () {
+        $("#responsive-nav ul li  a").each(function () {
+            $this = $(this);
+            if ($this[0].href == String(window.location)) {
+                $this.css({"a": "active", "color": "red", "text-decoration": "blink",
+                    "border-bottom":"2px solid #ff0000","padding-bottom": "0px"});
+            }
+        });
+    });
 	/*]]>*/
 </script>
 

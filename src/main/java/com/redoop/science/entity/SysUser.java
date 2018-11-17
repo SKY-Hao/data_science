@@ -5,11 +5,14 @@ import com.baomidou.mybatisplus.annotation.TableId;
 import java.time.LocalDateTime;
 import com.baomidou.mybatisplus.annotation.TableField;
 import java.io.Serializable;
+import java.util.Date;
+import java.util.List;
 
 import lombok.*;
 import lombok.experimental.Accessors;
 
 import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.NotNull;
 
 /**
  * <p>
@@ -100,6 +103,32 @@ public class SysUser implements Serializable {
     @TableField("STATUS")
     private Integer status;
 
+
+    //_____________后加______________________
+
+    /**
+     * 部门ID
+     */
+    @NotEmpty(message="部门不能为空")
+    @TableField("DEPT_ID")
+    private Long deptId;
+
+    /**
+     * 部门名称
+     */
+    @TableField(exist=false)
+    private String deptName;
+
+    /**
+     * 角色ID列表
+     */
+    @TableField(exist=false)
+    private List<Long> roleIdList;
+
+
+
+
+
     public Integer getId() {
         return id;
     }
@@ -140,12 +169,48 @@ public class SysUser implements Serializable {
         this.creatorName = creatorName;
     }
 
+    public static long getSerialVersionUID() {
+        return serialVersionUID;
+    }
+
     public LocalDateTime getCreateDate() {
         return createDate;
     }
 
     public void setCreateDate(LocalDateTime createDate) {
         this.createDate = createDate;
+    }
+
+    public Integer getStatus() {
+        return status;
+    }
+
+    public void setStatus(Integer status) {
+        this.status = status;
+    }
+
+    public Long getDeptId() {
+        return deptId;
+    }
+
+    public void setDeptId(Long deptId) {
+        this.deptId = deptId;
+    }
+
+    public String getDeptName() {
+        return deptName;
+    }
+
+    public void setDeptName(String deptName) {
+        this.deptName = deptName;
+    }
+
+    public List<Long> getRoleIdList() {
+        return roleIdList;
+    }
+
+    public void setRoleIdList(List<Long> roleIdList) {
+        this.roleIdList = roleIdList;
     }
 
     public Integer getOperationId() {

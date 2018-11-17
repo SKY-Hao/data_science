@@ -5,6 +5,7 @@ import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.redoop.science.entity.*;
+import com.redoop.science.service.ISysPermissionService;
 import com.redoop.science.service.IViewsService;
 import com.redoop.science.service.IViewsTablesService;
 import com.redoop.science.utils.*;
@@ -16,6 +17,7 @@ import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpServletRequest;
 import java.time.LocalDateTime;
+import java.util.List;
 
 /**
  * <p>
@@ -34,6 +36,10 @@ public class ViewsController {
     @Autowired
     private IViewsService viewsService;
 
+    @Autowired
+    ISysPermissionService sysPermissionService;
+
+
     @GetMapping("/{num}")
     public ModelAndView index(Model model, @PathVariable Long num, HttpServletRequest request){
         Page<Views> page = new Page<>();
@@ -41,6 +47,9 @@ public class ViewsController {
         page.setCurrent(num);
         page.setDesc("ID");
         IPage<Views> pages = viewsService.page(page,null);
+
+        List<SysPermission> permissionList = sysPermissionService.getTpyeList();
+        model.addAttribute("permissionList",permissionList);
         model.addAttribute("nickName", SessionUtils.getUserNickName(request));
         model.addAttribute("items", pages.getRecords());
         model.addAttribute("activeType", 5);

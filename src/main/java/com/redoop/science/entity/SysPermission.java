@@ -87,6 +87,11 @@ public class SysPermission implements Serializable {
 
 
     /**
+     * 父菜单名称
+     */
+    @TableField(exist=false)
+    private String parentName;
+    /**
      * ztree属性
      */
     @TableField(exist=false)

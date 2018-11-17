@@ -52,7 +52,16 @@ public enum ResultEnum {
 
     NOT_SAVE(1005,"没有保存,请保存之后再查询"),
 
-    DELETE_CHILD(1006,"先删除子部门");
+    DELETE_CHILD(1006,"先删除子部门"),
+
+    SYS_MENU(1007,"系统菜单,不能删除"),
+
+    DELETE_CHILD_MENU_BTN(1008,"请先删除子菜单或按钮"),
+
+    ADMIN_USER(1009,"系统管理员不能被删除"),
+
+    IS_USER(10010,"当前用户不能被删除");
+
 
     private int code;
     private String msg;

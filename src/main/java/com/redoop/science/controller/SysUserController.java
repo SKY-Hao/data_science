@@ -3,7 +3,9 @@ package com.redoop.science.controller;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.redoop.science.entity.SysRole;
 import com.redoop.science.entity.SysUser;
+import com.redoop.science.service.ISysUserRoleService;
 import com.redoop.science.service.ISysUserService;
 import com.redoop.science.utils.Result;
 import com.redoop.science.utils.ResultEnum;
@@ -17,6 +19,7 @@ import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.List;
+import java.util.Map;
 
 /**
  * <p>
@@ -29,8 +32,13 @@ import java.util.List;
 @Controller
 @RequestMapping("/user")
 public class SysUserController {
+
     @Autowired
     private ISysUserService sysUserService;
+
+    @Autowired
+    private ISysUserRoleService userRoleService;
+
 
     @GetMapping("/tologin")
     public ModelAndView login(ModelAndView modelAndViewm){
@@ -56,8 +64,6 @@ public class SysUserController {
         }else {
             return new Result<String>(ResultEnum.FAIL_PASSWORD);
         }
-
-
     }
 
      /**
@@ -97,4 +103,7 @@ public class SysUserController {
             return new Result<String>(ResultEnum.FAIL);
         }
     }
+
+
+
 }

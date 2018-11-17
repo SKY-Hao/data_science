@@ -4,7 +4,9 @@ package com.redoop.science.controller;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.redoop.science.entity.RealDb;
+import com.redoop.science.entity.SysPermission;
 import com.redoop.science.service.IRealDbService;
+import com.redoop.science.service.ISysPermissionService;
 import com.redoop.science.utils.Result;
 import com.redoop.science.utils.ResultEnum;
 import com.redoop.science.utils.SessionUtils;
@@ -35,7 +37,8 @@ import java.util.List;
 public class RealDbController {
     @Autowired
     private IRealDbService realDbService;
-
+    @Autowired
+    ISysPermissionService sysPermissionService;
     /**
      * 数据源列表分类
      * @param model
@@ -48,6 +51,8 @@ public class RealDbController {
         page.setCurrent(num);
         page.setDesc("ID");
         IPage<RealDb> pages = realDbService.page(page,null);
+        List<SysPermission> permissionList = sysPermissionService.getTpyeList();
+        model.addAttribute("permissionList",permissionList);
         model.addAttribute("nickName", SessionUtils.getUserNickName(request));
         model.addAttribute("list", pages.getRecords());
         model.addAttribute("activeType", 2);
