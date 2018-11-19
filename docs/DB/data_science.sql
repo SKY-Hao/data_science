@@ -10,7 +10,7 @@ Target Server Type    : MYSQL
 Target Server Version : 50721
 File Encoding         : 65001
 
-Date: 2018-11-15 16:44:29
+Date: 2018-11-19 10:11:02
 */
 
 SET FOREIGN_KEY_CHECKS=0;
@@ -119,7 +119,7 @@ CREATE TABLE `sys_dept` (
   `ORDER_NUM` int(11) DEFAULT NULL COMMENT '排序',
   `DEL_FLAG` tinyint(4) DEFAULT '0' COMMENT '是否删除-1:已删除;0:正常',
   PRIMARY KEY (`ID`)
-) ENGINE=InnoDB AUTO_INCREMENT=19 DEFAULT CHARSET=utf8 COMMENT='部门管理';
+) ENGINE=InnoDB AUTO_INCREMENT=18 DEFAULT CHARSET=utf8 COMMENT='部门管理';
 
 -- ----------------------------
 -- Table structure for sys_permission
@@ -137,7 +137,7 @@ CREATE TABLE `sys_permission` (
   `ORDER_NUM` int(11) DEFAULT NULL COMMENT '排序',
   `PARENT_ID` int(11) DEFAULT NULL COMMENT '父菜单ID，一级菜单为0',
   PRIMARY KEY (`ID`) USING BTREE
-) ENGINE=InnoDB AUTO_INCREMENT=51 DEFAULT CHARSET=utf8 ROW_FORMAT=DYNAMIC;
+) ENGINE=InnoDB AUTO_INCREMENT=48 DEFAULT CHARSET=utf8 ROW_FORMAT=DYNAMIC;
 
 -- ----------------------------
 -- Table structure for sys_role
@@ -150,7 +150,7 @@ CREATE TABLE `sys_role` (
   `DEPT_ID` int(11) DEFAULT NULL COMMENT '部门ID',
   `CREATE_DATE` datetime DEFAULT NULL COMMENT '创建时间',
   PRIMARY KEY (`ID`) USING BTREE
-) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8 ROW_FORMAT=DYNAMIC COMMENT='系统权限';
+) ENGINE=InnoDB AUTO_INCREMENT=43 DEFAULT CHARSET=utf8 ROW_FORMAT=DYNAMIC COMMENT='系统权限';
 
 -- ----------------------------
 -- Table structure for sys_role_dept
@@ -172,7 +172,7 @@ CREATE TABLE `sys_role_permission` (
   `ROLE_ID` int(11) DEFAULT NULL COMMENT '角色表ID',
   `PERMISSION_ID` int(11) DEFAULT NULL COMMENT '资源表ID',
   PRIMARY KEY (`ID`) USING BTREE
-) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8 ROW_FORMAT=DYNAMIC;
+) ENGINE=InnoDB AUTO_INCREMENT=71 DEFAULT CHARSET=utf8 ROW_FORMAT=DYNAMIC;
 
 -- ----------------------------
 -- Table structure for sys_user
@@ -180,19 +180,20 @@ CREATE TABLE `sys_role_permission` (
 DROP TABLE IF EXISTS `sys_user`;
 CREATE TABLE `sys_user` (
   `ID` int(11) NOT NULL AUTO_INCREMENT COMMENT '编号',
-  `NICK_NAME` varchar(30) NOT NULL COMMENT '昵称',
+  `NICK_NAME` varchar(30) DEFAULT NULL COMMENT '昵称',
   `REMARK` varchar(200) DEFAULT NULL COMMENT '注释',
-  `CREATOR_ID` int(11) NOT NULL COMMENT '创建人编号',
-  `CREATOR_NAME` varchar(30) NOT NULL COMMENT '创建人姓名',
-  `CREATE_DATE` datetime NOT NULL COMMENT '创建日期',
-  `OPERATION_ID` int(11) NOT NULL COMMENT '操作人编号',
-  `OPERATION_TIME` datetime NOT NULL COMMENT '操作时间',
+  `CREATOR_ID` int(11) DEFAULT NULL COMMENT '创建人编号',
+  `CREATOR_NAME` varchar(30) DEFAULT NULL COMMENT '创建人姓名',
+  `CREATE_DATE` datetime DEFAULT NULL COMMENT '创建日期',
+  `OPERATION_ID` int(11) DEFAULT NULL COMMENT '操作人编号',
+  `OPERATION_TIME` datetime DEFAULT NULL COMMENT '操作时间',
   `EMAIL` varchar(50) DEFAULT NULL COMMENT '邮箱',
   `USERNAME` varchar(30) NOT NULL COMMENT '用户名',
   `PASSWORD` varchar(70) NOT NULL COMMENT '密码',
   `STATUS` tinyint(1) NOT NULL COMMENT '用户状态 0-正常启用 1-停用 2-删除',
+  `DEPT_ID` bigint(20) DEFAULT NULL COMMENT '部门ID',
   PRIMARY KEY (`ID`) USING BTREE
-) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8 ROW_FORMAT=DYNAMIC;
+) ENGINE=InnoDB AUTO_INCREMENT=17 DEFAULT CHARSET=utf8 ROW_FORMAT=DYNAMIC;
 
 -- ----------------------------
 -- Table structure for sys_user_role
