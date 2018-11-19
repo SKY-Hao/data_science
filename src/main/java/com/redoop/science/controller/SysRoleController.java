@@ -147,7 +147,6 @@ public class SysRoleController {
             }
             roleDeptService.saveBatch(list);
 
-
             // 保存角色与菜单关系
             List<SysRolePermission> permissionList = new ArrayList<>(role.getPermissionIdList().size());
             for (Long permissionId : role.getPermissionIdList()) {
@@ -170,11 +169,9 @@ public class SysRoleController {
     @RequestMapping("/update")
     @ResponseBody
     public Result update(@RequestBody SysRole role) {
-
         if (roleService.saveOrUpdate(role)) {
 
             Long  a =  role.getId().longValue();
-
 
             roleDeptService.deleteBatch(new Long[]{a});
             //保存角色与部门关系
@@ -187,8 +184,6 @@ public class SysRoleController {
                 list.add(sysRoleDeptEntity);
             }
             roleDeptService.saveBatch(list);
-
-
             rolePermissionService.deleteBatch(new Long[]{a});
             // 保存角色与菜单关系
             List<SysRolePermission> permissionList = new ArrayList<>(role.getPermissionIdList().size());
@@ -199,9 +194,6 @@ public class SysRoleController {
                 permissionList.add(sysRolePermission);
             }
             rolePermissionService.saveBatch(permissionList);
-
-
-
             return new Result<String>(ResultEnum.SECCUSS);
         } else {
             return new Result<String>(ResultEnum.FAIL);

@@ -10,7 +10,7 @@ $(function () {
             { label: '创建时间', name: 'createTime', index: "createTime", width: 80}
         ],
         viewrecords: true,
-       /* height: 0,*/
+        height: 500,
         rowNum: 1000,
         rowList : [10,30,50],
         rownumbers: true,

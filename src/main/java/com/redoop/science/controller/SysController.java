@@ -136,13 +136,12 @@ public class SysController {
     @ResponseBody
     public Result save(@RequestBody SysUser user){
 
-
+        user.setNickName(user.getUsername());
         LocalDateTime localDateTime = LocalDateTime.now();
         localDateTime.format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
         user.setCreateDate(localDateTime);
         user.setPassword(passwordEncoder.encode(user.getPassword().trim()));
         if (sysUserService.save(user)){
-
 
            //保存用户与角色关系
            List<SysUserRole> list = new ArrayList<>(user.getRoleIdList().size());
@@ -168,6 +167,7 @@ public class SysController {
     @RequestMapping("/user/update")
     @ResponseBody
     public Result update(@RequestBody SysUser user){
+        user.setNickName(user.getUsername());
         LocalDateTime localDateTime = LocalDateTime.now();
         localDateTime.format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
         user.setCreateDate(localDateTime);
@@ -196,7 +196,6 @@ public class SysController {
         } else {
             return new Result<String>(ResultEnum.FAIL);
         }
-
     }
 
 
