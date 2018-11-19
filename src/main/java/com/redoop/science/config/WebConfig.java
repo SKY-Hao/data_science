@@ -3,6 +3,7 @@ package com.redoop.science.config;
 import com.fasterxml.jackson.annotation.JsonAutoDetect;
 import com.fasterxml.jackson.annotation.PropertyAccessor;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.redoop.science.utils.RedisUtil;
 import org.springframework.cache.CacheManager;
 import org.springframework.cache.annotation.EnableCaching;
 import org.springframework.cache.interceptor.KeyGenerator;
@@ -14,11 +15,16 @@ import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.serializer.Jackson2JsonRedisSerializer;
 import org.springframework.data.redis.serializer.RedisSerializer;
 import org.springframework.data.redis.serializer.StringRedisSerializer;
+import org.springframework.security.access.AccessDecisionVoter;
+import org.springframework.security.access.hierarchicalroles.RoleHierarchyImpl;
+import org.springframework.security.access.vote.AuthenticatedVoter;
+import org.springframework.security.access.vote.RoleHierarchyVoter;
+import org.springframework.security.web.access.expression.WebExpressionVoter;
+import org.springframework.security.web.firewall.StrictHttpFirewall;
 
 import javax.annotation.Resource;
 import java.lang.reflect.Method;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.*;
 
 /**
  * @Author: Alan
@@ -90,5 +96,30 @@ public class WebConfig {
         redisTemplate.setHashValueSerializer(jackson2JsonRedisSerializer);// Hash value序列化
         redisTemplate.afterPropertiesSet();
         return redisTemplate;
+    }
+    @Bean
+    public RedisUtil redisUtil(){
+        return new RedisUtil();
+    }
+    /**
+     * 只允许GET、POST请求访问
+     * @return
+     */
+    @Bean
+    public StrictHttpFirewall httpFirewall() {
+        StrictHttpFirewall firewall = new StrictHttpFirewall();
+        firewall.setAllowedHttpMethods(Arrays.asList("GET", "POST"));
+        return firewall;
+    }
+    @Bean
+    public WebAccessDecisionManager webAccessDecisionManager(){
+        List<AccessDecisionVoter<? extends Object>> decisionVoters = new ArrayList<>();
+        decisionVoters.add(new WebExpressionVoter());
+        RoleHierarchyImpl roleHierarchy = new RoleHierarchyImpl();
+        roleHierarchy.setHierarchy("ROLE_ADMIN > ROLE_USER\n" +
+                "ROLE_USER > ROLE_ANONYMOUS\n");
+        decisionVoters.add(new RoleHierarchyVoter(roleHierarchy));
+        decisionVoters.add(new AuthenticatedVoter());
+        return new WebAccessDecisionManager(decisionVoters);
     }
 }

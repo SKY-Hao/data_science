@@ -29,7 +29,7 @@ public class SysRole implements GrantedAuthority {
     private Integer id;
 
     /**
-     * 库名
+     * 角色名
      */
     @NotEmpty(message="角色名不能为空")
     @TableField("NAME")

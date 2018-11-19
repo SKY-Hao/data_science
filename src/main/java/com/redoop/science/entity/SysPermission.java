@@ -37,8 +37,8 @@ public class SysPermission implements Serializable {
     /**
      * 备注
      */
-    @TableField("DESCRITPION")
-    private String descritpion;
+    @TableField("DESCRIPTION")
+    private String description;
 
     /**
      * 链接

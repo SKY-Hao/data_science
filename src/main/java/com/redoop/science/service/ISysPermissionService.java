@@ -1,5 +1,6 @@
 package com.redoop.science.service;
 
+import com.redoop.science.dto.sys.SysPermissionDto;
 import com.redoop.science.entity.SysPermission;
 import com.baomidou.mybatisplus.extension.service.IService;
 
@@ -20,4 +21,6 @@ public interface ISysPermissionService extends IService<SysPermission> {
     List<SysPermission> getListParentId(Integer id);
 
     List<SysPermission> getTpyeList();
+
+    List<SysPermissionDto> getSysPermissionDto();
 }

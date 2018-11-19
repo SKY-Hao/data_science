@@ -49,17 +49,18 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         http.authorizeRequests()
 
                 //允许访问静态资源
-                .antMatchers("/css/**","/fonts/**","/img/**","/js/**","/favicon.ico").permitAll()
-                .anyRequest().authenticated()
+                    .antMatchers("/css/**","/fonts/**","/img/**","/js/**","/favicon.ico").permitAll()
+                    .anyRequest().authenticated()
                 .and()
-                .formLogin()
+                    .formLogin()
                     .loginPage("/login")
                     .loginProcessingUrl("/login/form")
                     .successHandler(authenticationSuccessHandler)
                     .failureHandler(authenticationFailureHandler).permitAll()
                 .and()
-                .exceptionHandling().accessDeniedPage("/error/401")
-                .and().csrf().disable();
+                    .exceptionHandling().accessDeniedPage("/error/401")
+                .and()
+                    .csrf().disable();
         http.sessionManagement().maximumSessions(1).maxSessionsPreventsLogin(false).expiredUrl("/login?expired=true")
                 .sessionRegistry(sessionRegistry());
 

@@ -10,4 +10,7 @@
     <select id="findByUserId" resultMap="sysRole" parameterType="Integer">
       select * from  SYS_ROLE T where T.id in (SELECT ROLE_ID FROM sys_user_role WHERE USER_ID = #{userId} )
     </select>
+    <select id="findByPermissionId" resultType="string" parameterType="Integer">
+      select name from  SYS_ROLE T where T.id in (SELECT ROLE_ID FROM SYS_ROLE_PERMISSION WHERE PERMISSION_ID = #{permissionId} )
+    </select>
 </mapper>

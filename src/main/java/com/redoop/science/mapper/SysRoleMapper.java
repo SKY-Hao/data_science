@@ -21,4 +21,11 @@ public interface SysRoleMapper extends BaseMapper<SysRole> {
      * @return
      */
     List<SysRole> findByUserId(@Param("userId")Integer userId);
+
+    /**
+     * 获取资源的所有权限
+     * @param permissionId
+     * @return
+     */
+    List<String> findByPermissionId(@Param("permissionId")Integer permissionId);
 }

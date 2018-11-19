@@ -1,10 +1,10 @@
 package com.redoop.science.service.impl;
 
+import com.redoop.science.dto.sys.SysPermissionDto;
 import com.redoop.science.entity.SysPermission;
 import com.redoop.science.mapper.SysPermissionMapper;
 import com.redoop.science.service.ISysPermissionService;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -20,21 +20,25 @@ import java.util.List;
 @Service
 public class SysPermissionServiceImpl extends ServiceImpl<SysPermissionMapper, SysPermission> implements ISysPermissionService {
 
-    @Autowired
-    SysPermissionMapper sysPermissionMapper;
+
 
     @Override
     public List<SysPermission> getNotButtonList() {
-        return sysPermissionMapper.findNotButtonList();
+        return baseMapper.findNotButtonList();
     }
 
     @Override
     public List<SysPermission> getListParentId(Integer id) {
-        return sysPermissionMapper.findListParentId(id);
+        return baseMapper.findListParentId(id);
     }
 
     @Override
     public List<SysPermission> getTpyeList() {
-        return sysPermissionMapper.findTypeList();
+        return baseMapper.findTypeList();
+    }
+
+    @Override
+    public List<SysPermissionDto> getSysPermissionDto() {
+        return baseMapper.findListPermissionDto();
     }
 }

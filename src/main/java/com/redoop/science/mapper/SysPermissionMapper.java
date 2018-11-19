@@ -1,5 +1,6 @@
 package com.redoop.science.mapper;
 
+import com.redoop.science.dto.sys.SysPermissionDto;
 import com.redoop.science.entity.SysPermission;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import org.apache.ibatis.annotations.Select;
@@ -25,4 +26,9 @@ public interface SysPermissionMapper extends BaseMapper<SysPermission> {
 
     @Select("select * from sys_permission where TYPE = 1")
     List<SysPermission> findTypeList();
+
+    /**
+     * @return
+     */
+    List<SysPermissionDto> findListPermissionDto();
 }
