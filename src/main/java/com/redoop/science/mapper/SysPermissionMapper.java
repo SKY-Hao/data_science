@@ -24,11 +24,14 @@ public interface SysPermissionMapper extends BaseMapper<SysPermission> {
     @Select("select * from sys_permission where PARENT_ID = #{id} order by ORDER_NUM asc")
     List<SysPermission> findListParentId(Integer id);
 
-    @Select("select * from sys_permission where TYPE = 1")
+   @Select("select * from sys_permission where TYPE = 1")
     List<SysPermission> findTypeList();
 
     /**
      * @return
      */
     List<SysPermissionDto> findListPermissionDto();
+
+
+    List<SysPermission> findByUserNamePermission(String name);
 }

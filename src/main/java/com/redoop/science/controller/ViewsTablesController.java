@@ -62,7 +62,7 @@ public class ViewsTablesController {
         page.setCurrent(num);
         page.setDesc("ID");
         IPage<ViewsTables> pages = viewsTablesService.page(page,null);
-        List<SysPermission> permissionList = sysPermissionService.getTpyeList();
+        List<SysPermission> permissionList = sysPermissionService.findByUserNamePermission(SessionUtils.getUserNickName(request));
         model.addAttribute("permissionList",permissionList);
         model.addAttribute("nickName", SessionUtils.getUserNickName(request));
         model.addAttribute("items", pages.getRecords());
@@ -86,7 +86,8 @@ public class ViewsTablesController {
 
         List<ViewsDto> views =  viewsService.getViewsTables();
         getZtree(model);
-
+        List<SysPermission> permissionList = sysPermissionService.getTpyeList();
+        model.addAttribute("permissionList",permissionList);
         model.addAttribute("nickName", SessionUtils.getUserNickName(request));
         model.addAttribute("select", views);
 
@@ -168,7 +169,8 @@ public class ViewsTablesController {
 
         List<ViewsDto> views =  viewsService.getViewsTables();
         ViewsTables viewsTables = viewsTablesService.getById(id);
-
+        List<SysPermission> permissionList = sysPermissionService.findByUserNamePermission(SessionUtils.getUserNickName(request));
+        model.addAttribute("permissionList",permissionList);
 
         model.addAttribute("select", views);
         if (viewsTables!=null){
@@ -264,7 +266,7 @@ public class ViewsTablesController {
         return stringResult;
     }*/
 
-    @DeleteMapping("/delete/{id}")
+    @RequestMapping("/delete/{id}")
     @ResponseBody
     public Result<String> delete(@PathVariable Integer id){
         if (viewsTablesService.removeById(id)){

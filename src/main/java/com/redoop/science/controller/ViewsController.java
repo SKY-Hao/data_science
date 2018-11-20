@@ -48,7 +48,7 @@ public class ViewsController {
         page.setDesc("ID");
         IPage<Views> pages = viewsService.page(page,null);
 
-        List<SysPermission> permissionList = sysPermissionService.getTpyeList();
+        List<SysPermission> permissionList = sysPermissionService.findByUserNamePermission(SessionUtils.getUserNickName(request));
         model.addAttribute("permissionList",permissionList);
         model.addAttribute("nickName", SessionUtils.getUserNickName(request));
         model.addAttribute("items", pages.getRecords());
@@ -65,7 +65,8 @@ public class ViewsController {
 
     @GetMapping("/addView")
     public ModelAndView addView(Model model,HttpServletRequest request){
-
+        List<SysPermission> permissionList = sysPermissionService.findByUserNamePermission(SessionUtils.getUserNickName(request));
+        model.addAttribute("permissionList",permissionList);
         model.addAttribute("nickName", SessionUtils.getUserNickName(request));
         return new ModelAndView("/views/viewsAdd");
     }
@@ -109,7 +110,7 @@ public class ViewsController {
 
 
     }
-    @DeleteMapping("/delete/{id}")
+    @RequestMapping("/delete/{id}")
     @ResponseBody
     public Result<String> delete(@PathVariable Integer id){
         if (viewsService.removeById(id)){
@@ -120,7 +121,8 @@ public class ViewsController {
     }
     @RequestMapping(value = "/edit/{id}",method = RequestMethod.GET)
     public ModelAndView edit(Model model,@PathVariable(value = "id") String id,HttpServletRequest request) {
-
+        List<SysPermission> permissionList = sysPermissionService.findByUserNamePermission(SessionUtils.getUserNickName(request));
+        model.addAttribute("permissionList",permissionList);
         Views views = viewsService.getById(id);
         if (views!=null){
             model.addAttribute("views", views);

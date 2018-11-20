@@ -60,20 +60,25 @@ public class VirtualTablesController {
         page.setCurrent(num);
         page.setDesc("ID");
         IPage<VirtualTables> pages = virtualTablesService.page(page,null);
-        List<SysPermission> permissionList = sysPermissionService.getTpyeList();
+
+        List<SysPermission> permissionList = sysPermissionService.findByUserNamePermission(SessionUtils.getUserNickName(request));
         model.addAttribute("permissionList",permissionList);
+
         model.addAttribute("nickName", SessionUtils.getUserNickName(request));
         model.addAttribute("items", pages.getRecords());
-        model.addAttribute("activeType", 1);
+       // model.addAttribute("activeType", 1);
         model.addAttribute("pageNum", num);
         model.addAttribute("virtual", new VirtualTables());
         model.addAttribute("pages", pages.getPages());
         model.addAttribute("total", pages.getTotal());
         return new ModelAndView("/select/index");
     }
+
+
     @GetMapping("/edit/{id}")
     public ModelAndView edit(Model model,@PathVariable(value = "id") String id,HttpServletRequest request){
-
+        List<SysPermission> permissionList = sysPermissionService.findByUserNamePermission(SessionUtils.getUserNickName(request));
+        model.addAttribute("permissionList",permissionList);
         VirtualTables virtualTables = virtualTablesService.getById(id);
         if(virtualTables!=null){
             model.addAttribute("virtual", virtualTables);
@@ -91,6 +96,8 @@ public class VirtualTablesController {
     public ModelAndView add(Model model,HttpServletRequest request){
 
         getZtree(model);
+        List<SysPermission> permissionList = sysPermissionService.findByUserNamePermission(SessionUtils.getUserNickName(request));
+        model.addAttribute("permissionList",permissionList);
         model.addAttribute("nickName", SessionUtils.getUserNickName(request));
         return new ModelAndView("/select/edit");
     }
@@ -193,7 +200,7 @@ public class VirtualTablesController {
         return model;
     }
 
-    @DeleteMapping("/delete/{id}")
+    @RequestMapping("/delete/{id}")
     @ResponseBody
     public Result<String> delete(@PathVariable Integer id){
         if (virtualTablesService.removeById(id)){

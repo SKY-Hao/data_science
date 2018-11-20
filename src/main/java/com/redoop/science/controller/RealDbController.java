@@ -51,7 +51,7 @@ public class RealDbController {
         page.setCurrent(num);
         page.setDesc("ID");
         IPage<RealDb> pages = realDbService.page(page,null);
-        List<SysPermission> permissionList = sysPermissionService.getTpyeList();
+        List<SysPermission> permissionList = sysPermissionService.findByUserNamePermission(SessionUtils.getUserNickName(request));
         model.addAttribute("permissionList",permissionList);
         model.addAttribute("nickName", SessionUtils.getUserNickName(request));
         model.addAttribute("list", pages.getRecords());
@@ -70,7 +70,8 @@ public class RealDbController {
      */
     @RequestMapping(value = "/toAdd", method = RequestMethod.GET)
     public ModelAndView form( Model model,HttpServletRequest request) {
-
+        List<SysPermission> permissionList = sysPermissionService.findByUserNamePermission(SessionUtils.getUserNickName(request));
+        model.addAttribute("permissionList",permissionList);
         model.addAttribute("realDb", new RealDb());
         model.addAttribute("nickName", SessionUtils.getUserNickName(request));
         return new ModelAndView("/realDb/add");
@@ -109,6 +110,8 @@ public class RealDbController {
      */
     @RequestMapping(value = "/toEdit/{id}",method = RequestMethod.GET)
     public ModelAndView toEdit(Model model,@PathVariable(value = "id") String id,HttpServletRequest request) {
+        List<SysPermission> permissionList = sysPermissionService.findByUserNamePermission(SessionUtils.getUserNickName(request));
+        model.addAttribute("permissionList",permissionList);
         RealDb realDb = realDbService.getById(id);
         if (realDb!=null){
             model.addAttribute("realDb", realDb);
@@ -127,6 +130,10 @@ public class RealDbController {
      */
     @RequestMapping(value = "/toList/{id}",method = RequestMethod.GET)
     public ModelAndView toList(Model model,@PathVariable(value = "id") String id,HttpServletRequest request) {
+
+        List<SysPermission> permissionList = sysPermissionService.findByUserNamePermission(SessionUtils.getUserNickName(request));
+        model.addAttribute("permissionList",permissionList);
+
         RealDb realDb = realDbService.getById(id);
         if (realDb!=null){
             model.addAttribute("realDb", realDb);
@@ -195,8 +202,11 @@ public class RealDbController {
      */
     @RequestMapping("/selectDatabase")
     @ResponseBody
-    public List<RealDb> selectDatabase(Model model){
+    public List<RealDb> selectDatabase(Model model,HttpServletRequest request){
+
+        List<SysPermission> permissionList = sysPermissionService.findByUserNamePermission(SessionUtils.getUserNickName(request));
         List<RealDb> list =  realDbService.selectDatabase();
+        model.addAttribute("permissionList",permissionList);
         model.addAttribute("list" ,list);
         return list;
     }

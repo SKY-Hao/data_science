@@ -4,15 +4,13 @@ import com.redoop.science.entity.SysDept;
 import com.redoop.science.entity.SysPermission;
 import com.redoop.science.service.ISysDeptService;
 import com.redoop.science.service.ISysPermissionService;
-import com.redoop.science.utils.R;
-import com.redoop.science.utils.Result;
-import com.redoop.science.utils.ResultEnum;
-import com.redoop.science.utils.SessionUtils;
+import com.redoop.science.utils.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.HashMap;
@@ -35,8 +33,8 @@ public class SysDeptController {
     @Autowired
     ISysPermissionService sysPermissionService;
 
-    @GetMapping("/list")
-    public String index(Map map,HttpServletRequest request){
+    @RequestMapping("/list")
+    public String index(Map map,HttpServletRequest request) throws CustomException{
         List<SysDept> deptList = deptService.list(null);
         for(SysDept sysDept : deptList){
             SysDept parentDeptEntity =  deptService.getById(sysDept.getParentId());
@@ -45,10 +43,11 @@ public class SysDeptController {
             }
         }
 
-        List<SysPermission> permissionList = sysPermissionService.getTpyeList();
+        List<SysPermission> permissionList = sysPermissionService.findByUserNamePermission(SessionUtils.getUserNickName(request));
         map.put("deptList",deptList);
         map.put("permissionList",permissionList);
         map.put("nickName", SessionUtils.getUserNickName(request));
+
         return "/sys/dept";
     }
 

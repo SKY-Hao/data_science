@@ -8,7 +8,7 @@
     <div>
         <div>
             <div sec:authorize="isAuthenticated()">
-                <p>亲爱的 <span sec:authentication="name"></span>，您权限不足。请向系统管理员申请相应权限。</p>
+                <p>亲爱的 <span sec:authentication="name">${msg}</span>，您权限不足。请向系统管理员申请相应权限。</p>
             </div>
             <div sec:authorize="isAnonymous()">
                 <p>无用户登录</p>

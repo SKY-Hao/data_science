@@ -55,11 +55,11 @@ public class SysController {
     @GetMapping("/manage")
     public ModelAndView index(Model model,HttpServletRequest request){
 
-        List<SysPermission> permissionList = sysPermissionService.getTpyeList();
+        //根据用户名称 ，查询用户所拥有的权限(菜单栏)
+        String name =SessionUtils.getUserNickName(request);
+        List<SysPermission> permissionList = sysPermissionService.findByUserNamePermission(name);
 
         model.addAttribute("permissionList",permissionList);
-       /* model.addAttribute("activeType", 7);*/
-        /*return new ModelAndView("sys/sys");*/
 
         model.addAttribute("nickName", SessionUtils.getUserNickName(request));
 
@@ -208,6 +208,11 @@ public class SysController {
 
         if(ArrayUtils.contains(userIds, 1L)){
             return new Result<String>(ResultEnum.ADMIN_USER);
+        }
+        String isId = sysUserService.findById(SessionUtils.getUserNickName(request));
+        long l = Long.parseLong(isId);
+        if (ArrayUtils.contains(userIds, l)){
+            return new Result<String>(ResultEnum.IS_USER);
         }
         if (userIds!=null){
             for (Long a : userIds){

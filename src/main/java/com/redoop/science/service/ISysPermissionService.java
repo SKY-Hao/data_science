@@ -23,4 +23,6 @@ public interface ISysPermissionService extends IService<SysPermission> {
     List<SysPermission> getTpyeList();
 
     List<SysPermissionDto> getSysPermissionDto();
+
+    List<SysPermission> findByUserNamePermission(String name);
 }

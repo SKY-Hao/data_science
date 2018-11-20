@@ -51,7 +51,7 @@ public class SysRoleController {
     public String index(Map map,HttpServletRequest request) {
 
         List<SysRole> list = roleService.list(null);
-        List<SysPermission> permissionList = sysPermissionService.getTpyeList();
+        List<SysPermission> permissionList = sysPermissionService.findByUserNamePermission(SessionUtils.getUserNickName(request));
         map.put("page", list);
         map.put("permissionList",permissionList);
         map.put("nickName", SessionUtils.getUserNickName(request));

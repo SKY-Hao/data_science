@@ -55,7 +55,7 @@ public class AnalysisController {
         page.setDesc("ID");
         IPage<Analysis> pages = analysisService.page(page,null);
 
-        List<SysPermission> permissionList = sysPermissionService.getTpyeList();
+        List<SysPermission> permissionList = sysPermissionService.findByUserNamePermission(SessionUtils.getUserNickName(request));
 
         model.addAttribute("permissionList",permissionList);
         model.addAttribute("nickName", SessionUtils.getUserNickName(request));
@@ -71,6 +71,8 @@ public class AnalysisController {
     @GetMapping("/add")
     public ModelAndView add(Model model,HttpServletRequest request){
         //getZtree(model);
+        List<SysPermission> permissionList = sysPermissionService.findByUserNamePermission(SessionUtils.getUserNickName(request));
+        model.addAttribute("permissionList",permissionList);
         model.addAttribute("nickName", SessionUtils.getUserNickName(request));
         return new ModelAndView("/analysis/update");
     }
@@ -128,8 +130,9 @@ public class AnalysisController {
      */
     @GetMapping("/edit/{id}")
     public ModelAndView edit(Model model,@PathVariable(value = "id") String id,HttpServletRequest request){
-
+        List<SysPermission> permissionList = sysPermissionService.findByUserNamePermission(SessionUtils.getUserNickName(request));
         Analysis analysis = analysisService.getById(id);
+        model.addAttribute("permissionList",permissionList);
         if(analysis!=null){
             model.addAttribute("analysis", analysis);
             //返回值

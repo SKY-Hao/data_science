@@ -55,7 +55,7 @@ public class RegFunctionController {
         page.setCurrent(num);
         page.setDesc("ID");
         IPage<RegFunction> pages = regFunctionService.page(page, null);
-        List<SysPermission> permissionList = sysPermissionService.getTpyeList();
+        List<SysPermission> permissionList = sysPermissionService.findByUserNamePermission(SessionUtils.getUserNickName(request));
         model.addAttribute("permissionList",permissionList);
         model.addAttribute("nickName", SessionUtils.getUserNickName(request));
         model.addAttribute("items", pages.getRecords());
@@ -68,7 +68,8 @@ public class RegFunctionController {
 
     @GetMapping("/edit/{id}")
     public ModelAndView edit(Model model, @PathVariable(value = "id") String id, HttpServletRequest request) {
-
+        List<SysPermission> permissionList = sysPermissionService.findByUserNamePermission(SessionUtils.getUserNickName(request));
+        model.addAttribute("permissionList",permissionList);
         RegFunction regFunction = regFunctionService.getById(id);
         if (regFunction != null) {
             model.addAttribute("virtual", regFunction);
@@ -84,7 +85,8 @@ public class RegFunctionController {
 
     @GetMapping("/add")
     public ModelAndView add(Model model, HttpServletRequest request) {
-
+        List<SysPermission> permissionList = sysPermissionService.findByUserNamePermission(SessionUtils.getUserNickName(request));
+        model.addAttribute("permissionList",permissionList);
         model.addAttribute("nickName", SessionUtils.getUserNickName(request));
         return new ModelAndView("/function/edit");
     }
