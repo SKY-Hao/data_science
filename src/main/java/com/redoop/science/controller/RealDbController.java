@@ -3,6 +3,7 @@ package com.redoop.science.controller;
 
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.redoop.science.constant.DBEnum;
 import com.redoop.science.entity.RealDb;
 import com.redoop.science.entity.SysPermission;
 import com.redoop.science.service.IRealDbService;
@@ -21,7 +22,10 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 
 /**
@@ -39,6 +43,7 @@ public class RealDbController {
     private IRealDbService realDbService;
     @Autowired
     ISysPermissionService sysPermissionService;
+
     /**
      * 数据源列表分类
      * @param model
@@ -46,14 +51,27 @@ public class RealDbController {
      */
     @GetMapping("/{num}")
     public ModelAndView index(Model model,@PathVariable Long num,HttpServletRequest request){
+
+        String  nickName = SessionUtils.getUserNickName(request);
+        Integer id = SessionUtils.getUserId(request);
+
         Page<RealDb> page = new Page<>();
         page.setSize(11L);
         page.setCurrent(num);
         page.setDesc("ID");
-        IPage<RealDb> pages = realDbService.page(page,null);
-        List<SysPermission> permissionList = sysPermissionService.findByUserNamePermission(SessionUtils.getUserNickName(request));
+
+//        IPage<RealDb> pages = realDbService.page(page,queryWrapper);
+        Map<String,Object> params = new HashMap();
+        params.put("id",id);
+        IPage<RealDb> pages = realDbService.pageList(page, params);
+
+        //System.out.println("sessionId>>>>>>>>>>>>>"+SessionUtils.getUserId(request));
+
+
+        List<SysPermission> permissionList = sysPermissionService.findByUserNamePermission(nickName);
+
         model.addAttribute("permissionList",permissionList);
-        model.addAttribute("nickName", SessionUtils.getUserNickName(request));
+        model.addAttribute("nickName", nickName);
         model.addAttribute("list", pages.getRecords());
         model.addAttribute("activeType", 2);
         model.addAttribute("pageNum", num);
@@ -62,6 +80,38 @@ public class RealDbController {
         model.addAttribute("total", pages.getTotal());
         return new ModelAndView("/realDb/index");
     }
+
+    @RequestMapping("/lists")
+    @ResponseBody
+    public List<Map<String, Object>> list(){
+
+        //  获取ztree json
+        // 获取真实库ztreejson
+        List<RealDb> realDbs =  realDbService.list(null);
+
+
+        List<Map<String,Object>> realZList = new ArrayList<>();
+        for (DBEnum dbEnum : DBEnum.values())
+        {
+            Map<String,Object> zMap = new HashMap<>();
+            zMap.put("pId",0);
+            zMap.put("name",dbEnum.getName());
+            zMap.put("icon","/img/icon/"+dbEnum.getName()+".png");
+            zMap.put("id",dbEnum.getDbType());
+            realZList.add(zMap);
+        }
+        for (RealDb realDb: realDbs){
+            Map<String,Object> zMap = new HashMap<>();
+            zMap.put("pId",realDb.getDbType());
+            zMap.put("name",realDb.getNikeName());
+            zMap.put("icon","/img/icon/db.png");
+            zMap.put("id",realDb.getId());
+            realZList.add(zMap);
+        }
+        return realZList;
+    }
+
+
 
     /**
      * 去添加数据源

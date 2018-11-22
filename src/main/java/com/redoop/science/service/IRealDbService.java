@@ -1,9 +1,12 @@
 package com.redoop.science.service;
 
+import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.redoop.science.entity.RealDb;
 import com.baomidou.mybatisplus.extension.service.IService;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * <p>
@@ -32,4 +35,18 @@ public interface IRealDbService extends IService<RealDb> {
      * @return
      */
     RealDb findByNikeName(String nikeName);
+
+    /**
+     *
+     * @param id
+     * @return
+     */
+    List<RealDb> findByRole(Integer  id);
+
+    /**
+     *根据nikeName查id，查角色id，根据角色id查对应的真实库信息
+     * @param params
+     * @return
+     */
+    IPage<RealDb> pageList(Page<RealDb> page, Map params);
 }

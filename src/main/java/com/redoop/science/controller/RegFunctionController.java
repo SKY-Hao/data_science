@@ -27,7 +27,10 @@ import javax.servlet.http.HttpServletRequest;
 import java.io.File;
 import java.io.IOException;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * <p>
@@ -50,11 +53,18 @@ public class RegFunctionController {
 
     @GetMapping("/{num}")
     public ModelAndView index(Model model, @PathVariable Long num, HttpServletRequest request) {
+
+        Integer id = SessionUtils.getUserId(request);
+
         Page<RegFunction> page = new Page<>();
         page.setSize(11L);
         page.setCurrent(num);
         page.setDesc("ID");
-        IPage<RegFunction> pages = regFunctionService.page(page, null);
+
+        Map<String,Object> params = new HashMap();
+        params.put("id",id);
+
+        IPage<RegFunction> pages = regFunctionService.pageList(page, params);
         List<SysPermission> permissionList = sysPermissionService.findByUserNamePermission(SessionUtils.getUserNickName(request));
         model.addAttribute("permissionList",permissionList);
         model.addAttribute("nickName", SessionUtils.getUserNickName(request));
@@ -64,6 +74,31 @@ public class RegFunctionController {
         model.addAttribute("pages", pages.getPages());
         model.addAttribute("total", pages.getTotal());
         return new ModelAndView("/function/index");
+    }
+
+
+
+    @RequestMapping("/lists")
+    @ResponseBody
+    public List<Map<String, Object>> list(){
+        //函数树
+        List<Map<String,Object>> funZList = new ArrayList<>();
+        Map<String,Object> fMap = new HashMap<>();
+        fMap.put("pId",0);
+        fMap.put("name","函数库");
+        fMap.put("icon","/img/icon/db.png");
+        fMap.put("id",1);
+        funZList.add(fMap);
+        List<RegFunction> regFunctionList = regFunctionService.list(null);
+        for (RegFunction regFunction:regFunctionList){
+            Map<String,Object> fMap2 = new HashMap<>();
+            fMap2.put("pId",1);
+            fMap2.put("name",regFunction.getName());
+            fMap2.put("icon","/img/icon/table.png");
+            fMap2.put("id",regFunction.getId());
+            funZList.add(fMap2);
+        }
+        return funZList;
     }
 
     @GetMapping("/edit/{id}")

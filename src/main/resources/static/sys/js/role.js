@@ -92,6 +92,85 @@ var data_setting = {
         chkboxType:{ "Y" : "", "N" : "" }
     }
 };
+//真实库树
+var realDb_ztree;
+var realDb_setting = {
+    data: {
+        simpleData: {
+            enable: true,
+            idKey: "id",
+            pIdKey: "pId",
+            rootPId: -1
+        },
+        key: {
+            url:"nourl"
+        }
+    },
+    check:{
+        enable:true,
+        nocheckInherit:true
+    }
+};
+
+//视图树
+var view_ztree;
+var view_setting = {
+    data: {
+        simpleData: {
+            enable: true,
+            idKey: "id",
+            pIdKey: "pId",
+            rootPId: -1
+        },
+        key: {
+            url:"nourl"
+        }
+    },
+    check:{
+        enable:true,
+        nocheckInherit:true
+    }
+};
+
+//函数树
+var fun_ztree;
+var fun_setting = {
+    data: {
+        simpleData: {
+            enable: true,
+            idKey: "id",
+            pIdKey: "pId",
+            rootPId: -1
+        },
+        key: {
+            url:"nourl"
+        }
+    },
+    check:{
+        enable:true,
+        nocheckInherit:true
+    }
+};
+
+//虚拟树
+var virtual_ztree;
+var virtual_setting = {
+    data: {
+        simpleData: {
+            enable: true,
+            idKey: "id",
+            pIdKey: "pId",
+            rootPId: -1
+        },
+        key: {
+            url:"nourl"
+        }
+    },
+    check:{
+        enable:true,
+        nocheckInherit:true
+    }
+};
 
 var vm = new Vue({
     el:'#rrapp',
@@ -115,10 +194,12 @@ var vm = new Vue({
             vm.title = "新增";
             vm.role = {deptName:null, deptId:null};
             vm.getMenuTree(null);
-
             vm.getDept();
-
             vm.getDataTree();
+            vm.getRealDb(null);
+            vm.getView(null);
+            vm.getFun(null);
+            vm.getVirtual(null);
         },
         update: function () {
             var id = getSelectedRow();
@@ -130,7 +211,10 @@ var vm = new Vue({
             vm.title = "修改";
             vm.getDataTree();
             vm.getMenuTree(id);
-
+            vm.getRealDb(id)
+            vm.getView(id)
+            vm.getFun(id);
+            vm.getVirtual(id);
             vm.getDept();
         },
         del: function () {
@@ -175,10 +259,39 @@ var vm = new Vue({
                     data_ztree.checkNode(node, true, false);
                 }
 
+                //勾选角色所拥有的真实库
+                var realDbIds = vm.role.readDbIdList;
+                for(var i=0; i<realDbIds.length; i++) {
+                    var node = realDb_ztree.getNodeByParam("id", realDbIds[i]);
+                    realDb_ztree.checkNode(node, true, false);
+                }
+
+                //勾选角色所拥有的视图
+                var viewIds = vm.role.viewIdList;
+                for(var i=0; i<viewIds.length; i++) {
+                    var node = view_ztree.getNodeByParam("id", viewIds[i]);
+                    view_ztree.checkNode(node, true, false);
+                }
+
+                //勾选角色所拥有的函数
+                var funIds = vm.role.funIdList;
+                for(var i=0; i<funIds.length; i++) {
+                    var node = fun_ztree.getNodeByParam("id", funIds[i]);
+                    fun_ztree.checkNode(node, true, false);
+                }
+
+                //勾选角色所拥有的虚拟
+                var virtualIds = vm.role.virtualIdList;
+                for(var i=0; i<virtualIds.length; i++) {
+                    var node = virtual_ztree.getNodeByParam("id", virtualIds[i]);
+                    virtual_ztree.checkNode(node, true, false);
+                }
+
                 vm.getDept();
             });
         },
         saveOrUpdate: function () {
+            //debugger
             //获取选择的菜单
             var nodes = menu_ztree.getCheckedNodes(true);
             var permissionIdList = new Array();
@@ -194,6 +307,42 @@ var vm = new Vue({
                 deptIdList.push(nodes[i].id);
             }
             vm.role.deptIdList = deptIdList;
+
+            //获取选择的真实库
+            var nodes = realDb_ztree.getCheckedNodes(true);
+            var readDbIdList = new Array();
+            for(var i=0; i<nodes.length; i++) {
+                readDbIdList.push(nodes[i].id);
+            }
+            vm.role.readDbIdList = readDbIdList;
+
+            //获取选择的视图
+            var nodes = view_ztree.getCheckedNodes(true);
+            var viewIdList = new Array();
+            for(var i=0; i<nodes.length; i++) {
+                viewIdList.push(nodes[i].id);
+            }
+            vm.role.viewIdList = viewIdList;
+
+
+            //获取选择的函数
+            var nodes = fun_ztree.getCheckedNodes(true);
+            var funIdList = new Array();
+            for(var i=0; i<nodes.length; i++) {
+                funIdList.push(nodes[i].id);
+            }
+            vm.role.funIdList = funIdList;
+
+
+            //获取选择的虚拟
+            var nodes = virtual_ztree.getCheckedNodes(true);
+            var virtualIdList = new Array();
+            for(var i=0; i<nodes.length; i++) {
+                virtualIdList.push(nodes[i].id);
+            }
+            vm.role.virtualIdList = virtualIdList;
+
+
 
             var url = vm.role.id == null ? "sys/role/save" : "sys/role/update";
             $.ajax({
@@ -244,6 +393,59 @@ var vm = new Vue({
                 }
             })
         },
+        getRealDb: function(roleId) {
+            //加载真实库
+            $.get(baseURL + "real/lists", function(r){
+                //debugger
+                realDb_ztree = $.fn.zTree.init($("#realDb_ztree"), realDb_setting, r);
+                //展开所有节点
+                realDb_ztree.expandAll(true);
+
+                if(roleId != null){
+                    vm.getRole(roleId);
+                }
+            });
+        },
+        getView: function(roleId) {
+            //加载视图
+            $.get(baseURL + "views/lists", function(r){
+                //debugger
+                view_ztree = $.fn.zTree.init($("#view_ztree"), view_setting, r);
+                //展开所有节点
+                view_ztree.expandAll(true);
+
+                if(roleId != null){
+                    vm.getRole(roleId);
+                }
+            });
+        },
+        getFun: function(roleId) {
+            //加载函数
+            $.get(baseURL + "function/lists", function(r){
+                //debugger
+                fun_ztree = $.fn.zTree.init($("#fun_ztree"), fun_setting, r);
+                //展开所有节点
+                fun_ztree.expandAll(true);
+
+                if(roleId != null){
+                    vm.getRole(roleId);
+                }
+            });
+        },
+       getVirtual: function(roleId) {
+            //加载虚拟
+            $.get(baseURL + "virtual/lists", function(r){
+                //debugger
+                virtual_ztree = $.fn.zTree.init($("#virtual_ztree"), virtual_setting, r);
+                //展开所有节点
+                virtual_ztree.expandAll(true);
+
+                if(roleId != null){
+                    vm.getRole(roleId);
+                }
+            });
+        },
+
         deptTree: function(){
             layer.open({
                 type: 1,

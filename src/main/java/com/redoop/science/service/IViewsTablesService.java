@@ -1,7 +1,11 @@
 package com.redoop.science.service;
 
+import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.redoop.science.entity.ViewsTables;
+
+import java.util.Map;
 
 /**
  * <p>
@@ -15,4 +19,6 @@ public interface IViewsTablesService extends IService<ViewsTables> {
 
 
     String getByName(String dbName);
+
+    IPage<ViewsTables> pageList(Page<ViewsTables> page, Map<String, Object> params);
 }

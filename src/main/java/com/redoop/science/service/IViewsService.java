@@ -1,10 +1,13 @@
 package com.redoop.science.service;
 
+import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.redoop.science.dto.ViewsDto;
 import com.redoop.science.entity.Views;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * <p>
@@ -19,4 +22,7 @@ public interface IViewsService extends IService<Views> {
 
     List<ViewsDto> getViewsTables();
 
+    IPage<Views> pageList(Page<Views> page, Map<String, Object> params);
+
+    List<ViewsDto> findByRole(Integer id);
 }

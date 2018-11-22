@@ -41,10 +41,10 @@ spring:
     druid:
       driver-class-name: com.mysql.cj.jdbc.Driver
       #\u57FA\u672C\u5C5E\u6027
-      #url: jdbc:mysql://127.0.0.1:3306/data_science?serverTimezone=Asia/Shanghai&useUnicode=true&characterEncoding=utf8&autoReconnect=true&rewriteBatchedStatements=TRUE&useSSL=false&allowPublicKeyRetrieval=true
+      #url: jdbc:mysql://192.168.0.163:3306/data_science?serverTimezone=Asia/Shanghai&useUnicode=true&characterEncoding=utf8&autoReconnect=true&rewriteBatchedStatements=TRUE&useSSL=false&allowPublicKeyRetrieval=true
       url: jdbc:mysql://192.168.0.122/data_science?serverTimezone=Asia/Shanghai&useUnicode=true&characterEncoding=utf8&autoReconnect=true&rewriteBatchedStatements=TRUE&useSSL=false&allowPublicKeyRetrieval=true
       username: root
-      #password: root
+      #password:
       password: Redoop123$%^
 #      username: root
 #      password: Alansun&**@7882
@@ -92,7 +92,7 @@ spring:
         max-wait: 1M # 连接池最大阻塞等待时间（使用负值表示没有限制）
     timeout: 1M
 server:
-  port: 8080
+  port: 8090
 #actuator
 ##运行状态 actuator监控
 #endpoints:

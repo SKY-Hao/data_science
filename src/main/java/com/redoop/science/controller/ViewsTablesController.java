@@ -57,12 +57,21 @@ public class ViewsTablesController {
      */
     @GetMapping("/{num}")
     public ModelAndView index(Model model, @PathVariable Long num, HttpServletRequest request){
+
+        Integer id = SessionUtils.getUserId(request);
+
         Page<ViewsTables> page = new Page<>();
+        
         page.setSize(11L);
         page.setCurrent(num);
         page.setDesc("ID");
-        IPage<ViewsTables> pages = viewsTablesService.page(page,null);
+
+        Map<String,Object> params = new HashMap();
+        params.put("id",id);
+        IPage<ViewsTables> pages = viewsTablesService.pageList(page,params);
+
         List<SysPermission> permissionList = sysPermissionService.findByUserNamePermission(SessionUtils.getUserNickName(request));
+
         model.addAttribute("permissionList",permissionList);
         model.addAttribute("nickName", SessionUtils.getUserNickName(request));
         model.addAttribute("items", pages.getRecords());
