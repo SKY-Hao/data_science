@@ -109,5 +109,11 @@ public class SysRole implements GrantedAuthority {
     @TableField(exist=false)
     private List<Long> virtualIdList;
 
+    /**
+     * 分析List(查询角色对应的分析)
+     */
+    @TableField(exist=false)
+    private List<Long> analysisIdList;
+
 
 }

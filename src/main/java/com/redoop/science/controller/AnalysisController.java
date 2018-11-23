@@ -5,11 +5,13 @@ import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.redoop.science.entity.Analysis;
+import com.redoop.science.entity.RegFunction;
 import com.redoop.science.entity.SysPermission;
 import com.redoop.science.entity.SysUserDetails;
 import com.redoop.science.service.IAnalysisService;
 import com.redoop.science.service.IRealDbService;
 import com.redoop.science.service.ISysPermissionService;
+import com.redoop.science.service.ISysRoleAnalysisService;
 import com.redoop.science.utils.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -37,9 +39,11 @@ public class AnalysisController {
     @Autowired
     private IAnalysisService analysisService;
     @Autowired
-    private IRealDbService realDbService;
-    @Autowired
     ISysPermissionService sysPermissionService;
+
+
+    @Autowired
+    ISysRoleAnalysisService roleAnalysisService;
     /**
      * 分析列表List
      * @param model
@@ -49,11 +53,16 @@ public class AnalysisController {
      */
     @GetMapping("/{num}")
     public ModelAndView index(Model model, @PathVariable Long num, HttpServletRequest request){
+        Integer id = SessionUtils.getUserId(request);
         Page<Analysis> page = new Page<>();
         page.setSize(11L);
         page.setCurrent(num);
         page.setDesc("ID");
-        IPage<Analysis> pages = analysisService.page(page,null);
+
+        Map<String,Object> params = new HashMap();
+        params.put("id",id);
+
+        IPage<Analysis> pages = analysisService.pageList(page,params);
 
         List<SysPermission> permissionList = sysPermissionService.findByUserNamePermission(SessionUtils.getUserNickName(request));
 
@@ -66,6 +75,29 @@ public class AnalysisController {
         model.addAttribute("pages", pages.getPages());
         model.addAttribute("total", pages.getTotal());
         return new ModelAndView("/analysis/index");
+    }
+
+    @RequestMapping("/lists")
+    @ResponseBody
+    public List<Map<String, Object>> list(){
+        //函数树
+        List<Map<String,Object>> analysisZList = new ArrayList<>();
+        Map<String,Object> fMap = new HashMap<>();
+        fMap.put("pId",0);
+        fMap.put("name","分析");
+        fMap.put("icon","/img/icon/db.png");
+        fMap.put("id",1);
+        analysisZList.add(fMap);
+        List<Analysis> analysisList = analysisService.list(null);
+        for (Analysis analysis:analysisList){
+            Map<String,Object> fMap2 = new HashMap<>();
+            fMap2.put("pId",1);
+            fMap2.put("name",analysis.getName());
+            fMap2.put("icon","/img/icon/table.png");
+            fMap2.put("id",analysis.getId());
+            analysisZList.add(fMap2);
+        }
+        return analysisZList;
     }
 
     @GetMapping("/add")
@@ -156,6 +188,7 @@ public class AnalysisController {
     public String delete(@PathVariable(value = "id")  Integer id){
         if (id!=null){
             analysisService.removeById(id);
+            roleAnalysisService.deleteAnalysis(id);
             return "redirect:/analysis/1";
         } else {
             return String.valueOf(new Result<String>(ResultEnum.FAIL));

@@ -53,6 +53,10 @@ public class SysRoleController {
     @Autowired
     ISysRoleVirtualService roleVirtualService;
 
+    @Autowired
+    ISysRoleAnalysisService roleAnalysisService;
+
+
     /**
      * 角色列表
      */
@@ -144,6 +148,12 @@ public class SysRoleController {
         role.setVirtualIdList(virtualIdList);
        //  System.out.println("查询角色对应的虚拟>>>>>>" + virtualIdList);
 
+        //查询角色对应的分析
+        List<Long> analysisIdList = roleAnalysisService.queryAnalysisIdList(id);
+        role.setAnalysisIdList(analysisIdList);
+        //  System.out.println("查询角色对应的分析>>>>>>" + analysisIdList);
+
+
         Map map = new HashMap();
         map.put("role", role);
 
@@ -233,6 +243,20 @@ public class SysRoleController {
             roleVirtualService.saveBatch(virtualIdList);
 
 
+            //保存角色与分析关系
+            List<SysRoleAnalysis> analysisIdList = new ArrayList<>(role.getAnalysisIdList().size());
+            for (Long viewId : role.getAnalysisIdList()) {
+                SysRoleAnalysis fun = new SysRoleAnalysis();
+                fun.setAnalysisId(viewId.intValue());
+                fun.setRoleId(role.getId());
+                analysisIdList.add(fun);
+            }
+            // System.out.println("保存角色与分析关系>>>>"+funIdList);
+            roleAnalysisService.saveBatch(analysisIdList);
+
+
+
+
             return new Result<String>(ResultEnum.SECCUSS);
         } else {
             return new Result<String>(ResultEnum.FAIL);
@@ -314,8 +338,6 @@ public class SysRoleController {
             roleFunService.saveBatch(funIdList);
 
 
-
-
             //删除角色与虚拟关系
             roleVirtualService.deleteBatch(new Long[]{a});
             //保存角色与虚拟关系
@@ -327,6 +349,19 @@ public class SysRoleController {
                 virtualIdList.add(fun);
             }
             roleVirtualService.saveBatch(virtualIdList);
+
+            //删除角色与分析关系
+            roleAnalysisService.deleteBatch(new Long[]{a});
+            //保存角色与分析关系
+            List<SysRoleAnalysis> analysisIdList = new ArrayList<>(role.getAnalysisIdList().size());
+            for (Long viewId : role.getAnalysisIdList()) {
+                SysRoleAnalysis fun = new SysRoleAnalysis();
+                fun.setAnalysisId(viewId.intValue());
+                fun.setRoleId(role.getId());
+                analysisIdList.add(fun);
+            }
+            roleAnalysisService.saveBatch(analysisIdList);
+
 
             return new Result<String>(ResultEnum.SECCUSS);
         } else {
@@ -362,6 +397,9 @@ public class SysRoleController {
 
             //删除角色与虚拟关系
             roleVirtualService.deleteBatch(roleIds);
+
+            //删除角色与分析关系
+            roleAnalysisService.deleteBatch(roleIds);
 
             //删除角色与用户关联
         //    sysUserRoleService.deleteBatch(roleIds);

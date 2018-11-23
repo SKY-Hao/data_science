@@ -172,6 +172,25 @@ var virtual_setting = {
     }
 };
 
+//分析树
+var analysis_ztree;
+var analysis_setting = {
+    data: {
+        simpleData: {
+            enable: true,
+            idKey: "id",
+            pIdKey: "pId",
+            rootPId: -1
+        },
+        key: {
+            url:"nourl"
+        }
+    },
+    check:{
+        enable:true,
+        nocheckInherit:true
+    }
+};
 var vm = new Vue({
     el:'#rrapp',
     data:{
@@ -200,6 +219,7 @@ var vm = new Vue({
             vm.getView(null);
             vm.getFun(null);
             vm.getVirtual(null);
+            vm.getAnalysis(null);
         },
         update: function () {
             var id = getSelectedRow();
@@ -215,6 +235,7 @@ var vm = new Vue({
             vm.getView(id)
             vm.getFun(id);
             vm.getVirtual(id);
+            vm.getAnalysis(id);
             vm.getDept();
         },
         del: function () {
@@ -287,6 +308,13 @@ var vm = new Vue({
                     virtual_ztree.checkNode(node, true, false);
                 }
 
+                //勾选角色所拥有的分析
+                var analysisIds = vm.role.analysisIdList;
+                for(var i=0; i<analysisIds.length; i++) {
+                    var node = analysis_ztree.getNodeByParam("id", analysisIds[i]);
+                    analysis_ztree.checkNode(node, true, false);
+                }
+
                 vm.getDept();
             });
         },
@@ -341,6 +369,14 @@ var vm = new Vue({
                 virtualIdList.push(nodes[i].id);
             }
             vm.role.virtualIdList = virtualIdList;
+
+            //获取选择的分析
+            var nodes = analysis_ztree.getCheckedNodes(true);
+            var analysisIdList = new Array();
+            for(var i=0; i<nodes.length; i++) {
+                analysisIdList.push(nodes[i].id);
+            }
+            vm.role.analysisIdList = analysisIdList;
 
 
 
@@ -445,7 +481,19 @@ var vm = new Vue({
                 }
             });
         },
+        getAnalysis: function(roleId) {
+            //加载视图
+            $.get(baseURL + "analysis/lists", function(r){
+                //debugger
+                analysis_ztree = $.fn.zTree.init($("#analysis_ztree"), analysis_setting, r);
+                //展开所有节点
+                analysis_ztree.expandAll(true);
 
+                if(roleId != null){
+                    vm.getRole(roleId);
+                }
+            });
+        },
         deptTree: function(){
             layer.open({
                 type: 1,

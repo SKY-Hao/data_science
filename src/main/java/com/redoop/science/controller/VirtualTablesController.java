@@ -48,8 +48,6 @@ public class VirtualTablesController {
     @Autowired
     ISysPermissionService sysPermissionService;
 
-    @Autowired
-    ISysRoleService roleService;
 
     @Autowired
     ISysRoleVirtualService roleVirtualService;
