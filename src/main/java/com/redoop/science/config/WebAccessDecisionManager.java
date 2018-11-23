@@ -1,5 +1,6 @@
 package com.redoop.science.config;
 
+import com.redoop.science.utils.CustomException;
 import org.springframework.security.access.AccessDecisionVoter;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.access.ConfigAttribute;
@@ -47,7 +48,7 @@ public class WebAccessDecisionManager extends AbstractAccessDecisionManager {
         }
         // 注意：执行这里，后台是会抛异常的，但是界面会跳转到所配的access-denied-page页面
         logger.info("没有权限,拒绝访问!");
-        throw new AccessDeniedException("没有权限,拒绝访问!");
+        throw new CustomException(401,"没有权限,拒绝访问!");
     }
 
     @Override
