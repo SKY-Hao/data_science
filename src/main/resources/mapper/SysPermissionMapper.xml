@@ -29,7 +29,16 @@
         ,T.ICON
         ,T.ORDER_NUM
     </sql>
-    <select id="findListPermissionDto" resultMap="sysPermissionDto" >
-      select <include refid="base"/> from SYS_PERMISSION T where T.TYPE != 0
+    <select id="findListPermissionDto" resultMap="sysPermissionDto">
+        select
+        <include refid="base"/>
+        from SYS_PERMISSION T where T.TYPE != 0
+    </select>
+
+    <select id="findByUserNamePermission" resultMap="sysPermissionDto">
+        SELECT d.* FROM	sys_user a LEFT JOIN sys_user_role b ON a.ID = b.USER_ID
+          LEFT JOIN sys_role_permission c ON b.ROLE_ID = c.ROLE_ID
+          LEFT JOIN sys_permission d ON c.PERMISSION_ID = d.ID
+          WHERE a.NICK_NAME = #{name} and d.TYPE !=0 GROUP BY d.ID
     </select>
 </mapper>

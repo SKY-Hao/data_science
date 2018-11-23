@@ -55,11 +55,11 @@ public class SysController {
     @GetMapping("/manage")
     public ModelAndView index(Model model,HttpServletRequest request){
 
-        List<SysPermission> permissionList = sysPermissionService.getTpyeList();
+        //根据用户名称 ，查询用户所拥有的权限(菜单栏)
+        String name =SessionUtils.getUserNickName(request);
+        List<SysPermission> permissionList = sysPermissionService.findByUserNamePermission(name);
 
         model.addAttribute("permissionList",permissionList);
-       /* model.addAttribute("activeType", 7);*/
-        /*return new ModelAndView("sys/sys");*/
 
         model.addAttribute("nickName", SessionUtils.getUserNickName(request));
 
@@ -136,13 +136,12 @@ public class SysController {
     @ResponseBody
     public Result save(@RequestBody SysUser user){
 
-
+        user.setNickName(user.getUsername());
         LocalDateTime localDateTime = LocalDateTime.now();
         localDateTime.format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
         user.setCreateDate(localDateTime);
         user.setPassword(passwordEncoder.encode(user.getPassword().trim()));
         if (sysUserService.save(user)){
-
 
            //保存用户与角色关系
            List<SysUserRole> list = new ArrayList<>(user.getRoleIdList().size());
@@ -168,6 +167,7 @@ public class SysController {
     @RequestMapping("/user/update")
     @ResponseBody
     public Result update(@RequestBody SysUser user){
+        user.setNickName(user.getUsername());
         LocalDateTime localDateTime = LocalDateTime.now();
         localDateTime.format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
         user.setCreateDate(localDateTime);
@@ -196,7 +196,6 @@ public class SysController {
         } else {
             return new Result<String>(ResultEnum.FAIL);
         }
-
     }
 
 
@@ -209,6 +208,11 @@ public class SysController {
 
         if(ArrayUtils.contains(userIds, 1L)){
             return new Result<String>(ResultEnum.ADMIN_USER);
+        }
+        String isId = sysUserService.findById(SessionUtils.getUserNickName(request));
+        long l = Long.parseLong(isId);
+        if (ArrayUtils.contains(userIds, l)){
+            return new Result<String>(ResultEnum.IS_USER);
         }
         if (userIds!=null){
             for (Long a : userIds){

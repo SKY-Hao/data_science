@@ -39,5 +39,13 @@ public class SysUserServiceImpl extends ServiceImpl<SysUserMapper, SysUser> impl
         return sysUserMapper.select(username,password);
     }
 
-
+    /**
+     * 根据nikeName查ID
+     * @param userNickName
+     * @return
+     */
+    @Override
+    public String findById(String userNickName) {
+        return sysUserMapper.findById(userNickName);
+    }
 }

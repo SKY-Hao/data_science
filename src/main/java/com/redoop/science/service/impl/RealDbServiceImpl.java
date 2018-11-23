@@ -1,5 +1,7 @@
 package com.redoop.science.service.impl;
 
+import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.redoop.science.entity.RealDb;
 import com.redoop.science.mapper.RealDbMapper;
 import com.redoop.science.service.IRealDbService;
@@ -26,6 +28,16 @@ public class RealDbServiceImpl extends ServiceImpl<RealDbMapper, RealDb> impleme
     @Autowired
     RealDbMapper realDbMapper;
 
+
+    @Override
+    public IPage<RealDb> pageList(Page<RealDb> page, Map params) {
+        return realDbMapper.findByRole(page,params);
+    }
+
+    @Override
+    public List<RealDb> findByRole(Integer id) {
+        return realDbMapper.findByUserId(id);
+    }
 
     /**
      * 根据数据源别名查询

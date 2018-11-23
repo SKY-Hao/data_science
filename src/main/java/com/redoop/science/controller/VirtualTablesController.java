@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.*;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.web.servlet.ModelAndView;
+import org.springframework.web.servlet.View;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.ArrayList;
@@ -54,31 +55,63 @@ public class VirtualTablesController {
     @GetMapping("/{num}")
     public ModelAndView index(Model model,@PathVariable Long num,HttpServletRequest request){
 
-
+        Integer id = SessionUtils.getUserId(request);
         Page<VirtualTables> page = new Page<>();
         page.setSize(11L);
         page.setCurrent(num);
         page.setDesc("ID");
-        IPage<VirtualTables> pages = virtualTablesService.page(page,null);
-        List<SysPermission> permissionList = sysPermissionService.getTpyeList();
+
+        Map<String,Object> params = new HashMap();
+        params.put("id",id);
+        IPage<VirtualTables> pages = virtualTablesService.pageList(page,params);
+
+        List<SysPermission> permissionList = sysPermissionService.findByUserNamePermission(SessionUtils.getUserNickName(request));
         model.addAttribute("permissionList",permissionList);
+
         model.addAttribute("nickName", SessionUtils.getUserNickName(request));
         model.addAttribute("items", pages.getRecords());
-        model.addAttribute("activeType", 1);
+       // model.addAttribute("activeType", 1);
         model.addAttribute("pageNum", num);
         model.addAttribute("virtual", new VirtualTables());
         model.addAttribute("pages", pages.getPages());
         model.addAttribute("total", pages.getTotal());
         return new ModelAndView("/select/index");
     }
+
+
+
+    @RequestMapping("/lists")
+    @ResponseBody
+    public List<Map<String, Object>> list(){
+        List<Map<String,Object>> virtualZList = new ArrayList<>();
+        Map<String,Object> vMap = new HashMap<>();
+        vMap.put("pId",0);
+        vMap.put("name","虚拟库");
+        vMap.put("icon","/img/icon/db.png");
+        vMap.put("id",1);
+        virtualZList.add(vMap);
+        List<VirtualTables> virtualTablesList = virtualTablesService.list(null);
+        for (VirtualTables virtualTables:virtualTablesList){
+            Map<String,Object> zMap = new HashMap<>();
+            zMap.put("pId",1);
+            zMap.put("name",virtualTables.getName());
+            zMap.put("icon","/img/icon/table.png");
+            zMap.put("id",virtualTables.getId());
+            virtualZList.add(zMap);
+        }
+        return virtualZList;
+    }
+
+
     @GetMapping("/edit/{id}")
     public ModelAndView edit(Model model,@PathVariable(value = "id") String id,HttpServletRequest request){
-
+        List<SysPermission> permissionList = sysPermissionService.findByUserNamePermission(SessionUtils.getUserNickName(request));
+        model.addAttribute("permissionList",permissionList);
         VirtualTables virtualTables = virtualTablesService.getById(id);
         if(virtualTables!=null){
             model.addAttribute("virtual", virtualTables);
             //返回值
-            getZtree(model);
+            getZtree(model,null);
             model.addAttribute("nickName", SessionUtils.getUserNickName(request));
             return new ModelAndView("/select/edit");
         }else{
@@ -90,16 +123,23 @@ public class VirtualTablesController {
     @GetMapping("/add")
     public ModelAndView add(Model model,HttpServletRequest request){
 
-        getZtree(model);
+
+        getZtree(model,request);
+        List<SysPermission> permissionList = sysPermissionService.findByUserNamePermission(SessionUtils.getUserNickName(request));
+        model.addAttribute("permissionList",permissionList);
         model.addAttribute("nickName", SessionUtils.getUserNickName(request));
         return new ModelAndView("/select/edit");
     }
 
-    public Model getZtree(Model model){
+    public Model getZtree(Model model,HttpServletRequest request){
+
+
+        Integer id = SessionUtils.getUserId(request);
+
         //  获取ztree json
         // 获取真实库ztreejson
-        List<RealDb> realDbs =  realDbService.list(null);
-        System.out.println(realDbs);
+        //List<RealDb> realDbs =  realDbService.list(null);
+        List<RealDb> realDbs =  realDbService.findByRole(id);
 
         List<Map<String,Object>> realZList = new ArrayList<>();
         for (DBEnum dbEnum : DBEnum.values())
@@ -121,7 +161,7 @@ public class VirtualTablesController {
         }
 
         // 获取虚拟库ztreejson
-    // 获取虚拟库ztreejson
+        // 获取虚拟库ztreejson
         List<Map<String,Object>> virtualZList = new ArrayList<>();
         Map<String,Object> vMap = new HashMap<>();
         vMap.put("pId",0);
@@ -129,7 +169,7 @@ public class VirtualTablesController {
         vMap.put("icon","/img/icon/db.png");
         vMap.put("id",1);
         virtualZList.add(vMap);
-        List<VirtualTables> virtualTablesList = virtualTablesService.list(null);
+        List<VirtualTables> virtualTablesList = virtualTablesService.findByRole(id);
         for (VirtualTables virtualTables:virtualTablesList){
             Map<String,Object> zMap = new HashMap<>();
             zMap.put("pId",1);
@@ -140,12 +180,14 @@ public class VirtualTablesController {
         }
 
         //获取视图库
-        List<ViewsDto> views =  viewsService.getViewsTables();
-
+       // List<ViewsDto> views =  viewsService.getViewsTables();
+      /*  Map<String,Object> params = new HashMap();
+        params.put("id",id);*/
+        List<ViewsDto> views =  viewsService.findByRole(id);
+        //System.out.println("根据id，查对应角色的视图库信息>>>>>>>>"+views);
         List<Map<String,Object>> viewsZList = new ArrayList<>();
         for (ViewsDto v :views)
         {
-
             Map<String,Object> zMap = new HashMap<>();
             //第一节点
             zMap.put("pId",0);
@@ -173,7 +215,7 @@ public class VirtualTablesController {
         fMap.put("icon","/img/icon/db.png");
         fMap.put("id",1);
         funZList.add(fMap);
-        List<RegFunction> regFunctionList = regFunctionService.list(null);
+        List<RegFunction> regFunctionList = regFunctionService.findByRole(id);
         for (RegFunction regFunction:regFunctionList){
             Map<String,Object> fMap2 = new HashMap<>();
             fMap2.put("pId",1);
@@ -193,7 +235,7 @@ public class VirtualTablesController {
         return model;
     }
 
-    @DeleteMapping("/delete/{id}")
+    @RequestMapping("/delete/{id}")
     @ResponseBody
     public Result<String> delete(@PathVariable Integer id){
         if (virtualTablesService.removeById(id)){

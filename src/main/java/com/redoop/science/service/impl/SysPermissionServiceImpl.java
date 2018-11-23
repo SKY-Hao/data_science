@@ -41,4 +41,14 @@ public class SysPermissionServiceImpl extends ServiceImpl<SysPermissionMapper, S
     public List<SysPermissionDto> getSysPermissionDto() {
         return baseMapper.findListPermissionDto();
     }
+
+    /**
+     * 根据登录用户的名称查询 所拥有的权限 目录导航菜单
+     * @param name
+     * @return
+     */
+    @Override
+    public List<SysPermission> findByUserNamePermission(String name) {
+        return baseMapper.findByUserNamePermission(name);
+    }
 }

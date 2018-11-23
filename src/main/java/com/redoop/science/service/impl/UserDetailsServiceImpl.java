@@ -3,7 +3,6 @@ package com.redoop.science.service.impl;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.redoop.science.dto.SysUserDto;
 import com.redoop.science.entity.SysUser;
-import com.redoop.science.entity.SysUserDetails;
 import com.redoop.science.mapper.SysUserMapper;
 import com.redoop.science.utils.CustomException;
 import com.redoop.science.utils.ResultEnum;

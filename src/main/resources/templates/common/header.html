@@ -15,6 +15,7 @@
                     <!--<a href="/">-->
                         <i class="fa fa-user-o"></i>
                         <span style="font-size: 12px;color: red" th:text="${nickName}" aria-describedby="basic-addon0"></span>
+                        <a href="/user/logout" style="font-size: 12px;color: red">注销</a>
                     <!--</a>-->
                 </li>
             </ul>
@@ -53,6 +54,9 @@
                                 <li th:if="${permissionList != null}" th:each="item : ${permissionList}">
                                     <a  th:href="${item.url}" th:text="${item.name}"></a>
                                 </li>
+                               <!-- <li>
+                                    <a href="http://192.168.0.163:8089">调度器</a>
+                                </li>-->
                                 <!--<li th:class="${activeType eq 1}? 'active' : ''">
                                     <a href="/virtual/1">查询</a>
                                 </li>
@@ -111,13 +115,13 @@
            $(this).attr('class', 'item cur');
        });
 });*/
-   $(document).ready(function(){
+  /* $(document).ready(function(){
        $("#responsive-nav ul li  a").each(function(){
            $this = $(this);
            if($this[0].href==String(window.location)){
                $this.css({"a":"active" , "color":"red","text-decoration":"blink"});
            }
        });
-   });
+   });*/
 
 </script>

@@ -28,7 +28,9 @@ public class WebAccessDecisionManager extends AbstractAccessDecisionManager {
     }
 
     @Override
-    public void decide(Authentication authentication, Object object, Collection<ConfigAttribute> configAttributes) throws AccessDeniedException, InsufficientAuthenticationException {
+    public void decide(Authentication authentication, Object object, Collection<ConfigAttribute> configAttributes)
+            throws AccessDeniedException, InsufficientAuthenticationException,CustomException {
+
         // 检查用户是否够权限访问资源
         // 参数authentication是从spring的全局缓存SecurityContextHolder中拿到的，里面是用户的权限信息
         // 参数object是url
@@ -40,7 +42,9 @@ public class WebAccessDecisionManager extends AbstractAccessDecisionManager {
         while (ite.hasNext()) {
             ConfigAttribute ca = ite.next();
             String needRole = ((SecurityConfig) ca).getAttribute();
+            logger.info("needRole>>>>>>>>>"+needRole);
             for (GrantedAuthority ga : authentication.getAuthorities()) {
+                logger.info("ga>>>>>>>"+ga.getAuthority());
                 if (needRole.equals(ga.getAuthority())) {
                     return;
                 }
@@ -48,7 +52,8 @@ public class WebAccessDecisionManager extends AbstractAccessDecisionManager {
         }
         // 注意：执行这里，后台是会抛异常的，但是界面会跳转到所配的access-denied-page页面
         logger.info("没有权限,拒绝访问!");
-        throw new CustomException(401,"没有权限,拒绝访问!");
+       throw new AccessDeniedException("没有权限,拒绝访问!");
+//        throw  new CustomException();
     }
 
     @Override

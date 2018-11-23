@@ -140,7 +140,7 @@
         //alert("谨慎操作,删除之后视图表也将清空");
         $.ajax({
             url: "/views/delete/" + id,
-            type: "DELETE",
+            type: "GET",
             dataType: "json",
             success: function (data) {
                 if (data.code == 200) {

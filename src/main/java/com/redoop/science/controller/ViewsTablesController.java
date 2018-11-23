@@ -57,12 +57,21 @@ public class ViewsTablesController {
      */
     @GetMapping("/{num}")
     public ModelAndView index(Model model, @PathVariable Long num, HttpServletRequest request){
+
+        Integer id = SessionUtils.getUserId(request);
+
         Page<ViewsTables> page = new Page<>();
+        
         page.setSize(11L);
         page.setCurrent(num);
         page.setDesc("ID");
-        IPage<ViewsTables> pages = viewsTablesService.page(page,null);
-        List<SysPermission> permissionList = sysPermissionService.getTpyeList();
+
+        Map<String,Object> params = new HashMap();
+        params.put("id",id);
+        IPage<ViewsTables> pages = viewsTablesService.pageList(page,params);
+
+        List<SysPermission> permissionList = sysPermissionService.findByUserNamePermission(SessionUtils.getUserNickName(request));
+
         model.addAttribute("permissionList",permissionList);
         model.addAttribute("nickName", SessionUtils.getUserNickName(request));
         model.addAttribute("items", pages.getRecords());
@@ -86,7 +95,8 @@ public class ViewsTablesController {
 
         List<ViewsDto> views =  viewsService.getViewsTables();
         getZtree(model);
-
+        List<SysPermission> permissionList = sysPermissionService.getTpyeList();
+        model.addAttribute("permissionList",permissionList);
         model.addAttribute("nickName", SessionUtils.getUserNickName(request));
         model.addAttribute("select", views);
 
@@ -168,7 +178,8 @@ public class ViewsTablesController {
 
         List<ViewsDto> views =  viewsService.getViewsTables();
         ViewsTables viewsTables = viewsTablesService.getById(id);
-
+        List<SysPermission> permissionList = sysPermissionService.findByUserNamePermission(SessionUtils.getUserNickName(request));
+        model.addAttribute("permissionList",permissionList);
 
         model.addAttribute("select", views);
         if (viewsTables!=null){
@@ -264,7 +275,7 @@ public class ViewsTablesController {
         return stringResult;
     }*/
 
-    @DeleteMapping("/delete/{id}")
+    @RequestMapping("/delete/{id}")
     @ResponseBody
     public Result<String> delete(@PathVariable Integer id){
         if (viewsTablesService.removeById(id)){

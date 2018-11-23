@@ -37,7 +37,7 @@ public class SysPermissionController {
     @GetMapping("/list")
     public String index(Map map,HttpServletRequest request){
         //List<SysPermission> permissionList = sysPermissionService.list(null);
-        List<SysPermission> permissionList = sysPermissionService.getTpyeList();
+        List<SysPermission> permissionList = sysPermissionService.findByUserNamePermission(SessionUtils.getUserNickName(request));
         for(SysPermission permission : permissionList){
             SysPermission parentDeptEntity =  sysPermissionService.getById(permission.getParentId());
             if(parentDeptEntity != null){

@@ -136,7 +136,7 @@
 
 		$.ajax({
 			url: "/virtual/delete/"+id,
-			type:"DELETE",
+			type:"GET",
 			dataType:"json",
 			success: function(data){
 				if(data.code==200){
@@ -151,13 +151,13 @@
 			}
 		});
 	}
-/*
+
     $(function () {
         $(".main-nav").click(function () {
 			$("a").css("background-color" , "red");
         });
     });
-*/
+
     $(document).ready(function () {
         $("#responsive-nav ul li  a").each(function () {
             $this = $(this);

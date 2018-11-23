@@ -1,6 +1,8 @@
 package com.redoop.science.entity;
 
+import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableField;
+import com.baomidou.mybatisplus.annotation.TableId;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -22,10 +24,11 @@ import java.util.List;
 @Accessors(chain = true)
 public class SysRole implements GrantedAuthority {
 
+    private static final long serialVersionUID = 1L;
     /**
      * 编号
      */
-    @TableField("ID")
+    @TableId(value = "ID", type = IdType.AUTO)
     private Integer id;
 
     /**
@@ -74,14 +77,37 @@ public class SysRole implements GrantedAuthority {
     @TableField(exist=false)
     private List<Long> deptIdList;
 
+
     /**
      * 创建时间
      */
     @TableField("CREATE_DATE")
     private Date createTime;
 
+    /**
+     * 真实库List(查询角色对应的真实库)
+     */
+    @TableField(exist=false)
+    private List<Long> readDbIdList;
+
+    /**
+     * 视图库List(查询角色对应的视图表)
+     */
+    @TableField(exist=false)
+    private List<Long> viewIdList;
+
+    /**
+     * 函数哭List(查询角色对应的函数)
+     */
+    @TableField(exist=false)
+    private List<Long> funIdList;
 
 
+    /**
+     * 虚拟库List(查询角色对应的虚拟库)
+     */
+    @TableField(exist=false)
+    private List<Long> virtualIdList;
 
 
 }

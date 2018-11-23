@@ -34,4 +34,7 @@ public interface SysUserMapper extends BaseMapper<SysUser> {
      * @return
      */
     SysUserDto findByUsername(@Param("username")String username);
+
+    @Select("select ID from sys_user where USERNAME = #{userNickName}")
+    String findById(String userNickName);
 }

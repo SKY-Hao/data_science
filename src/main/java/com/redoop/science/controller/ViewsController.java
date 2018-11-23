@@ -4,6 +4,8 @@ package com.redoop.science.controller;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.redoop.science.constant.DBEnum;
+import com.redoop.science.dto.ViewsDto;
 import com.redoop.science.entity.*;
 import com.redoop.science.service.ISysPermissionService;
 import com.redoop.science.service.IViewsService;
@@ -17,7 +19,10 @@ import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpServletRequest;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * <p>
@@ -42,13 +47,21 @@ public class ViewsController {
 
     @GetMapping("/{num}")
     public ModelAndView index(Model model, @PathVariable Long num, HttpServletRequest request){
+
+        //获取sessionID(登录用户ID)
+        Integer id = SessionUtils.getUserId(request);
+        Map<String,Object> params = new HashMap();
+        params.put("id",id);
+
+
         Page<Views> page = new Page<>();
         page.setSize(11L);
         page.setCurrent(num);
         page.setDesc("ID");
-        IPage<Views> pages = viewsService.page(page,null);
 
-        List<SysPermission> permissionList = sysPermissionService.getTpyeList();
+        IPage<Views> pages = viewsService.pageList(page,params);
+
+        List<SysPermission> permissionList = sysPermissionService.findByUserNamePermission(SessionUtils.getUserNickName(request));
         model.addAttribute("permissionList",permissionList);
         model.addAttribute("nickName", SessionUtils.getUserNickName(request));
         model.addAttribute("items", pages.getRecords());
@@ -61,11 +74,42 @@ public class ViewsController {
         return new ModelAndView("/views/viewsIndex");
     }
 
+    @RequestMapping("/lists")
+    @ResponseBody
+    public List<Map<String, Object>> list(){
+
+        //获取视图库
+        List<ViewsDto> views =  viewsService.getViewsTables();
+        System.out.println("获取视图库>>>>>>>>>"+views);
+        List<Map<String,Object>> viewsZList = new ArrayList<>();
+        for (ViewsDto v :views)
+        {
+
+            Map<String,Object> zMap = new HashMap<>();
+            //第一节点
+            zMap.put("pId",0);
+            zMap.put("name",v.getName());
+            zMap.put("icon","/img/icon/view.png");
+            zMap.put("id",v.getId());
+            viewsZList.add(zMap);
+
+            for (ViewsTables viewsTables : v.getViewsTablesList()){
+                Map<String,Object> z2Map = new HashMap<>();
+                z2Map.put("pId",viewsTables.getViewsId());
+                z2Map.put("name",viewsTables.getName());
+                z2Map.put("icon","/img/icon/viewTable.png");
+                z2Map.put("id",viewsTables.getId());
+                viewsZList.add(z2Map);
+            }
+        }
+        return viewsZList;
+    }
 
 
     @GetMapping("/addView")
     public ModelAndView addView(Model model,HttpServletRequest request){
-
+        List<SysPermission> permissionList = sysPermissionService.findByUserNamePermission(SessionUtils.getUserNickName(request));
+        model.addAttribute("permissionList",permissionList);
         model.addAttribute("nickName", SessionUtils.getUserNickName(request));
         return new ModelAndView("/views/viewsAdd");
     }
@@ -100,8 +144,10 @@ public class ViewsController {
                 views.setCreatorName(sysUser.getNickname());
             }
         }
-
         if (viewsService.save(views)){
+
+
+
             return new Result<String>(ResultEnum.SECCUSS);
         }else {
             return new Result<String>(ResultEnum.FAIL);
@@ -109,7 +155,7 @@ public class ViewsController {
 
 
     }
-    @DeleteMapping("/delete/{id}")
+    @RequestMapping("/delete/{id}")
     @ResponseBody
     public Result<String> delete(@PathVariable Integer id){
         if (viewsService.removeById(id)){
@@ -120,7 +166,8 @@ public class ViewsController {
     }
     @RequestMapping(value = "/edit/{id}",method = RequestMethod.GET)
     public ModelAndView edit(Model model,@PathVariable(value = "id") String id,HttpServletRequest request) {
-
+        List<SysPermission> permissionList = sysPermissionService.findByUserNamePermission(SessionUtils.getUserNickName(request));
+        model.addAttribute("permissionList",permissionList);
         Views views = viewsService.getById(id);
         if (views!=null){
             model.addAttribute("views", views);

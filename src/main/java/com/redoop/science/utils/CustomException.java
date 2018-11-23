@@ -8,7 +8,7 @@ package com.redoop.science.utils;
 public class CustomException extends RuntimeException {
 
     private int code;
-
+    private String msg;
     public CustomException() {
         super();
     }
@@ -24,5 +24,13 @@ public class CustomException extends RuntimeException {
 
     public void setCode(int code) {
         this.code = code;
+    }
+
+    public String getMsg() {
+        return msg;
+    }
+
+    public void setMsg(String msg) {
+        this.msg = msg;
     }
 }

@@ -136,7 +136,7 @@
 
 		$.ajax({
 			url: "/function/delete/"+id,
-			type:"DELETE",
+			type:"GET",
 			dataType:"json",
 			success: function(data){
 				if(data.code==200){

@@ -68,6 +68,16 @@ public class SessionUtils {
         return sysUserDetails.getNickname();
     }
 
+    /**
+     * 从session中获取用户Id
+     * @param request
+     * @return String
+     */
+    public static Integer getUserId(HttpServletRequest request){
+        SysUserDetails sysUserDetails = (SysUserDetails)request.getSession(true).getAttribute(SESSION_USER);
+        return sysUserDetails.getId();
+    }
+
 
     /**
      * 从session中获取用户信息
