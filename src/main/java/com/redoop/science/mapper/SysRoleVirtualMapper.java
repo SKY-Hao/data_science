@@ -2,6 +2,7 @@ package com.redoop.science.mapper;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.redoop.science.entity.SysRoleVirtualTables;
+import org.apache.ibatis.annotations.Delete;
 import org.apache.ibatis.annotations.Select;
 
 import java.util.List;
@@ -21,4 +22,7 @@ public interface SysRoleVirtualMapper extends BaseMapper<SysRoleVirtualTables> {
     List<Long> findById(Long id);
 
     int deleteBatch(Long[] roleIds);
+
+    @Delete("delete from sys_role_virtual_tables where VIRTUAL_ID = #{id}")
+    void deleteVirtualTables(Integer id);
 }

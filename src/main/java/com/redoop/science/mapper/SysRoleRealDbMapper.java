@@ -3,6 +3,7 @@ package com.redoop.science.mapper;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.redoop.science.entity.SysRolePermission;
 import com.redoop.science.entity.SysRoleRealDb;
+import org.apache.ibatis.annotations.Delete;
 import org.apache.ibatis.annotations.Select;
 
 import java.util.List;
@@ -25,4 +26,7 @@ public interface SysRoleRealDbMapper extends BaseMapper<SysRoleRealDb> {
 
 
     int deleteBatch(Long[] roleIds);
+
+    @Delete("delete from sys_role_real_db where REAL_DB_ID = #{id}")
+    void deleteDb(Integer id);
 }

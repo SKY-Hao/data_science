@@ -23,4 +23,5 @@ public interface SysUserRoleMapper extends BaseMapper<SysUserRole> {
 
     @Delete("delete from sys_user_role where USER_ID = #{user_id}")
     void deleteUserId(Integer user_id);
+
 }

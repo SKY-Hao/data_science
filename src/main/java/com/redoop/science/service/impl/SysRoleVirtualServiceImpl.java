@@ -33,4 +33,13 @@ public class SysRoleVirtualServiceImpl extends ServiceImpl<SysRoleVirtualMapper,
     public int deleteBatch(Long[] roleIds){
         return baseMapper.deleteBatch(roleIds);
     }
+
+    /**
+     * 根据VirtualTablesId删除角色与虚拟的关系
+     * @param id
+     */
+    @Override
+    public void deleteVirtualTables(Integer id) {
+        baseMapper.deleteVirtualTables(id);
+    }
 }

@@ -6,8 +6,7 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.redoop.science.constant.DBEnum;
 import com.redoop.science.entity.RealDb;
 import com.redoop.science.entity.SysPermission;
-import com.redoop.science.service.IRealDbService;
-import com.redoop.science.service.ISysPermissionService;
+import com.redoop.science.service.*;
 import com.redoop.science.utils.Result;
 import com.redoop.science.utils.ResultEnum;
 import com.redoop.science.utils.SessionUtils;
@@ -43,7 +42,8 @@ public class RealDbController {
     private IRealDbService realDbService;
     @Autowired
     ISysPermissionService sysPermissionService;
-
+    @Autowired
+    ISysRoleRealDbService roleRealDbService;
     /**
      * 数据源列表分类
      * @param model
@@ -134,7 +134,7 @@ public class RealDbController {
      * @return
      */
     @PostMapping("/save")
-    public ModelAndView save(@Validated RealDb realDb , BindingResult rs,Model model ){
+    public ModelAndView save(@Validated RealDb realDb , BindingResult rs,Model model,HttpServletRequest request ){
 
         if(rs.hasErrors()){
             for (ObjectError error : rs.getAllErrors()) {
@@ -145,6 +145,9 @@ public class RealDbController {
         RealDb dataReal =  realDbService.findByNikeName(realDb.getNikeName());
         if(dataReal != null){
             model.addAttribute("hintMessage","数据源名已经存在");
+            List<SysPermission> permissionList = sysPermissionService.findByUserNamePermission(SessionUtils.getUserNickName(request));
+            model.addAttribute("permissionList",permissionList);
+            model.addAttribute("nickName", SessionUtils.getUserNickName(request));
             return new ModelAndView("/realDb/add");
         }else{
             realDbService.saveForm(realDb);
@@ -200,7 +203,7 @@ public class RealDbController {
      * @return
      */
     @PostMapping("/update")
-    public ModelAndView  update(@Validated RealDb realDb ,BindingResult rs,Model model ){
+    public ModelAndView  update(@Validated RealDb realDb ,BindingResult rs,Model model,HttpServletRequest request ){
 
         if(rs.hasErrors()){
             for (ObjectError error : rs.getAllErrors()) {
@@ -224,6 +227,9 @@ public class RealDbController {
            realDbService.updateById(realDb);
        }else {
            model.addAttribute("hintMessage","数据源名已经存在");
+           List<SysPermission> permissionList = sysPermissionService.findByUserNamePermission(SessionUtils.getUserNickName(request));
+           model.addAttribute("permissionList",permissionList);
+           model.addAttribute("nickName", SessionUtils.getUserNickName(request));
            return new ModelAndView("/realDb/update");
        }
 
@@ -239,6 +245,7 @@ public class RealDbController {
     public String delete(@PathVariable(value = "id")  Integer id){
         if (id!=null){
             realDbService.removeById(id);
+            roleRealDbService.deleteDb(id);
             return "redirect:/real/1";
         } else {
             return String.valueOf(new Result<String>(ResultEnum.FAIL));

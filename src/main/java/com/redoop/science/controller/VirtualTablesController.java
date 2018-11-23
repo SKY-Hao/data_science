@@ -47,6 +47,12 @@ public class VirtualTablesController {
 
     @Autowired
     ISysPermissionService sysPermissionService;
+
+    @Autowired
+    ISysRoleService roleService;
+
+    @Autowired
+    ISysRoleVirtualService roleVirtualService;
     /**
      * 数据源列表分类
      * @param model
@@ -239,6 +245,8 @@ public class VirtualTablesController {
     @ResponseBody
     public Result<String> delete(@PathVariable Integer id){
         if (virtualTablesService.removeById(id)){
+            //删除中间表信息
+            roleVirtualService.deleteVirtualTables(id);
             return new Result<String>(ResultEnum.SECCUSS);
         }else {
             return new Result<String>(ResultEnum.FAIL);

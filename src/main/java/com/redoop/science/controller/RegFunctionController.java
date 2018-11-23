@@ -10,6 +10,7 @@ import com.redoop.science.entity.SysUser;
 import com.redoop.science.entity.SysUserDetails;
 import com.redoop.science.service.IRegFunctionService;
 import com.redoop.science.service.ISysPermissionService;
+import com.redoop.science.service.ISysRoleFunService;
 import com.redoop.science.utils.*;
 import okhttp3.HttpUrl;
 import org.apache.commons.io.FileUtils;
@@ -50,6 +51,9 @@ public class RegFunctionController {
 
     @Autowired
     ISysPermissionService sysPermissionService;
+
+    @Autowired
+    ISysRoleFunService roleFunService;
 
     @GetMapping("/{num}")
     public ModelAndView index(Model model, @PathVariable Long num, HttpServletRequest request) {
@@ -130,6 +134,7 @@ public class RegFunctionController {
     @ResponseBody
     public Result<String> delete(@PathVariable Integer id) {
         if (regFunctionService.removeById(id)) {
+            roleFunService.deleteFunId(id);
             return new Result<String>(ResultEnum.SECCUSS);
         } else {
             return new Result<String>(ResultEnum.FAIL);

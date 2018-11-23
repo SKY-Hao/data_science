@@ -10,7 +10,7 @@ public enum ResultEnum {
     /**
      * 返回成功
      */
-    SECCUSS(200,"执行成功"),
+    SECCUSS(200,"执行成功,联系管理员授权使用"),
     /**
      * 没有资源
      */

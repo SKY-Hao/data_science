@@ -33,4 +33,9 @@ public class SysRoleFunServiceImpl extends ServiceImpl<SysRoleFunMapper, SysRole
     public int deleteBatch(Long[] roleIds){
         return baseMapper.deleteBatch(roleIds);
     }
+
+    @Override
+    public void deleteFunId(Integer id) {
+        baseMapper.deleteFunId(id);
+    }
 }

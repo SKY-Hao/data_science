@@ -33,4 +33,9 @@ public class SysRoleRealDbServiceImpl extends ServiceImpl<SysRoleRealDbMapper, S
     public int deleteBatch(Long[] roleIds){
         return baseMapper.deleteBatch(roleIds);
     }
+
+    @Override
+    public void deleteDb(Integer id) {
+        baseMapper.deleteDb(id);
+    }
 }

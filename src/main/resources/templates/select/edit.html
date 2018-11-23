@@ -280,7 +280,7 @@
         }
         $.post("/run/save", {"sql": sql, "sqlName": sqlName, "id": id}, function (result) {
             if (result.code == 200) {
-                layer.msg("保存成功");
+                layer.msg("保存成功,请联系管理员授权使用");
             } else if (result.code == 300) {
                 layer.alert(result.msg)
             }

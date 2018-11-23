@@ -2,6 +2,7 @@ package com.redoop.science.mapper;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.redoop.science.entity.SysRoleViewsTables;
+import org.apache.ibatis.annotations.Delete;
 import org.apache.ibatis.annotations.Select;
 
 import java.util.List;
@@ -24,4 +25,7 @@ public interface SysRoleViewMapper extends BaseMapper<SysRoleViewsTables> {
 
 
     int deleteBatch(Long[] roleIds);
+
+    @Delete("delete from sys_role_views_tables  where VIEW_TABLES_ID = #{id}")
+    void deleteViewsTables(Integer id);
 }

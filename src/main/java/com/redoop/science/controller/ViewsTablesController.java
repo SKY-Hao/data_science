@@ -10,6 +10,7 @@ import com.redoop.science.dto.ViewsDto;
 import com.redoop.science.entity.*;
 import com.redoop.science.mapper.ViewsMapper;
 import com.redoop.science.service.ISysPermissionService;
+import com.redoop.science.service.ISysRoleViewService;
 import com.redoop.science.service.IViewsService;
 import com.redoop.science.service.IViewsTablesService;
 import com.redoop.science.utils.*;
@@ -47,7 +48,8 @@ public class ViewsTablesController {
 
     @Autowired
     ISysPermissionService sysPermissionService;
-
+    @Autowired
+    ISysRoleViewService roleViewService;
     /**
      * 视图表
      * @param model
@@ -279,6 +281,8 @@ public class ViewsTablesController {
     @ResponseBody
     public Result<String> delete(@PathVariable Integer id){
         if (viewsTablesService.removeById(id)){
+
+            roleViewService.deleteViewsTables(id);
             return new Result<String>(ResultEnum.SECCUSS);
         }else {
             return new Result<String>(ResultEnum.FAIL);

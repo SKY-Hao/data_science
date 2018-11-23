@@ -3,8 +3,7 @@ package com.redoop.science.controller;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.redoop.science.entity.SysUserDetails;
 import com.redoop.science.entity.VirtualTables;
-import com.redoop.science.service.IRealDbService;
-import com.redoop.science.service.IVirtualTablesService;
+import com.redoop.science.service.*;
 import com.redoop.science.utils.*;
 import okhttp3.HttpUrl;
 import org.apache.commons.io.FileUtils;
@@ -17,9 +16,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.*;
 import java.time.LocalDateTime;
-import java.util.Enumeration;
-import java.util.Map;
-import java.util.Set;
 
 /**
  * @Author: Alan
@@ -30,9 +26,9 @@ import java.util.Set;
 @RequestMapping("/run")
 public class JobController {
     Logger logger = LoggerFactory.getLogger(getClass());
+
     @Autowired
     private IVirtualTablesService virtualTablesService;
-
     @PostMapping("/script")
     @ResponseBody
     public Result<String> script(HttpServletRequest request,@RequestParam(value = "sql") String sql,@RequestParam(value = "sqlName") String  sqlName) throws Exception {
@@ -79,6 +75,9 @@ public class JobController {
     public Result save(HttpServletRequest request,
                        @RequestParam(name = "id",required = false) Long id,
                        @RequestParam(name = "sql") String sql, @RequestParam(value = "sqlName") String  sqlName) {
+
+        Integer userId = SessionUtils.getUserId(request);
+
         VirtualTables virtualTables = null;
         SysUserDetails sysUser = SessionUtils.getUser(request);
         QueryWrapper queryWrapper = new QueryWrapper();

@@ -79,7 +79,7 @@
                 "viewsName": viewsName},
             function (result) {
                 if (result.code == 200) {
-                    layer.msg("保存成功");
+                    layer.msg("保存成功,请联系管理员授权使用");
                     location.href="/views/1"
                 } else if (result.code == 1001 || result.code == 1003) {
                     layer.alert(result.msg + ",请重新输入");
