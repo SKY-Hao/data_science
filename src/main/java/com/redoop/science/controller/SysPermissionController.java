@@ -21,7 +21,7 @@ import java.util.Map;
 
 /**
  * <p>
- *    菜单  前端控制器
+ * 菜单  前端控制器
  * </p>
  *
  * @author Alan
@@ -35,16 +35,16 @@ public class SysPermissionController {
     ISysPermissionService sysPermissionService;
 
     @GetMapping("/list")
-    public String index(Map map,HttpServletRequest request){
+    public String index(Map map, HttpServletRequest request) {
         //List<SysPermission> permissionList = sysPermissionService.list(null);
-        List<SysPermission> permissionList = sysPermissionService.findByUserNamePermission(SessionUtils.getUserNickName(request));
-        for(SysPermission permission : permissionList){
-            SysPermission parentDeptEntity =  sysPermissionService.getById(permission.getParentId());
-            if(parentDeptEntity != null){
+        List<SysPermission> permissionList = sysPermissionService.findByPermission(SessionUtils.getUserId(request));
+        for (SysPermission permission : permissionList) {
+            SysPermission parentDeptEntity = sysPermissionService.getById(permission.getParentId());
+            if (parentDeptEntity != null) {
                 permission.setParentName(parentDeptEntity.getName());
             }
         }
-        map.put("permissionList",permissionList);
+        map.put("permissionList", permissionList);
         map.put("nickName", SessionUtils.getUserNickName(request));
         return "/sys/permission";
     }
@@ -52,11 +52,11 @@ public class SysPermissionController {
 
     @RequestMapping("/lists")
     @ResponseBody
-    public List<SysPermission> list(){
+    public List<SysPermission> list() {
         List<SysPermission> permissionList = sysPermissionService.list(null);
-        for(SysPermission permission : permissionList){
-            SysPermission parentPermission =  sysPermissionService.getById(permission.getParentId());
-            if(parentPermission != null){
+        for (SysPermission permission : permissionList) {
+            SysPermission parentPermission = sysPermissionService.getById(permission.getParentId());
+            if (parentPermission != null) {
                 permission.setParentName(parentPermission.getName());
             }
         }
@@ -70,7 +70,7 @@ public class SysPermissionController {
      */
     @RequestMapping("/select")
     @ResponseBody
-    public Map select(){
+    public Map select() {
         //查询列表数据
         List<SysPermission> permissionList = sysPermissionService.getNotButtonList();
 
@@ -82,7 +82,7 @@ public class SysPermissionController {
         root.setOpen(true);
         permissionList.add(root);
         Map map = new HashMap();
-        map.put("permissionList",permissionList);
+        map.put("permissionList", permissionList);
         return map;
     }
 
@@ -92,10 +92,10 @@ public class SysPermissionController {
      */
     @RequestMapping("/info/{id}")
     @ResponseBody
-    public Map info(@PathVariable("id") Integer id){
+    public Map info(@PathVariable("id") Integer id) {
         SysPermission menu = sysPermissionService.getById(id);
         Map map = new HashMap();
-        map.put("menu",menu);
+        map.put("menu", menu);
         return map;
     }
 
@@ -104,13 +104,13 @@ public class SysPermissionController {
      */
     @RequestMapping("/save")
     @ResponseBody
-    public Result save(@RequestBody SysPermission sysPermission){
+    public Result save(@RequestBody SysPermission sysPermission) {
         //数据校验
         verifyForm(sysPermission);
 
-        if ( sysPermissionService.save(sysPermission)){
+        if (sysPermissionService.save(sysPermission)) {
             return new Result<String>(ResultEnum.SECCUSS);
-        }else {
+        } else {
             return new Result<String>(ResultEnum.FAIL);
         }
     }
@@ -120,13 +120,13 @@ public class SysPermissionController {
      */
     @RequestMapping("/update")
     @ResponseBody
-    public Result update(@RequestBody SysPermission sysPermission){
+    public Result update(@RequestBody SysPermission sysPermission) {
         //数据校验
         verifyForm(sysPermission);
 
-        if ( sysPermissionService.updateById(sysPermission)){
+        if (sysPermissionService.updateById(sysPermission)) {
             return new Result<String>(ResultEnum.SECCUSS);
-        }else {
+        } else {
             return new Result<String>(ResultEnum.FAIL);
         }
     }
@@ -136,19 +136,19 @@ public class SysPermissionController {
      */
     @RequestMapping("/delete")
     @ResponseBody
-    public Result delete(Integer id){
+    public Result delete(Integer id) {
 
         /*if(id <= 31){
             return new Result<String>(ResultEnum.SYS_MENU);
         }*/
         //判断是否有子菜单或按钮
         List<SysPermission> menuList = sysPermissionService.getListParentId(id);
-        if(menuList.size() > 0){
+        if (menuList.size() > 0) {
             return new Result<String>(ResultEnum.DELETE_CHILD_MENU_BTN);
         }
-        if (    sysPermissionService.removeById(id)){
+        if (sysPermissionService.removeById(id)) {
             return new Result<String>(ResultEnum.SECCUSS);
-        }else {
+        } else {
             return new Result<String>(ResultEnum.FAIL);
         }
     }
@@ -157,44 +157,44 @@ public class SysPermissionController {
     /**
      * 验证参数是否正确
      */
-    private void verifyForm(SysPermission permission){
-        if(StringUtils.isBlank(permission.getName())){
+    private void verifyForm(SysPermission permission) {
+        if (StringUtils.isBlank(permission.getName())) {
             throw new RRException("菜单名称不能为空");
         }
 
-        if(permission.getParentId() == null){
+        if (permission.getParentId() == null) {
             throw new RRException("上级菜单不能为空");
         }
 
         //菜单
-        if(permission.getType() == DBEnum.MenuType.MENU.getValue()){
-            if(StringUtils.isBlank(permission.getUrl())){
+        if (permission.getType() == DBEnum.MenuType.MENU.getValue()) {
+            if (StringUtils.isBlank(permission.getUrl())) {
                 throw new RRException("菜单URL不能为空");
             }
         }
 
         //上级菜单类型
         int parentType = DBEnum.MenuType.CATALOG.getValue();
-        if(permission.getParentId() != 0){
+        if (permission.getParentId() != 0) {
             SysPermission parentMenu = sysPermissionService.getById(permission.getParentId());
             parentType = parentMenu.getType();
         }
 
         //目录、菜单
-        if(permission.getType() == DBEnum.MenuType.CATALOG.getValue() ||
-                permission.getType() == DBEnum.MenuType.MENU.getValue()){
-            if(parentType != DBEnum.MenuType.CATALOG.getValue()){
+        if (permission.getType() == DBEnum.MenuType.CATALOG.getValue() ||
+                permission.getType() == DBEnum.MenuType.MENU.getValue()) {
+            if (parentType != DBEnum.MenuType.CATALOG.getValue()) {
                 throw new RRException("上级菜单只能为目录类型");
             }
-            return ;
+            return;
         }
 
         //按钮
-        if(permission.getType() == DBEnum.MenuType.BUTTON.getValue()){
-            if(parentType != DBEnum.MenuType.MENU.getValue()){
+        if (permission.getType() == DBEnum.MenuType.BUTTON.getValue()) {
+            if (parentType != DBEnum.MenuType.MENU.getValue()) {
                 throw new RRException("上级菜单只能为菜单类型");
             }
-            return ;
+            return;
         }
     }
 

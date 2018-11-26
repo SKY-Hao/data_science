@@ -5,6 +5,7 @@ import com.redoop.science.entity.SysPermission;
 import com.baomidou.mybatisplus.extension.service.IService;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * <p>
@@ -24,5 +25,6 @@ public interface ISysPermissionService extends IService<SysPermission> {
 
     List<SysPermissionDto> getSysPermissionDto();
 
-    List<SysPermission> findByUserNamePermission(String name);
+
+    List<SysPermission> findByPermission(Integer id);
 }

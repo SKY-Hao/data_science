@@ -5,6 +5,8 @@ import com.redoop.science.service.*;
 import com.redoop.science.utils.Result;
 import com.redoop.science.utils.ResultEnum;
 import com.redoop.science.utils.SessionUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -25,6 +27,7 @@ import java.util.*;
 @RequestMapping("/sys/role")
 public class SysRoleController {
 
+    Logger logger = LoggerFactory.getLogger(getClass());
 
     @Autowired
     ISysRoleService roleService;
@@ -45,7 +48,7 @@ public class SysRoleController {
     ISysRoleRealDbService roleRealDbService;
 
     @Autowired
-    ISysRoleViewService  roleViewService;
+    ISysRoleViewService roleViewService;
 
     @Autowired
     ISysRoleFunService roleFunService;
@@ -61,12 +64,12 @@ public class SysRoleController {
      * 角色列表
      */
     @GetMapping("/list")
-    public String index(Map map,HttpServletRequest request) {
+    public String index(Map map, HttpServletRequest request) {
 
         List<SysRole> list = roleService.list(null);
-        List<SysPermission> permissionList = sysPermissionService.findByUserNamePermission(SessionUtils.getUserNickName(request));
+        List<SysPermission> permissionList = sysPermissionService.findByPermission(SessionUtils.getUserId(request));
         map.put("page", list);
-        map.put("permissionList",permissionList);
+        map.put("permissionList", permissionList);
         map.put("nickName", SessionUtils.getUserNickName(request));
 
         return "/sys/role";
@@ -77,10 +80,10 @@ public class SysRoleController {
      */
     @RequestMapping("/select")
     @ResponseBody
-    public Map select(){
+    public Map select() {
         List<SysRole> list = roleService.list(null);
         Map<String, Object> map = new HashMap<>();
-        map.put("list",list);
+        map.put("list", list);
         return map;
     }
 
@@ -115,6 +118,7 @@ public class SysRoleController {
     @RequestMapping("/info/{id}")
     @ResponseBody
     public Map info(@PathVariable("id") Long id) {
+        logger.info("/info/{id} 进入");
         SysRole role = roleService.getById(id);
 
         //查询角色对应的菜单
@@ -125,28 +129,28 @@ public class SysRoleController {
         //查询角色对应的部门
         List<Long> deptIdList = roleDeptService.queryDeptIdList(new Long[]{id});
         role.setDeptIdList(deptIdList);
-       // System.out.println("查询角色对应的部门>>>>>>>" + deptIdList);
+        // System.out.println("查询角色对应的部门>>>>>>>" + deptIdList);
 
         //查询角色对应的真实库
         List<Long> readDbIdList = roleRealDbService.queryReadDbIdList(id);
         role.setReadDbIdList(readDbIdList);
-      //  System.out.println("查询角色对应的真实库>>>>>>" + readDbIdList);
+        //  System.out.println("查询角色对应的真实库>>>>>>" + readDbIdList);
 
         //查询角色对应的视图库
         List<Long> viewIdList = roleViewService.queryViewIdList(id);
         role.setViewIdList(viewIdList);
-     //   System.out.println("查询角色对应的视图表>>>>>>" + viewIdList);
+        //   System.out.println("查询角色对应的视图表>>>>>>" + viewIdList);
 
 
         //查询角色对应的函数库
         List<Long> funIdList = roleFunService.queryFunIdList(id);
         role.setFunIdList(funIdList);
-      //  System.out.println("查询角色对应的函数库>>>>>>" + funIdList);
+        //  System.out.println("查询角色对应的函数库>>>>>>" + funIdList);
 
         //查询角色对应的虚拟库
         List<Long> virtualIdList = roleVirtualService.queryVirtualIdList(id);
         role.setVirtualIdList(virtualIdList);
-       //  System.out.println("查询角色对应的虚拟>>>>>>" + virtualIdList);
+        //  System.out.println("查询角色对应的虚拟>>>>>>" + virtualIdList);
 
         //查询角色对应的分析
         List<Long> analysisIdList = roleAnalysisService.queryAnalysisIdList(id);
@@ -169,7 +173,7 @@ public class SysRoleController {
     public Result save(@RequestBody SysRole role) {
 
         //role.setCreateTime(new Date());
-       // System.out.println("保存时:前端传回的role》》》》》》》" + role);
+        // System.out.println("保存时:前端传回的role》》》》》》》" + role);
         if (roleService.save(role)) {
 
             //保存角色与部门关系
@@ -180,7 +184,7 @@ public class SysRoleController {
                 sysRoleDeptEntity.setRoleId(role.getId());
                 list.add(sysRoleDeptEntity);
             }
-         //   System.out.println("保存角色与部门关系>>>>"+list);
+            //   System.out.println("保存角色与部门关系>>>>"+list);
             roleDeptService.saveBatch(list);
 
             // 保存角色与菜单关系
@@ -191,18 +195,18 @@ public class SysRoleController {
                 sysRolePermission.setRoleId(role.getId());
                 permissionList.add(sysRolePermission);
             }
-          //  System.out.println("保存角色与菜单关系>>>>"+permissionList);
+            //  System.out.println("保存角色与菜单关系>>>>"+permissionList);
             rolePermissionService.saveBatch(permissionList);
 
             //保存角色与真实库关系
             List<SysRoleRealDb> realDbList = new ArrayList<>(role.getReadDbIdList().size());
             for (Long readDbId : role.getReadDbIdList()) {
                 SysRoleRealDb realDb = new SysRoleRealDb();
-                    realDb.setRealDbId(readDbId.intValue());
-                    realDb.setRoleId(role.getId());
-                    realDbList.add(realDb);
+                realDb.setRealDbId(readDbId.intValue());
+                realDb.setRoleId(role.getId());
+                realDbList.add(realDb);
             }
-           // System.out.println("保存角色与真实库关系系>>>>"+realDbList);
+            // System.out.println("保存角色与真实库关系系>>>>"+realDbList);
             roleRealDbService.saveBatch(realDbList);
 
 
@@ -214,7 +218,7 @@ public class SysRoleController {
                 realDb.setRoleId(role.getId());
                 viewIdList.add(realDb);
             }
-          //  System.out.println("保存角色与视图库关系>>>>"+viewIdList);
+            //  System.out.println("保存角色与视图库关系>>>>"+viewIdList);
             roleViewService.saveBatch(viewIdList);
 
 
@@ -226,9 +230,8 @@ public class SysRoleController {
                 fun.setRoleId(role.getId());
                 funIdList.add(fun);
             }
-           // System.out.println("保存角色与函数关系>>>>"+funIdList);
+            // System.out.println("保存角色与函数关系>>>>"+funIdList);
             roleFunService.saveBatch(funIdList);
-
 
 
             //保存角色与虚拟关系
@@ -239,7 +242,7 @@ public class SysRoleController {
                 fun.setRoleId(role.getId());
                 virtualIdList.add(fun);
             }
-          //  System.out.println("保存角色与虚拟关系>>>>"+virtualIdList);
+            //  System.out.println("保存角色与虚拟关系>>>>"+virtualIdList);
             roleVirtualService.saveBatch(virtualIdList);
 
 
@@ -253,8 +256,6 @@ public class SysRoleController {
             }
             // System.out.println("保存角色与分析关系>>>>"+funIdList);
             roleAnalysisService.saveBatch(analysisIdList);
-
-
 
 
             return new Result<String>(ResultEnum.SECCUSS);
@@ -272,7 +273,7 @@ public class SysRoleController {
         //role.setCreateTime(new Date());
         if (roleService.saveOrUpdate(role)) {
 
-            Long  a =  role.getId().longValue();
+            Long a = role.getId().longValue();
 
             //删除角色与部门关系
             roleDeptService.deleteBatch(new Long[]{a});
@@ -375,10 +376,10 @@ public class SysRoleController {
      */
     @RequestMapping("/delete")
     @ResponseBody
-    public Result delete(@RequestBody Long[] roleIds){
+    public Result delete(@RequestBody Long[] roleIds) {
 
 
-        if (roleService.removeByIds(Arrays.asList(roleIds))){
+        if (roleService.removeByIds(Arrays.asList(roleIds))) {
 
             //删除角色与菜单关联
             rolePermissionService.deleteBatch(roleIds);
@@ -402,17 +403,13 @@ public class SysRoleController {
             roleAnalysisService.deleteBatch(roleIds);
 
             //删除角色与用户关联
-        //    sysUserRoleService.deleteBatch(roleIds);
+            //    sysUserRoleService.deleteBatch(roleIds);
 
             return new Result<String>(ResultEnum.SECCUSS);
-        }else {
+        } else {
             return new Result<String>(ResultEnum.FAIL);
         }
     }
-
-
-
-
 
 
 }

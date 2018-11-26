@@ -3,9 +3,11 @@ package com.redoop.science.mapper;
 import com.redoop.science.dto.sys.SysPermissionDto;
 import com.redoop.science.entity.SysPermission;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
+import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.annotations.Select;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * <p>
@@ -33,5 +35,5 @@ public interface SysPermissionMapper extends BaseMapper<SysPermission> {
     List<SysPermissionDto> findListPermissionDto();
 
 
-    List<SysPermission> findByUserNamePermission(String name);
+    List<SysPermission> findByPermission(Integer id);
 }

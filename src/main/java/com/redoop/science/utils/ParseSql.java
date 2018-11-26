@@ -225,13 +225,12 @@ public class ParseSql {
             returnSql.append(sqlCode);
         }
         String repSql = copySql;
-        System.out.println("copySql==========="+copySql);
+        //System.out.println("copySql==========="+copySql);
         for (String map : viwesNames.keySet()) {
             repSql = repSql.replaceAll(map.trim(), viwesNames.get(map));
         }
         returnSql.append(repSql);
-
-        System.out.println("view_repSqlrepSql====" + repSql);
+        //System.out.println("view_repSqlrepSql====" + repSql);
         return returnSql.toString();
     }
 

@@ -35,10 +35,10 @@
         from SYS_PERMISSION T where T.TYPE != 0
     </select>
 
-    <select id="findByUserNamePermission" resultMap="sysPermissionDto">
-        SELECT d.* FROM	sys_user a LEFT JOIN sys_user_role b ON a.ID = b.USER_ID
-          LEFT JOIN sys_role_permission c ON b.ROLE_ID = c.ROLE_ID
-          LEFT JOIN sys_permission d ON c.PERMISSION_ID = d.ID
-          WHERE a.NICK_NAME = #{name} and d.TYPE !=0 GROUP BY d.ID
+    <select id="findByPermission" resultMap="sysPermissionDto">
+        SELECT c.* FROM	sys_user_role a
+        LEFT JOIN sys_role_permission b ON a.ROLE_ID = b.ROLE_ID
+        LEFT JOIN sys_permission c ON  b.PERMISSION_ID = c.ID
+        WHERE a.USER_ID = #{id} and c.TYPE !=0 GROUP BY c.ID
     </select>
 </mapper>

@@ -5,11 +5,9 @@ import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.redoop.science.entity.Analysis;
-import com.redoop.science.entity.RegFunction;
 import com.redoop.science.entity.SysPermission;
 import com.redoop.science.entity.SysUserDetails;
 import com.redoop.science.service.IAnalysisService;
-import com.redoop.science.service.IRealDbService;
 import com.redoop.science.service.ISysPermissionService;
 import com.redoop.science.service.ISysRoleAnalysisService;
 import com.redoop.science.utils.*;
@@ -64,12 +62,12 @@ public class AnalysisController {
 
         IPage<Analysis> pages = analysisService.pageList(page,params);
 
-        List<SysPermission> permissionList = sysPermissionService.findByUserNamePermission(SessionUtils.getUserNickName(request));
+        List<SysPermission> permissionList = sysPermissionService.findByPermission(id);
 
         model.addAttribute("permissionList",permissionList);
         model.addAttribute("nickName", SessionUtils.getUserNickName(request));
         model.addAttribute("list", pages.getRecords());
-        model.addAttribute("activeType", 3);
+        //model.addAttribute("activeType", 3);
         model.addAttribute("pageNum", num);
         model.addAttribute("analysis", new Analysis());
         model.addAttribute("pages", pages.getPages());
@@ -103,7 +101,7 @@ public class AnalysisController {
     @GetMapping("/add")
     public ModelAndView add(Model model,HttpServletRequest request){
         //getZtree(model);
-        List<SysPermission> permissionList = sysPermissionService.findByUserNamePermission(SessionUtils.getUserNickName(request));
+        List<SysPermission> permissionList = sysPermissionService.findByPermission(SessionUtils.getUserId(request));
         model.addAttribute("permissionList",permissionList);
         model.addAttribute("nickName", SessionUtils.getUserNickName(request));
         return new ModelAndView("/analysis/update");
@@ -141,7 +139,7 @@ public class AnalysisController {
             }
         }
         analysis.setCode(ParseSql.parse(sql));
-        System.out.println("分析analysis.getCode()====="+analysis.getCode());
+        //System.out.println("分析analysis.getCode()====="+analysis.getCode());
         analysis.setName(sqlName);
         analysis.setFinallyCode(sql);
         analysis.setOperationTime(new Date());
@@ -162,7 +160,7 @@ public class AnalysisController {
      */
     @GetMapping("/edit/{id}")
     public ModelAndView edit(Model model,@PathVariable(value = "id") String id,HttpServletRequest request){
-        List<SysPermission> permissionList = sysPermissionService.findByUserNamePermission(SessionUtils.getUserNickName(request));
+        List<SysPermission> permissionList = sysPermissionService.findByPermission(SessionUtils.getUserId(request));
         Analysis analysis = analysisService.getById(id);
         model.addAttribute("permissionList",permissionList);
         if(analysis!=null){
@@ -194,44 +192,5 @@ public class AnalysisController {
             return String.valueOf(new Result<String>(ResultEnum.FAIL));
         }
     }
-
-
-    /**
-     * 执行sql查询
-     * @param sql
-     * @return
-     */
-  /*  @PostMapping("/script")
-    @ResponseBody
-    public Result<String> script(@RequestParam(value = "sql") String sql) {
-        Result<String> stringResult = new Result<>(ResultEnum.FAIL);
-        String result = "";
-        try {
-            String runSql = ParseSql.parseSql(sql);
-            HttpUrl url = new HttpUrl.Builder()
-                    .scheme("http")
-                    .host("192.168.0.163")
-                    .port(9003)
-                    .addPathSegments("run\\script")
-                    .addQueryParameter("sql", runSql)
-                    .build();
-            String sqlResult = HttpClient.httpPost(url, "");
-            result = sqlResult;
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
-        System.out.println("resultresultresult>>>>>"+result);
-
-        if(JsonUtil.isJSONValid(result)){
-
-            stringResult = new Result<String>(ResultEnum.SECCUSS,result);
-        }else{
-            stringResult = new Result<String>(ResultEnum.FAIL,result);
-        }
-        return stringResult;
-    }*/
-
-
 
 }

@@ -29,14 +29,15 @@ public class JobController {
 
     @Autowired
     private IVirtualTablesService virtualTablesService;
+
     @PostMapping("/script")
     @ResponseBody
-    public Result<String> script(HttpServletRequest request,@RequestParam(value = "sql") String sql,@RequestParam(value = "sqlName") String  sqlName) throws Exception {
+    public Result<String> script(HttpServletRequest request, @RequestParam(value = "sql") String sql, @RequestParam(value = "sqlName") String sqlName) throws Exception {
 
 
         Result<String> stringResult = new Result<>(ResultEnum.FAIL);
         String result = "";
-       // String fileName = sqlName;
+        // String fileName = sqlName;
 
         try {
             String runSql = ParseSql.parse(sql);
@@ -53,19 +54,19 @@ public class JobController {
         } catch (IOException e) {
             e.printStackTrace();
         }
-        logger.info("sql查询返回结果>>>>>>>"+result);
-        if(JsonUtil.isJSONValid(result)){
-            stringResult = new Result<String>(ResultEnum.SECCUSS,result);
+        logger.info("sql查询返回结果>>>>>>>" + result);
+        if (JsonUtil.isJSONValid(result)) {
+            stringResult = new Result<String>(ResultEnum.SECCUSS, result);
 
             //查询结果(json),将json保持为csv文件(upload/files/*.csv)
-            FileUtils.writeStringToFile(new File("upload/files/"+sqlName+".csv"),  PoiUtils.json_to_csv(result));
+            FileUtils.writeStringToFile(new File("upload/files/" + sqlName + ".csv"), PoiUtils.json_to_csv(result));
             /*保存json格式文件
             DownLoadFiles down = new DownLoadFiles();
             String   filePath ="upload/files/";
             down.createJsonFile(result,filePath, fileName,null);*/
 
-        }else{
-            stringResult = new Result<String>(ResultEnum.FAIL,result);
+        } else {
+            stringResult = new Result<String>(ResultEnum.FAIL, result);
         }
         return stringResult;
     }
@@ -73,24 +74,24 @@ public class JobController {
     @PostMapping("/save")
     @ResponseBody
     public Result save(HttpServletRequest request,
-                       @RequestParam(name = "id",required = false) Long id,
-                       @RequestParam(name = "sql") String sql, @RequestParam(value = "sqlName") String  sqlName) {
+                       @RequestParam(name = "id", required = false) Long id,
+                       @RequestParam(name = "sql") String sql, @RequestParam(value = "sqlName") String sqlName) {
 
         Integer userId = SessionUtils.getUserId(request);
 
         VirtualTables virtualTables = null;
         SysUserDetails sysUser = SessionUtils.getUser(request);
         QueryWrapper queryWrapper = new QueryWrapper();
-        queryWrapper.eq("NAME",sqlName);
+        queryWrapper.eq("NAME", sqlName);
 
 
-        if(id!=null){
+        if (id != null) {
             virtualTables = virtualTablesService.getById(id);
-        }else{
-            VirtualTables virtualTable  = virtualTablesService.getOne(queryWrapper);
-            if(virtualTable!=null){
-                return new Result(ResultEnum.EXIST,"名称已存在，请使用其他名称");
-            }else{
+        } else {
+            VirtualTables virtualTable = virtualTablesService.getOne(queryWrapper);
+            if (virtualTable != null) {
+                return new Result(ResultEnum.EXIST, "名称已存在，请使用其他名称");
+            } else {
                 virtualTables = new VirtualTables();
                 virtualTables.setCreateDate(LocalDateTime.now());
                 virtualTables.setCreatorId(sysUser.getId());
@@ -101,51 +102,51 @@ public class JobController {
         virtualTables.setOperationTime(LocalDateTime.now());
         virtualTables.setOperationId(sysUser.getId());
         virtualTables.setName(sqlName);
-        if (virtualTablesService.saveOrUpdate(virtualTables)){
+        if (virtualTablesService.saveOrUpdate(virtualTables)) {
             return new Result<String>(ResultEnum.SECCUSS);
-        }else {
+        } else {
             return new Result<String>(ResultEnum.FAIL);
         }
     }
 
 
-
     /**
      * 下载文件
+     *
      * @param response
      * @param sqlName
      * @return
      */
-   @RequestMapping("/download/{sqlName}")
-   @ResponseBody
-   public Result downloadFile(HttpServletResponse response, @PathVariable("sqlName") String sqlName) {
-       String fileName = "upload/files/"+sqlName+".csv";
-       File file = new File(fileName);
-       if (!file.exists()) {
-           return new Result(ResultEnum.EXIST,"文件不存在");
-       }
+    @RequestMapping("/download/{sqlName}")
+    @ResponseBody
+    public Result downloadFile(HttpServletResponse response, @PathVariable("sqlName") String sqlName) {
+        String fileName = "upload/files/" + sqlName + ".csv";
+        File file = new File(fileName);
+        if (!file.exists()) {
+            return new Result(ResultEnum.EXIST, "文件不存在,请查询之后下载");
+        }
 
-       response.reset();
-       response.setHeader("Content-Disposition", "attachment;fileName=" + fileName);
+        response.reset();
+        response.setHeader("Content-Disposition", "attachment;fileName=" + fileName);
 
-       try {
-           InputStream inStream = new FileInputStream(fileName);
-           OutputStream os = response.getOutputStream();
+        try {
+            InputStream inStream = new FileInputStream(fileName);
+            OutputStream os = response.getOutputStream();
 
-           byte[] buff = new byte[1024*1024];
-           int len = -1;
-           while ((len = inStream.read(buff)) > 0) {
-               os.write(buff, 0, len);
-           }
-           os.flush();
-           os.close();
+            byte[] buff = new byte[1024 * 1024];
+            int len = -1;
+            while ((len = inStream.read(buff)) > 0) {
+                os.write(buff, 0, len);
+            }
+            os.flush();
+            os.close();
 
-           inStream.close();
-       } catch (Exception e) {
-           e.printStackTrace();
-           return new Result(ResultEnum.EXIST,"下载失败");
-       }
-       return new Result<String>(ResultEnum.SECCUSS);
-   }
+            inStream.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+            return new Result(ResultEnum.EXIST, "下载失败");
+        }
+        return new Result<String>(ResultEnum.SECCUSS);
+    }
 
 }

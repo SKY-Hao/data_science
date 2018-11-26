@@ -44,15 +44,17 @@ public class RealDbController {
     ISysPermissionService sysPermissionService;
     @Autowired
     ISysRoleRealDbService roleRealDbService;
+
     /**
      * 数据源列表分类
+     *
      * @param model
      * @return
      */
     @GetMapping("/{num}")
-    public ModelAndView index(Model model,@PathVariable Long num,HttpServletRequest request){
+    public ModelAndView index(Model model, @PathVariable Long num, HttpServletRequest request) {
 
-        String  nickName = SessionUtils.getUserNickName(request);
+        String nickName = SessionUtils.getUserNickName(request);
         Integer id = SessionUtils.getUserId(request);
 
         Page<RealDb> page = new Page<>();
@@ -61,19 +63,19 @@ public class RealDbController {
         page.setDesc("ID");
 
 //        IPage<RealDb> pages = realDbService.page(page,queryWrapper);
-        Map<String,Object> params = new HashMap();
-        params.put("id",id);
+        Map<String, Object> params = new HashMap();
+        params.put("id", id);
         IPage<RealDb> pages = realDbService.pageList(page, params);
 
         //System.out.println("sessionId>>>>>>>>>>>>>"+SessionUtils.getUserId(request));
 
 
-        List<SysPermission> permissionList = sysPermissionService.findByUserNamePermission(nickName);
+        List<SysPermission> permissionList = sysPermissionService.findByPermission(SessionUtils.getUserId(request));
 
-        model.addAttribute("permissionList",permissionList);
+        model.addAttribute("permissionList", permissionList);
         model.addAttribute("nickName", nickName);
         model.addAttribute("list", pages.getRecords());
-        model.addAttribute("activeType", 2);
+        // model.addAttribute("activeType", 2);
         model.addAttribute("pageNum", num);
         model.addAttribute("real", new RealDb());
         model.addAttribute("pages", pages.getPages());
@@ -83,45 +85,44 @@ public class RealDbController {
 
     @RequestMapping("/lists")
     @ResponseBody
-    public List<Map<String, Object>> list(){
+    public List<Map<String, Object>> list() {
 
         //  获取ztree json
         // 获取真实库ztreejson
-        List<RealDb> realDbs =  realDbService.list(null);
+        List<RealDb> realDbs = realDbService.list(null);
 
 
-        List<Map<String,Object>> realZList = new ArrayList<>();
-        for (DBEnum dbEnum : DBEnum.values())
-        {
-            Map<String,Object> zMap = new HashMap<>();
-            zMap.put("pId",0);
-            zMap.put("name",dbEnum.getName());
-            zMap.put("icon","/img/icon/"+dbEnum.getName()+".png");
-            zMap.put("id",dbEnum.getDbType());
+        List<Map<String, Object>> realZList = new ArrayList<>();
+        for (DBEnum dbEnum : DBEnum.values()) {
+            Map<String, Object> zMap = new HashMap<>();
+            zMap.put("pId", 0);
+            zMap.put("name", dbEnum.getName());
+            zMap.put("icon", "/img/icon/" + dbEnum.getName() + ".png");
+            zMap.put("id", dbEnum.getDbType());
             realZList.add(zMap);
         }
-        for (RealDb realDb: realDbs){
-            Map<String,Object> zMap = new HashMap<>();
-            zMap.put("pId",realDb.getDbType());
-            zMap.put("name",realDb.getNikeName());
-            zMap.put("icon","/img/icon/db.png");
-            zMap.put("id",realDb.getId());
+        for (RealDb realDb : realDbs) {
+            Map<String, Object> zMap = new HashMap<>();
+            zMap.put("pId", realDb.getDbType());
+            zMap.put("name", realDb.getNikeName());
+            zMap.put("icon", "/img/icon/db.png");
+            zMap.put("id", realDb.getId());
             realZList.add(zMap);
         }
         return realZList;
     }
 
 
-
     /**
      * 去添加数据源
+     *
      * @param model
      * @return
      */
     @RequestMapping(value = "/toAdd", method = RequestMethod.GET)
-    public ModelAndView form( Model model,HttpServletRequest request) {
-        List<SysPermission> permissionList = sysPermissionService.findByUserNamePermission(SessionUtils.getUserNickName(request));
-        model.addAttribute("permissionList",permissionList);
+    public ModelAndView form(Model model, HttpServletRequest request) {
+        List<SysPermission> permissionList = sysPermissionService.findByPermission(SessionUtils.getUserId(request));
+        model.addAttribute("permissionList", permissionList);
         model.addAttribute("realDb", new RealDb());
         model.addAttribute("nickName", SessionUtils.getUserNickName(request));
         return new ModelAndView("/realDb/add");
@@ -130,26 +131,27 @@ public class RealDbController {
 
     /**
      * 保存
+     *
      * @param realDb
      * @return
      */
     @PostMapping("/save")
-    public ModelAndView save(@Validated RealDb realDb , BindingResult rs,Model model,HttpServletRequest request ){
+    public ModelAndView save(@Validated RealDb realDb, BindingResult rs, Model model, HttpServletRequest request) {
 
-        if(rs.hasErrors()){
+        if (rs.hasErrors()) {
             for (ObjectError error : rs.getAllErrors()) {
-                System.out.println(">>>>>>>>新增Real-db信息时-验证表单错误提示>>>>>>>"+error.getDefaultMessage());
+                System.out.println(">>>>>>>>新增Real-db信息时-验证表单错误提示>>>>>>>" + error.getDefaultMessage());
             }
             return new ModelAndView("/realDb/add");
         }
-        RealDb dataReal =  realDbService.findByNikeName(realDb.getNikeName());
-        if(dataReal != null){
-            model.addAttribute("hintMessage","数据源名已经存在");
-            List<SysPermission> permissionList = sysPermissionService.findByUserNamePermission(SessionUtils.getUserNickName(request));
-            model.addAttribute("permissionList",permissionList);
+        RealDb dataReal = realDbService.findByNikeName(realDb.getNikeName());
+        if (dataReal != null) {
+            model.addAttribute("hintMessage", "数据源名已经存在");
+            List<SysPermission> permissionList = sysPermissionService.findByPermission(SessionUtils.getUserId(request));
+            model.addAttribute("permissionList", permissionList);
             model.addAttribute("nickName", SessionUtils.getUserNickName(request));
             return new ModelAndView("/realDb/add");
-        }else{
+        } else {
             realDbService.saveForm(realDb);
         }
         return new ModelAndView("redirect:/real/1");
@@ -157,65 +159,68 @@ public class RealDbController {
 
     /**
      * 去修改
+     *
      * @param model
      * @param id
      * @return
      */
-    @RequestMapping(value = "/toEdit/{id}",method = RequestMethod.GET)
-    public ModelAndView toEdit(Model model,@PathVariable(value = "id") String id,HttpServletRequest request) {
-        List<SysPermission> permissionList = sysPermissionService.findByUserNamePermission(SessionUtils.getUserNickName(request));
-        model.addAttribute("permissionList",permissionList);
+    @RequestMapping(value = "/toEdit/{id}", method = RequestMethod.GET)
+    public ModelAndView toEdit(Model model, @PathVariable(value = "id") String id, HttpServletRequest request) {
+        List<SysPermission> permissionList = sysPermissionService.findByPermission(SessionUtils.getUserId(request));
+        model.addAttribute("permissionList", permissionList);
         RealDb realDb = realDbService.getById(id);
-        if (realDb!=null){
+        if (realDb != null) {
             model.addAttribute("realDb", realDb);
             model.addAttribute("nickName", SessionUtils.getUserNickName(request));
             return new ModelAndView("/realDb/update");
-        }else {
+        } else {
             return new ModelAndView("/error/500");
         }
     }
 
     /**
      * 查看单个数据源信息-不能修改
+     *
      * @param model
      * @param id
      * @return
      */
-    @RequestMapping(value = "/toList/{id}",method = RequestMethod.GET)
-    public ModelAndView toList(Model model,@PathVariable(value = "id") String id,HttpServletRequest request) {
+    @RequestMapping(value = "/toList/{id}", method = RequestMethod.GET)
+    public ModelAndView toList(Model model, @PathVariable(value = "id") String id, HttpServletRequest request) {
 
-        List<SysPermission> permissionList = sysPermissionService.findByUserNamePermission(SessionUtils.getUserNickName(request));
-        model.addAttribute("permissionList",permissionList);
+        List<SysPermission> permissionList = sysPermissionService.findByPermission(SessionUtils.getUserId(request));
+        model.addAttribute("permissionList", permissionList);
 
         RealDb realDb = realDbService.getById(id);
-        if (realDb!=null){
+        if (realDb != null) {
             model.addAttribute("realDb", realDb);
             model.addAttribute("nickName", SessionUtils.getUserNickName(request));
             return new ModelAndView("/realDb/update");
-        }else {
+        } else {
             return new ModelAndView("/error/500");
         }
     }
 
     /**
      * 修改提交
+     *
      * @param realDb
      * @return
      */
     @PostMapping("/update")
-    public ModelAndView  update(@Validated RealDb realDb ,BindingResult rs,Model model,HttpServletRequest request ){
+    public ModelAndView update(@Validated RealDb realDb, BindingResult rs, Model model, HttpServletRequest request) {
 
-        if(rs.hasErrors()){
+        if (rs.hasErrors()) {
             for (ObjectError error : rs.getAllErrors()) {
-                System.out.println(">>>>>>>>修改Real-db信息提交时-验证表单错误提示>>>>>>>"+error.getDefaultMessage());
+                System.out.println(">>>>>>>>修改Real-db信息提交时-验证表单错误提示>>>>>>>" + error.getDefaultMessage());
             }
             return new ModelAndView("/realDb/update");
         }
         //根据id查询之前的nikeName
         RealDb realDb1 = realDbService.getById(realDb.getId());
         //查数据源别名
-        RealDb dataReal =  realDbService.findByNikeName(realDb.getNikeName());
-        realDb.setLogo(" /img/realDb/"+realDb.getDbType()+".jpg");
+        RealDb dataReal = realDbService.findByNikeName(realDb.getNikeName());
+        realDb.setLogo(" /img/realDb/" + realDb.getDbType() + ".jpg");
        /* if(dataReal != null || realDb1.getNikeName() == realDb.getNikeName()){
             model.addAttribute("hintMessage","数据源名已经存在");
             return new ModelAndView("/realDb/update");
@@ -223,27 +228,28 @@ public class RealDbController {
             realDbService.updateById(realDb);
         }*/
 
-       if(realDb.getNikeName().equals( realDb1.getNikeName()) || dataReal==null){
-           realDbService.updateById(realDb);
-       }else {
-           model.addAttribute("hintMessage","数据源名已经存在");
-           List<SysPermission> permissionList = sysPermissionService.findByUserNamePermission(SessionUtils.getUserNickName(request));
-           model.addAttribute("permissionList",permissionList);
-           model.addAttribute("nickName", SessionUtils.getUserNickName(request));
-           return new ModelAndView("/realDb/update");
-       }
+        if (realDb.getNikeName().equals(realDb1.getNikeName()) || dataReal == null) {
+            realDbService.updateById(realDb);
+        } else {
+            model.addAttribute("hintMessage", "数据源名已经存在");
+            List<SysPermission> permissionList = sysPermissionService.findByPermission(SessionUtils.getUserId(request));
+            model.addAttribute("permissionList", permissionList);
+            model.addAttribute("nickName", SessionUtils.getUserNickName(request));
+            return new ModelAndView("/realDb/update");
+        }
 
         return new ModelAndView("redirect:/real/1");
     }
 
     /**
      * 删除
+     *
      * @param id
      * @return
      */
     @RequestMapping("/delete/{id}")
-    public String delete(@PathVariable(value = "id")  Integer id){
-        if (id!=null){
+    public String delete(@PathVariable(value = "id") Integer id) {
+        if (id != null) {
             realDbService.removeById(id);
             roleRealDbService.deleteDb(id);
             return "redirect:/real/1";
@@ -254,17 +260,18 @@ public class RealDbController {
 
     /**
      * 查看库中的表信息
+     *
      * @param model
      * @return
      */
     @RequestMapping("/selectDatabase")
     @ResponseBody
-    public List<RealDb> selectDatabase(Model model,HttpServletRequest request){
+    public List<RealDb> selectDatabase(Model model, HttpServletRequest request) {
 
-        List<SysPermission> permissionList = sysPermissionService.findByUserNamePermission(SessionUtils.getUserNickName(request));
-        List<RealDb> list =  realDbService.selectDatabase();
-        model.addAttribute("permissionList",permissionList);
-        model.addAttribute("list" ,list);
+        List<SysPermission> permissionList = sysPermissionService.findByPermission(SessionUtils.getUserId(request));
+        List<RealDb> list = realDbService.selectDatabase();
+        model.addAttribute("permissionList", permissionList);
+        model.addAttribute("list", list);
         return list;
     }
 

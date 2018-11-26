@@ -11,19 +11,22 @@ import org.springframework.web.bind.annotation.GetMapping;
 @Controller
 public class LoginController {
     @GetMapping("/login")
-    public String login(){
-        return "login";
+    public String login() {
+        return "/login";
     }
+
     @GetMapping("/")
-    public String root(){
+    public String root() {
         return "redirect:/virtual/1";
     }
+
     @GetMapping("/401")
-    public String http401(){
-        return "401";
+    public String http401() {
+        return "/401";
     }
+
     @GetMapping("/404")
-    public String http404(){
-        return "404";
+    public String http404() {
+        return "/404";
     }
 }
