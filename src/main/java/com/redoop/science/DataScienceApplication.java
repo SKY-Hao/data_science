@@ -8,9 +8,9 @@ import org.springframework.session.data.redis.config.annotation.web.http.EnableR
 /**
  * @author ALan
  */
+@SpringBootApplication
 @MapperScan("com.redoop.science.mapper")
 @EnableRedisHttpSession(redisNamespace="redoop:session")
-@SpringBootApplication
 public class DataScienceApplication {
 
     public static void main(String[] args) {

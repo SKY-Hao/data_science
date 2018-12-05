@@ -21,6 +21,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpServletRequest;
+import java.sql.Date;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -150,6 +151,21 @@ public class RegFunctionController {
             //名称重复
             return new Result<String>(ResultEnum.REPEAT);
         }
+
+        if(id!=null){
+            regFunction = regFunctionService.getById(id);
+        }else{
+            RegFunction analy  = regFunctionService.getOne(wrapper);
+            if(analy!=null){
+                return new Result(ResultEnum.REPEAT);
+            }else{
+                regFunction = new RegFunction();
+                regFunction.setCreateDate(LocalDateTime.now());
+                regFunction.setCreatorId(loginUser.getId());
+                regFunction.setCreatorName(loginUser.getNickname());
+            }
+        }
+
         regFunction = new RegFunction();
         regFunction.setCreateDate(LocalDateTime.now());
         regFunction.setCreatorId(loginUser.getId());

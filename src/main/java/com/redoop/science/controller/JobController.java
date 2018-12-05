@@ -44,7 +44,7 @@ public class JobController {
             HttpUrl url = new HttpUrl.Builder()
                     .scheme("http")
 //                    .host("127.0.0.1")
-                    .host("192.168.0.163")
+                    .host("192.168.0.122")
                     .port(9003)
                     .addPathSegments("run\\script")
                     .addQueryParameter("sql", runSql)
