@@ -124,26 +124,33 @@ public class AnalysisController {
         SysUserDetails sysUser = SessionUtils.getUser(request);
         QueryWrapper queryWrapper = new QueryWrapper();
         queryWrapper.eq("NAME",sqlName);
-
+        Analysis analy  = analysisService.getOne(queryWrapper);
         if(id!=null){
             analysis = analysisService.getById(id);
+            if (sqlName.equals(analysis.getName()) ||analy==null){
+                analysis.setCode(ParseSql.parse(sql));
+                analysis.setName(sqlName);
+                analysis.setFinallyCode(sql);
+                analysis.setOperationTime(new Date());
+                analysis.setOperationId(sysUser.getId());
+            }else {
+                return new Result(ResultEnum.REPEAT);
+            }
         }else{
-            Analysis analy  = analysisService.getOne(queryWrapper);
             if(analy!=null){
                 return new Result(ResultEnum.REPEAT);
             }else{
                 analysis = new Analysis();
+                analysis.setCode(ParseSql.parse(sql));
+                analysis.setFinallyCode(sql);
+                analysis.setOperationId(sysUser.getId());
                 analysis.setCreateDate(new Date());
                 analysis.setCreatorId(sysUser.getId());
                 analysis.setCreatorName(sysUser.getNickname());
+                analysis.setName(sqlName);
             }
         }
-        analysis.setCode(ParseSql.parse(sql));
-        //System.out.println("分析analysis.getCode()====="+analysis.getCode());
-        analysis.setName(sqlName);
-        analysis.setFinallyCode(sql);
-        analysis.setOperationTime(new Date());
-        analysis.setOperationId(sysUser.getId());
+
         if (analysisService.saveOrUpdate(analysis)){
             return new Result<String>(ResultEnum.SECCUSS);
         }else {

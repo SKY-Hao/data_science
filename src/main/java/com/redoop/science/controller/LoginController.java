@@ -22,11 +22,11 @@ public class LoginController {
 
     @GetMapping("/401")
     public String http401() {
-        return "/401";
+        return "/error/401";
     }
 
     @GetMapping("/404")
     public String http404() {
-        return "/404";
+        return "/error/404";
     }
 }

@@ -4,6 +4,8 @@ import com.baomidou.mybatisplus.annotation.TableId;
 import java.time.LocalDateTime;
 import com.baomidou.mybatisplus.annotation.TableField;
 import java.io.Serializable;
+import java.util.Date;
+
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.experimental.Accessors;
@@ -69,7 +71,7 @@ public class RegFunction implements Serializable {
      * 创建日期
      */
     @TableField("CREATE_DATE")
-    private LocalDateTime createDate;
+    private Date createDate;
 
     /**
      * 操作人编号

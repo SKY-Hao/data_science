@@ -216,17 +216,20 @@ public class RealDbController {
             }
             return new ModelAndView("/realDb/update");
         }
-        //根据id查询之前的nikeName
+        //根据id查询
         RealDb realDb1 = realDbService.getById(realDb.getId());
-        //查数据源别名
+
+        System.out.println("根据id查询>>>>>>>>>"+realDb1);
+
+        System.out.println("realDb.getId()>>>>>>>>>"+realDb.getId());
+        System.out.println("realDb.getNikeName()>>>>>>>>>"+realDb.getNikeName());
+
+        //根据数据源名查询
         RealDb dataReal = realDbService.findByNikeName(realDb.getNikeName());
+
+        System.out.println("根据数据源名查询>>>>>>>>>"+dataReal);
+
         realDb.setLogo(" /img/realDb/" + realDb.getDbType() + ".jpg");
-       /* if(dataReal != null || realDb1.getNikeName() == realDb.getNikeName()){
-            model.addAttribute("hintMessage","数据源名已经存在");
-            return new ModelAndView("/realDb/update");
-        }else{
-            realDbService.updateById(realDb);
-        }*/
 
         if (realDb.getNikeName().equals(realDb1.getNikeName()) || dataReal == null) {
             realDbService.updateById(realDb);

@@ -164,9 +164,9 @@ public class SysController {
     @ResponseBody
     public Result update(@RequestBody SysUser user) {
         user.setNickName(user.getUsername());
-        LocalDateTime localDateTime = LocalDateTime.now();
+       /* LocalDateTime localDateTime = LocalDateTime.now();
         localDateTime.format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
-        user.setCreateDate(localDateTime);
+        user.setCreateDate(localDateTime);*/
         if (StringUtils.isBlank(user.getPassword())) {
             user.setPassword(null);
         } else {
@@ -177,7 +177,6 @@ public class SysController {
         Integer user_id = user.getId();
         userRoleService.delete(user_id);
         if (sysUserService.saveOrUpdate(user)) {
-
             //保存用户与角色关系
             List<SysUserRole> list = new ArrayList<>(user.getRoleIdList().size());
             for (Long roleId : user.getRoleIdList()) {

@@ -21,12 +21,8 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpServletRequest;
-import java.sql.Date;
-import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+
+import java.util.*;
 
 /**
  * <p>
@@ -142,36 +138,34 @@ public class RegFunctionController {
                                @RequestParam(value = "name") String name,
                                HttpServletRequest request) {
         RegFunction regFunction = null;
-        SysUserDetails loginUser = SessionUtils.getUser(request);
+        SysUserDetails sysUser = SessionUtils.getUser(request);
 
-        QueryWrapper<RegFunction> wrapper = new QueryWrapper<>();
-        wrapper.eq("NAME", name);
-        RegFunction regFunctionCheckName = regFunctionService.getOne(wrapper);
-        if (regFunctionCheckName != null) {
-            //名称重复
-            return new Result<String>(ResultEnum.REPEAT);
-        }
+        QueryWrapper<RegFunction> queryWrapper = new QueryWrapper<>();
+        queryWrapper.eq("NAME", name);
+        RegFunction fun  = regFunctionService.getOne(queryWrapper);
 
         if(id!=null){
             regFunction = regFunctionService.getById(id);
+            if (name.equals(regFunction.getName()) ||fun==null){
+                regFunction.setCode(code);
+                regFunction.setName(name);
+                regFunction.setCreateDate(new Date());
+                regFunction.setCreatorId(sysUser.getId());
+                regFunction.setCreatorName(sysUser.getNickname());
+            }else {
+                return new Result(ResultEnum.REPEAT);
+            }
         }else{
-            RegFunction analy  = regFunctionService.getOne(wrapper);
-            if(analy!=null){
+            if(fun!=null){
                 return new Result(ResultEnum.REPEAT);
             }else{
                 regFunction = new RegFunction();
-                regFunction.setCreateDate(LocalDateTime.now());
-                regFunction.setCreatorId(loginUser.getId());
-                regFunction.setCreatorName(loginUser.getNickname());
+                regFunction.setCreateDate(new Date());
+                regFunction.setName(name);
+                regFunction.setCreatorId(sysUser.getId());
+                regFunction.setCreatorName(sysUser.getNickname());
             }
         }
-
-        regFunction = new RegFunction();
-        regFunction.setCreateDate(LocalDateTime.now());
-        regFunction.setCreatorId(loginUser.getId());
-        regFunction.setCreatorName(loginUser.getNickname());
-        regFunction.setCode(code);
-        regFunction.setName(name);
         if (regFunctionService.saveOrUpdate(regFunction)) {
             //注册函数
             return new Result<String>(ResultEnum.SECCUSS);
