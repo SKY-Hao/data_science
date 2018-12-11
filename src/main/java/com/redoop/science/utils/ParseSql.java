@@ -127,7 +127,13 @@ public class ParseSql {
                         break;
                     case 5:
 //                        hive
-                        returnSql.append("");
+                        returnSql.append("connect jdbc where  " +
+                                "truncate=\"true\"" +
+                                "and url=\"jdbc:hive2://" + realDb.getIp() + ":" + realDb.getPort() + ";databaseName=" + realDb.getName() + ";\"" +
+                                "and driver=\"org.apache.hive.jdbc.HiveDriver\"" +
+                                "and user=\"" + realDb.getDbName() + "\" " +
+                                "and password=\"" + realDb.getDbPassword() + "\" " +
+                                "as " + realDb.getNikeName() + "; ");
                         break;
                     case 6:
 //                        redis
@@ -175,7 +181,7 @@ public class ParseSql {
                         returnSql.append("load jdbc.`" + tableName + "` as " + dbName[1] + ";");
                         break;
                     case 5:
-                        returnSql.append("");
+                        returnSql.append("load jdbc.`" + tableName + "` as " + dbName[1] + ";");
                         break;
                     case 6:
                         returnSql.append("");
