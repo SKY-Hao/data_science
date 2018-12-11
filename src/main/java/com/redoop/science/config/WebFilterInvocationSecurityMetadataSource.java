@@ -63,7 +63,6 @@ public class WebFilterInvocationSecurityMetadataSource implements FilterInvocati
             resUrl = iter.next();
             matcher = new AntPathRequestMatcher(resUrl);
             if(matcher.matches(request)) {
-                logger.info("requestMap.get(resUrl)>>>>>"+requestMap.get(resUrl).toString());
                 return requestMap.get(resUrl);
             }
         }

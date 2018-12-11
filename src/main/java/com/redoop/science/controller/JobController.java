@@ -57,7 +57,7 @@ public class JobController {
         } catch (IOException e) {
             e.printStackTrace();
         }
-        logger.info("sql查询返回结果>>>>>>>"+result);
+//        logger.info("sql查询返回结果>>>>>>>"+result);
         if(JsonUtil.isJSONValid(result)){
             stringResult = new Result<String>(ResultEnum.SECCUSS,result);
 
