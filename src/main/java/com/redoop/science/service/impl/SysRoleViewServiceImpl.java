@@ -33,4 +33,9 @@ public class SysRoleViewServiceImpl extends ServiceImpl<SysRoleViewMapper, SysRo
     public int deleteBatch(Long[] roleIds){
         return baseMapper.deleteBatch(roleIds);
     }
+
+    @Override
+    public void deleteViewsTables(Integer id) {
+        baseMapper.deleteViewsTables(id);
+    }
 }

@@ -1,19 +1,15 @@
 package com.redoop.science.controller;
 
-
-import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
-import com.redoop.science.constant.DBEnum;
 import com.redoop.science.dto.ViewsDto;
 import com.redoop.science.entity.*;
-import com.redoop.science.mapper.ViewsMapper;
 import com.redoop.science.service.ISysPermissionService;
+import com.redoop.science.service.ISysRoleViewService;
 import com.redoop.science.service.IViewsService;
 import com.redoop.science.service.IViewsTablesService;
 import com.redoop.science.utils.*;
-import okhttp3.HttpUrl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -21,7 +17,6 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpServletRequest;
-import java.io.IOException;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -30,7 +25,7 @@ import java.util.Map;
 
 /**
  * <p>
- *  视图表 前端控制器
+ * 视图表 前端控制器
  * </p>
  *
  * @author admin
@@ -47,35 +42,38 @@ public class ViewsTablesController {
 
     @Autowired
     ISysPermissionService sysPermissionService;
+    @Autowired
+    ISysRoleViewService roleViewService;
 
     /**
      * 视图表
+     *
      * @param model
      * @param num
      * @param request
      * @return
      */
     @GetMapping("/{num}")
-    public ModelAndView index(Model model, @PathVariable Long num, HttpServletRequest request){
+    public ModelAndView index(Model model, @PathVariable Long num, HttpServletRequest request) {
 
         Integer id = SessionUtils.getUserId(request);
 
         Page<ViewsTables> page = new Page<>();
-        
+
         page.setSize(11L);
         page.setCurrent(num);
         page.setDesc("ID");
 
-        Map<String,Object> params = new HashMap();
-        params.put("id",id);
-        IPage<ViewsTables> pages = viewsTablesService.pageList(page,params);
+        Map<String, Object> params = new HashMap();
+        params.put("id", id);
+        IPage<ViewsTables> pages = viewsTablesService.pageList(page, params);
 
-        List<SysPermission> permissionList = sysPermissionService.findByUserNamePermission(SessionUtils.getUserNickName(request));
+        List<SysPermission> permissionList = sysPermissionService.findByPermission(SessionUtils.getUserId(request));
 
-        model.addAttribute("permissionList",permissionList);
+        model.addAttribute("permissionList", permissionList);
         model.addAttribute("nickName", SessionUtils.getUserNickName(request));
         model.addAttribute("items", pages.getRecords());
-        model.addAttribute("activeType", 4);
+        //model.addAttribute("activeType", 4);
         model.addAttribute("pageNum", num);
         model.addAttribute("viewsTables", new ViewsTables());
         model.addAttribute("pages", pages.getPages());
@@ -86,17 +84,18 @@ public class ViewsTablesController {
 
     /**
      * 去添加视图表
+     *
      * @param model
      * @param request
      * @return
      */
     @GetMapping("/add")
-    public ModelAndView add(Model model,HttpServletRequest request){
+    public ModelAndView add(Model model, HttpServletRequest request) {
 
-        List<ViewsDto> views =  viewsService.getViewsTables();
+        List<ViewsDto> views = viewsService.getViewsTables();
         getZtree(model);
         List<SysPermission> permissionList = sysPermissionService.getTpyeList();
-        model.addAttribute("permissionList",permissionList);
+        model.addAttribute("permissionList", permissionList);
         model.addAttribute("nickName", SessionUtils.getUserNickName(request));
         model.addAttribute("select", views);
 
@@ -105,6 +104,7 @@ public class ViewsTablesController {
 
     /**
      * 保存视图表
+     *
      * @param request
      * @param id
      * @param sql
@@ -115,9 +115,9 @@ public class ViewsTablesController {
     @PostMapping("/save")
     @ResponseBody
     public Result save(HttpServletRequest request,
-                       @RequestParam(name = "id",required = false) Integer id,
+                       @RequestParam(name = "id", required = false) Integer id,
                        @RequestParam(name = "sql") String sql,
-                       @RequestParam(value = "sqlName") String  sqlName,
+                       @RequestParam(value = "sqlName") String sqlName,
                        @RequestParam(name = "vId") Integer vId/*,
                        @RequestParam(value = "viewsName") String viewsName*/) {
 
@@ -127,29 +127,29 @@ public class ViewsTablesController {
         SysUserDetails sysUser = SessionUtils.getUser(request);
 
         QueryWrapper queryWrapper = new QueryWrapper();
-        queryWrapper.eq("NAME",sqlName);
+        queryWrapper.eq("NAME", sqlName);
 
-        if(id!=null){
+        if (id != null) {
             tables = viewsTablesService.getById(id);
-        }else{
+        } else {
 
-            ViewsTables virtualTable  = viewsTablesService.getOne(queryWrapper);
+            ViewsTables virtualTable = viewsTablesService.getOne(queryWrapper);
 
-            if(virtualTable!=null){
-                return new Result(ResultEnum.REPEAT,"名称已存在，请使用其他名称");
-            }else{
+            if (virtualTable != null) {
+                return new Result(ResultEnum.REPEAT, "名称已存在，请使用其他名称");
+            } else {
                 tables = new ViewsTables();
                 tables.setCreateDate(LocalDateTime.now());
                 tables.setCreatorId(sysUser.getId());
                 tables.setCreatorName(sysUser.getNickname());
             }
-            if (vId == null || vId ==0){
-                return new Result(ResultEnum.NOT_VIEW,"目前没有视图库，请创建视图库");
+            if (vId == null || vId == 0) {
+                return new Result(ResultEnum.NOT_VIEW, "目前没有视图库，请创建视图库");
             }
 
         }
 
-        if (vId!=0){
+        if (vId != 0) {
             //保存下拉vid(视图库id)
             tables.setViewsId(vId);
         }
@@ -159,35 +159,34 @@ public class ViewsTablesController {
         tables.setOperationTime(LocalDateTime.now());
         tables.setOperationId(sysUser.getId());
 
-        if (viewsTablesService.save(tables)){
+        if (viewsTablesService.save(tables)) {
             return new Result<String>(ResultEnum.SECCUSS);
-        }else {
+        } else {
             return new Result<String>(ResultEnum.FAIL);
         }
     }
 
     /**
-     *
      * @param model
      * @param id
      * @param request
      * @return
      */
-    @RequestMapping(value = "/edit/{id}",method = RequestMethod.GET)
-    public ModelAndView edit(Model model,@PathVariable(value = "id") String id,HttpServletRequest request) {
+    @RequestMapping(value = "/edit/{id}", method = RequestMethod.GET)
+    public ModelAndView edit(Model model, @PathVariable(value = "id") String id, HttpServletRequest request) {
 
-        List<ViewsDto> views =  viewsService.getViewsTables();
+        List<ViewsDto> views = viewsService.getViewsTables();
         ViewsTables viewsTables = viewsTablesService.getById(id);
-        List<SysPermission> permissionList = sysPermissionService.findByUserNamePermission(SessionUtils.getUserNickName(request));
-        model.addAttribute("permissionList",permissionList);
+        List<SysPermission> permissionList = sysPermissionService.findByPermission(SessionUtils.getUserId(request));
+        model.addAttribute("permissionList", permissionList);
 
         model.addAttribute("select", views);
-        if (viewsTables!=null){
+        if (viewsTables != null) {
             getZtree(model);
             model.addAttribute("viewsLists", viewsTables);
             model.addAttribute("nickName", SessionUtils.getUserNickName(request));
             return new ModelAndView("/views/update");
-        }else {
+        } else {
             return new ModelAndView("/error/500");
         }
     }
@@ -195,33 +194,33 @@ public class ViewsTablesController {
 
     /**
      * 获取树
+     *
      * @param model
      * @return
      */
-    public Model getZtree(Model model){
+    public Model getZtree(Model model) {
         //  获取ztree json
         // 获取真实库ztreejson
 
-        List<ViewsDto> views =  viewsService.getViewsTables();
+        List<ViewsDto> views = viewsService.getViewsTables();
 
-        List<Map<String,Object>> realZList = new ArrayList<>();
-        for (ViewsDto v :views)
-        {
+        List<Map<String, Object>> realZList = new ArrayList<>();
+        for (ViewsDto v : views) {
 
-            Map<String,Object> zMap = new HashMap<>();
+            Map<String, Object> zMap = new HashMap<>();
             //第一节点
-            zMap.put("pId",0);
-            zMap.put("name",v.getName());
-            zMap.put("icon","/img/icon/view.png");
-            zMap.put("id",v.getId());
+            zMap.put("pId", 0);
+            zMap.put("name", v.getName());
+            zMap.put("icon", "/img/icon/view.png");
+            zMap.put("id", v.getId());
             realZList.add(zMap);
 
-            for (ViewsTables viewsTables : v.getViewsTablesList()){
-                Map<String,Object> z2Map = new HashMap<>();
-                z2Map.put("pId",viewsTables.getViewsId());
-                z2Map.put("name",viewsTables.getName());
-                z2Map.put("icon","/img/icon/viewTable.png");
-                z2Map.put("id",viewsTables.getId()+10000);
+            for (ViewsTables viewsTables : v.getViewsTablesList()) {
+                Map<String, Object> z2Map = new HashMap<>();
+                z2Map.put("pId", viewsTables.getViewsId());
+                z2Map.put("name", viewsTables.getName());
+                z2Map.put("icon", "/img/icon/viewTable.png");
+                z2Map.put("id", viewsTables.getId() + 10000);
                 realZList.add(z2Map);
             }
         }
@@ -232,12 +231,6 @@ public class ViewsTablesController {
 
         return model;
     }
-
-
-
-
-
-
 
 
     /**
@@ -274,23 +267,17 @@ public class ViewsTablesController {
         }
         return stringResult;
     }*/
-
     @RequestMapping("/delete/{id}")
     @ResponseBody
-    public Result<String> delete(@PathVariable Integer id){
-        if (viewsTablesService.removeById(id)){
+    public Result<String> delete(@PathVariable Integer id) {
+        if (viewsTablesService.removeById(id)) {
+
+            roleViewService.deleteViewsTables(id);
             return new Result<String>(ResultEnum.SECCUSS);
-        }else {
+        } else {
             return new Result<String>(ResultEnum.FAIL);
         }
     }
-
-
-
-
-
-
-
 
 
 }

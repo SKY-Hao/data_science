@@ -1,6 +1,10 @@
 <!DOCTYPE html>
 <html>
 <head>
+    <meta charset="utf-8"/>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1"/>
+    <link rel="shortcut icon" href="/img/icon/logo.ico"/>
     <title>角色管理</title>
 
     <link rel="stylesheet" href="/sys/bootstrap/bootstrap.min.css"/>
@@ -83,43 +87,50 @@
                                         <input type="text" class="form-control" v-model="role.remark" placeholder="备注"/>
                                     </div>
                                 </div>
-                                <div class="form-inline clearfix" style="margin-top:30px;margin-left:26px;">
+                                <div class="form-inline clearfix" style="margin-top:30px;margin-left:26px;width: 91%">
                                     <div class="form-group col-md-2">
-                                        <strong class="col-sm-5 control-label">功能</strong>
+                                        <strong class="col-sm-6 control-label">功能</strong>
                                         <div class="col-sm-10">
                                             <ul id="menuTree" class="ztree"></ul>
                                         </div>
                                     </div>
                                     <div class="form-group col-md-2">
-                                        <strong class="col-sm-5 control-label">部门</strong>
+                                        <strong class="col-sm-6 control-label">部门</strong>
                                         <div class="col-sm-10">
                                             <ul id="dataTree" class="ztree"></ul>
                                         </div>
                                     </div>
                                     <div class="form-group col-md-2">
-                                        <strong class="col-sm-5 control-label">真实库</strong>
+                                        <strong class="col-sm-6 control-label">真实库</strong>
                                         <div class="col-sm-10">
                                             <ul id="realDb_ztree" class="ztree"></ul>
                                         </div>
                                     </div>
                                     <div class="form-group col-md-2">
-                                        <strong class="col-sm-5 control-label">视图库</strong>
+                                        <strong class="col-sm-6 control-label">视图库</strong>
                                         <div class="col-sm-10">
                                             <ul id="view_ztree" class="ztree"></ul>
                                         </div>
                                     </div>
                                     <div class="form-group col-md-2">
-                                        <strong class="col-sm-5 control-label">函数库</strong>
+                                        <strong class="col-sm-6 control-label">函数库</strong>
                                         <div class="col-sm-10">
                                             <ul id="fun_ztree" class="ztree"></ul>
                                         </div>
                                     </div>
                                     <div class="form-group col-md-2">
-                                        <strong class="col-sm-5 control-label">虚拟库</strong>
+                                        <strong class="col-sm-6 control-label">虚拟库</strong>
                                         <div class="col-sm-10">
                                             <ul id="virtual_ztree" class="ztree"></ul>
                                         </div>
                                     </div>
+                                    <div class="form-group col-md-2">
+                                        <strong class="col-sm-6 control-label">分析</strong>
+                                        <div class="col-sm-10">
+                                            <ul id="analysis_ztree" class="ztree"></ul>
+                                        </div>
+                                    </div>
+
                                 </div>
                                 <div class="form-group">
                                     <div class="col-sm-2 control-label"></div>

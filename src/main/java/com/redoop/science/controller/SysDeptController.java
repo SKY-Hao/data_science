@@ -8,9 +8,7 @@ import com.redoop.science.utils.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.HashMap;
@@ -20,8 +18,8 @@ import java.util.Map;
 /**
  * @author admin
  * @since 2018年11月6日15:27:30
- *
- *   部门Controller
+ * <p>
+ * 部门Controller
  */
 @Controller
 @RequestMapping("/sys/dept")
@@ -34,18 +32,18 @@ public class SysDeptController {
     ISysPermissionService sysPermissionService;
 
     @RequestMapping("/list")
-    public String index(Map map,HttpServletRequest request) throws CustomException{
+    public String index(Map map, HttpServletRequest request) throws CustomException {
         List<SysDept> deptList = deptService.list(null);
-        for(SysDept sysDept : deptList){
-            SysDept parentDeptEntity =  deptService.getById(sysDept.getParentId());
-            if(parentDeptEntity != null){
+        for (SysDept sysDept : deptList) {
+            SysDept parentDeptEntity = deptService.getById(sysDept.getParentId());
+            if (parentDeptEntity != null) {
                 sysDept.setParentName(parentDeptEntity.getName());
             }
         }
 
-        List<SysPermission> permissionList = sysPermissionService.findByUserNamePermission(SessionUtils.getUserNickName(request));
-        map.put("deptList",deptList);
-        map.put("permissionList",permissionList);
+        List<SysPermission> permissionList = sysPermissionService.findByPermission(SessionUtils.getUserId(request));
+        map.put("deptList", deptList);
+        map.put("permissionList", permissionList);
         map.put("nickName", SessionUtils.getUserNickName(request));
 
         return "/sys/dept";
@@ -54,43 +52,44 @@ public class SysDeptController {
 
     @RequestMapping("/lists")
     @ResponseBody
-    public List<SysDept> list(){
+    public List<SysDept> list() {
 
         List<SysDept> deptList = deptService.list(null);
 
-        for(SysDept sysDept : deptList){
-            SysDept parentDeptEntity =  deptService.getById(sysDept.getParentId());
-            if(parentDeptEntity != null){
+        for (SysDept sysDept : deptList) {
+            SysDept parentDeptEntity = deptService.getById(sysDept.getParentId());
+            if (parentDeptEntity != null) {
                 sysDept.setParentName(parentDeptEntity.getName());
             }
         }
 
         return deptList;
     }
+
     /**
      * 选择部门(添加、修改菜单)
      */
     @RequestMapping("/select")
     @ResponseBody
-    public Map select(Model model){
+    public Map select(Model model) {
         List<SysDept> deptList = deptService.list(null);
-        for(SysDept sysDept : deptList){
-            SysDept parentDeptEntity =  deptService.getById(sysDept.getParentId());
-            if(parentDeptEntity != null){
+        for (SysDept sysDept : deptList) {
+            SysDept parentDeptEntity = deptService.getById(sysDept.getParentId());
+            if (parentDeptEntity != null) {
                 sysDept.setParentName(parentDeptEntity.getName());
             }
         }
 
-        System.out.println("选择部门(添加、修改菜单)deptList>>>>>>>>>>>>>>>>>>>>"+deptList);
+        System.out.println("选择部门(添加、修改菜单)deptList>>>>>>>>>>>>>>>>>>>>" + deptList);
         //添加一级部门
         SysDept root = new SysDept();
-            root.setId(0);
-            root.setName("一级部门");
-            root.setParentId(-1L);
-            root.setOpen(true);
-            deptList.add(root);
+        root.setId(0);
+        root.setName("一级部门");
+        root.setParentId(-1L);
+        root.setOpen(true);
+        deptList.add(root);
         Map map = new HashMap();
-        map.put("deptList",deptList);
+        map.put("deptList", deptList);
         return map;
     }
 
@@ -100,30 +99,30 @@ public class SysDeptController {
      */
     @GetMapping("/info")
     @ResponseBody
-    public Map info(){
+    public Map info() {
         long id = 0;
         List<SysDept> deptList = deptService.list(null);
-        for(SysDept sysDept : deptList){
-            SysDept parentDeptEntity =  deptService.getById(sysDept.getParentId());
-            if(parentDeptEntity != null){
+        for (SysDept sysDept : deptList) {
+            SysDept parentDeptEntity = deptService.getById(sysDept.getParentId());
+            if (parentDeptEntity != null) {
                 sysDept.setParentName(parentDeptEntity.getName());
             }
         }
 
-        System.out.println("上级部门>>>>>>>>>>>>>>>>"+deptList);
-            Long parentId = null;
-            for(SysDept sysDeptEntity : deptList){
-                if(parentId == null){
-                    parentId = sysDeptEntity.getParentId();
-                    continue;
-                }
-                if(parentId > sysDeptEntity.getParentId().longValue()){
-                    parentId = sysDeptEntity.getParentId();
-                }
+        System.out.println("上级部门>>>>>>>>>>>>>>>>" + deptList);
+        Long parentId = null;
+        for (SysDept sysDeptEntity : deptList) {
+            if (parentId == null) {
+                parentId = sysDeptEntity.getParentId();
+                continue;
             }
+            if (parentId > sysDeptEntity.getParentId().longValue()) {
+                parentId = sysDeptEntity.getParentId();
+            }
+        }
         id = parentId;
-            Map map = new HashMap();
-            map.put("id",id);
+        Map map = new HashMap();
+        map.put("id", id);
         return map;
     }
 
@@ -132,10 +131,10 @@ public class SysDeptController {
      */
     @RequestMapping("/info/{id}")
     @ResponseBody
-    public Map info(@PathVariable("id") Integer id){
+    public Map info(@PathVariable("id") Integer id) {
         SysDept dept = deptService.getById(id);
         Map map = new HashMap();
-        map.put("dept",dept);
+        map.put("dept", dept);
         return map;
     }
 
@@ -143,11 +142,11 @@ public class SysDeptController {
 
     @PostMapping("/save")
     @ResponseBody
-    public Result save(@RequestBody SysDept dept){
+    public Result save(@RequestBody SysDept dept) {
 
-        if ( deptService.save(dept)){
+        if (deptService.save(dept)) {
             return new Result<String>(ResultEnum.SECCUSS);
-        }else {
+        } else {
             return new Result<String>(ResultEnum.FAIL);
         }
     }
@@ -156,11 +155,11 @@ public class SysDeptController {
 
     @RequestMapping("/update")
     @ResponseBody
-    public Result update(@RequestBody SysDept dept){
+    public Result update(@RequestBody SysDept dept) {
 
-        if (  deptService.updateById(dept)){
+        if (deptService.updateById(dept)) {
             return new Result<String>(ResultEnum.SECCUSS);
-        }else {
+        } else {
             return new Result<String>(ResultEnum.FAIL);
         }
     }
@@ -169,26 +168,19 @@ public class SysDeptController {
 
     @RequestMapping("/delete")
     @ResponseBody
-    public Result delete(Integer id){
+    public Result delete(Integer id) {
         //判断是否有子部门
         List<Integer> deptList = deptService.queryDetpIdList(id);
-        if(deptList.size() > 0){
+        if (deptList.size() > 0) {
             return new Result<String>(ResultEnum.DELETE_CHILD);
         }
 
-        if ( deptService.removeById(id)){
+        if (deptService.removeById(id)) {
             return new Result<String>(ResultEnum.SECCUSS);
-        }else {
+        } else {
             return new Result<String>(ResultEnum.FAIL);
         }
     }
-
-
-
-
-
-
-
 
 
 }

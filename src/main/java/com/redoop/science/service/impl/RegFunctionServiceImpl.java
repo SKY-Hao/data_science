@@ -41,4 +41,5 @@ public class RegFunctionServiceImpl extends ServiceImpl<RegFunctionMapper, RegFu
     public List<RegFunction> findByRole(Integer id) {
         return regFunctionMapper.findByRoleUserId(id);
     }
+
 }

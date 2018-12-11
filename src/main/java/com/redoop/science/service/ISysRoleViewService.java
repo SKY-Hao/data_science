@@ -18,4 +18,6 @@ public interface ISysRoleViewService extends IService<SysRoleViewsTables> {
     List<Long> queryViewIdList(Long id);
 
     int deleteBatch(Long[] longs);
+
+    void deleteViewsTables(Integer id);
 }

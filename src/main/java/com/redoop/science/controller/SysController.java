@@ -10,10 +10,8 @@ import com.redoop.science.utils.Result;
 import com.redoop.science.utils.ResultEnum;
 import com.redoop.science.utils.SessionUtils;
 import org.apache.commons.lang.ArrayUtils;
-import org.apache.commons.lang.RandomStringUtils;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -28,8 +26,8 @@ import java.util.*;
 /**
  * @author admin
  * @since 2018年11月12日09:05:21
- *
- *   sysController
+ * <p>
+ * sysController
  */
 @Controller
 @RequestMapping("/sys")
@@ -49,17 +47,16 @@ public class SysController {
 
 
     @Autowired
-    private  PasswordEncoder passwordEncoder;
+    private PasswordEncoder passwordEncoder;
 
 
     @GetMapping("/manage")
-    public ModelAndView index(Model model,HttpServletRequest request){
+    public ModelAndView index(Model model, HttpServletRequest request) {
 
-        //根据用户名称 ，查询用户所拥有的权限(菜单栏)
-        String name =SessionUtils.getUserNickName(request);
-        List<SysPermission> permissionList = sysPermissionService.findByUserNamePermission(name);
+        //根据用户SESSIONiD ，查询用户所拥有的权限(菜单栏)
+        List<SysPermission> permissionList = sysPermissionService.findByPermission(SessionUtils.getUserId(request));
 
-        model.addAttribute("permissionList",permissionList);
+        model.addAttribute("permissionList", permissionList);
 
         model.addAttribute("nickName", SessionUtils.getUserNickName(request));
 
@@ -67,17 +64,16 @@ public class SysController {
     }
 
 
-
     /**
      * 所有用户列表
      */
     @GetMapping("/user/list")
-    public String index(Map map,HttpServletRequest request) {
+    public String index(Map map, HttpServletRequest request) {
 
         List<SysUser> list = sysUserService.list(null);
         List<SysPermission> permissionList = sysPermissionService.getTpyeList();
         map.put("page", list);
-        map.put("permissionList",permissionList);
+        map.put("permissionList", permissionList);
         map.put("nickName", SessionUtils.getUserNickName(request));
 
         return "/sys/user";
@@ -116,7 +112,7 @@ public class SysController {
      */
     @RequestMapping("/user/info/{id}")
     @ResponseBody
-    public Map info(@PathVariable("id") Long id){
+    public Map info(@PathVariable("id") Long id) {
 
         SysUser user = sysUserService.getById(id);
 
@@ -134,29 +130,29 @@ public class SysController {
      */
     @RequestMapping("/user/save")
     @ResponseBody
-    public Result save(@RequestBody SysUser user){
+    public Result save(@RequestBody SysUser user) {
 
         user.setNickName(user.getUsername());
         LocalDateTime localDateTime = LocalDateTime.now();
         localDateTime.format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
         user.setCreateDate(localDateTime);
         user.setPassword(passwordEncoder.encode(user.getPassword().trim()));
-        if (sysUserService.save(user)){
+        if (sysUserService.save(user)) {
 
-           //保存用户与角色关系
-           List<SysUserRole> list = new ArrayList<>(user.getRoleIdList().size());
-           for(Long roleId : user.getRoleIdList()){
-               SysUserRole sysUserRoleEntity = new SysUserRole();
-               sysUserRoleEntity.setUserId(user.getId());
-               sysUserRoleEntity.setRoleId(roleId.intValue());
-               list.add(sysUserRoleEntity);
-           }
-           userRoleService.saveBatch(list);
+            //保存用户与角色关系
+            List<SysUserRole> list = new ArrayList<>(user.getRoleIdList().size());
+            for (Long roleId : user.getRoleIdList()) {
+                SysUserRole sysUserRoleEntity = new SysUserRole();
+                sysUserRoleEntity.setUserId(user.getId());
+                sysUserRoleEntity.setRoleId(roleId.intValue());
+                list.add(sysUserRoleEntity);
+            }
+            userRoleService.saveBatch(list);
 
-           return new Result<String>(ResultEnum.SECCUSS);
-       } else {
-           return new Result<String>(ResultEnum.FAIL);
-       }
+            return new Result<String>(ResultEnum.SECCUSS);
+        } else {
+            return new Result<String>(ResultEnum.FAIL);
+        }
 
     }
 
@@ -166,25 +162,24 @@ public class SysController {
      */
     @RequestMapping("/user/update")
     @ResponseBody
-    public Result update(@RequestBody SysUser user){
+    public Result update(@RequestBody SysUser user) {
         user.setNickName(user.getUsername());
-        LocalDateTime localDateTime = LocalDateTime.now();
+       /* LocalDateTime localDateTime = LocalDateTime.now();
         localDateTime.format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
-        user.setCreateDate(localDateTime);
-        if(StringUtils.isBlank(user.getPassword())){
+        user.setCreateDate(localDateTime);*/
+        if (StringUtils.isBlank(user.getPassword())) {
             user.setPassword(null);
-        }else{
+        } else {
             user.setPassword(passwordEncoder.encode(user.getPassword().trim()));
         }
 
         //根据用户ID删除 用户的角色
-        Integer user_id=user.getId();
+        Integer user_id = user.getId();
         userRoleService.delete(user_id);
-        if (sysUserService.saveOrUpdate(user)){
-
+        if (sysUserService.saveOrUpdate(user)) {
             //保存用户与角色关系
             List<SysUserRole> list = new ArrayList<>(user.getRoleIdList().size());
-            for(Long roleId : user.getRoleIdList()){
+            for (Long roleId : user.getRoleIdList()) {
                 SysUserRole sysUserRoleEntity = new SysUserRole();
                 sysUserRoleEntity.setUserId(user.getId());
                 sysUserRoleEntity.setRoleId(roleId.intValue());
@@ -204,32 +199,29 @@ public class SysController {
      */
     @RequestMapping("/user/delete")
     @ResponseBody
-    public Result delete(@RequestBody Long[] userIds,HttpServletRequest request) {
+    public Result delete(@RequestBody Long[] userIds, HttpServletRequest request) {
 
-        if(ArrayUtils.contains(userIds, 1L)){
+        if (ArrayUtils.contains(userIds, 1L)) {
             return new Result<String>(ResultEnum.ADMIN_USER);
         }
         String isId = sysUserService.findById(SessionUtils.getUserNickName(request));
         long l = Long.parseLong(isId);
-        if (ArrayUtils.contains(userIds, l)){
+        if (ArrayUtils.contains(userIds, l)) {
             return new Result<String>(ResultEnum.IS_USER);
         }
-        if (userIds!=null){
-            for (Long a : userIds){
+        if (userIds != null) {
+            for (Long a : userIds) {
                 userRoleService.delete(a.intValue());
             }
         }
-       if ( sysUserService.removeByIds(Arrays.asList(userIds))){
+        if (sysUserService.removeByIds(Arrays.asList(userIds))) {
 
-           return new Result<String>(ResultEnum.SECCUSS);
-       }else {
-           return new Result<String>(ResultEnum.FAIL);
-       }
+            return new Result<String>(ResultEnum.SECCUSS);
+        } else {
+            return new Result<String>(ResultEnum.FAIL);
+        }
 
     }
-
-
-
 
 
 }

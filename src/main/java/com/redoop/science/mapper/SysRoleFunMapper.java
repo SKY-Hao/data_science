@@ -2,6 +2,7 @@ package com.redoop.science.mapper;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.redoop.science.entity.SysRoleFunction;
+import org.apache.ibatis.annotations.Delete;
 import org.apache.ibatis.annotations.Select;
 
 import java.util.List;
@@ -21,4 +22,7 @@ public interface SysRoleFunMapper extends BaseMapper<SysRoleFunction> {
     List<Long> findById(Long id);
 
     int deleteBatch(Long[] roleIds);
+
+    @Delete("delete from sys_role_function where FUNCTION_ID =#{id} ")
+    void deleteFunId(Integer id);
 }

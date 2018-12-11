@@ -27,10 +27,6 @@ import javax.servlet.http.HttpServletResponse;
 public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
     /**
      * 定义要捕获的异常 可以多个 @ExceptionHandler({})
-     *
-     * @param request  request
-     * @param e        exception
-     * @param response response
      * @return 响应结果
      */
     /*@ExceptionHandler(CustomException.class)

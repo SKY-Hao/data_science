@@ -1,6 +1,5 @@
 package com.redoop.science.config;
 
-import com.redoop.science.handler.RestAuthenticationFailureHandler;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
@@ -39,6 +38,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     private AuthenticationSuccessHandler authenticationSuccessHandler;
     @Autowired
     private FindByIndexNameSessionRepository<? extends Session> redisOperationsSessionRepository;
+
     @Override
     protected void configure(AuthenticationManagerBuilder auth) throws Exception {
         auth.userDetailsService(userDetailsService).passwordEncoder(passwordEncoder());
@@ -49,18 +49,18 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         http.authorizeRequests()
 
                 //允许访问静态资源
-                    .antMatchers("/css/**","/fonts/**","/img/**","/error/**","/js/**","/favicon.ico").permitAll()
-                    .anyRequest().authenticated()
+                .antMatchers("/css/**", "/fonts/**", "/img/**", "/js/**", "/favicon.ico", "/js/**", "/sys/**").permitAll()
+                .anyRequest().authenticated()
                 .and()
-                    .formLogin()
-                    .loginPage("/login")
-                    .loginProcessingUrl("/login/form")
-                    .successHandler(authenticationSuccessHandler)
-                    .failureHandler(authenticationFailureHandler).permitAll()
+                .formLogin()
+                .loginPage("/login")
+                .loginProcessingUrl("/login/form")
+                .successHandler(authenticationSuccessHandler)
+                .failureHandler(authenticationFailureHandler).permitAll()
                 .and()
-                    .exceptionHandling().accessDeniedPage("/error/401")
+                .exceptionHandling().accessDeniedPage("/error/401")
                 .and()
-                    .csrf().disable();
+                .csrf().disable();
         http.sessionManagement().maximumSessions(1).maxSessionsPreventsLogin(false).expiredUrl("/login?expired=true")
                 .sessionRegistry(sessionRegistry());
 
@@ -69,7 +69,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
 
     @Bean
-    public PasswordEncoder passwordEncoder(){
+    public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
     }
 
@@ -77,7 +77,6 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     SpringSessionBackedSessionRegistry sessionRegistry() {
         return new SpringSessionBackedSessionRegistry<>(this.redisOperationsSessionRepository);
     }
-
 
 
 }

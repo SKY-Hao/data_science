@@ -18,4 +18,10 @@ public interface ISysRoleVirtualService extends IService<SysRoleVirtualTables> {
     List<Long> queryVirtualIdList(Long id);
 
     int deleteBatch(Long[] longs);
+
+    /**
+     * 根据VirtualTables删除角色与虚拟的关系
+     * @param id
+     */
+    void deleteVirtualTables(Integer id);
 }

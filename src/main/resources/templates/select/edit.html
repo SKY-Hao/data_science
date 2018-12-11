@@ -119,7 +119,7 @@
                     <input id="id" type="hidden"/><br/>
                     <button id="runButton" onclick="submitRunSQL()" class="btn btn-info">查询</button>
                     <button id="saveButton" onclick="submitSaveSQL()" class="btn btn-success">保存</button>
-                    <button id="save" onclick="saveSQL()" class="btn btn-danger">下载</button>
+                    <button id="save" onclick="downSQL()" class="btn btn-danger">下载</button>
 
                 </div>
                 <div class="div-table" id="divTable">
@@ -239,9 +239,6 @@
                         }
                     }
                 }
-
-
-
                 let html = "<div class=\"div-table-row\">";
                 for (let column in keys) {
                     html+="<div class=\"div-table-col\">"+keys[column]+"</div>";
@@ -280,16 +277,16 @@
         }
         $.post("/run/save", {"sql": sql, "sqlName": sqlName, "id": id}, function (result) {
             if (result.code == 200) {
-                layer.msg("保存成功");
+                layer.msg("保存成功,请联系管理员授权使用");
             } else if (result.code == 300) {
-                layer.alert(result.msg)
+                layer.msg(result.msg)
             }
         });
     }
     /**
      * 导出
      */
-    function saveSQL() {
+    function downSQL() {
         var sql = editor.getValue();
        var sqlName = $("#sqlName").val();
         if (sqlName == null || sqlName == "") {

@@ -32,4 +32,5 @@ public class SysUserRoleServiceImpl extends ServiceImpl<SysUserRoleMapper, SysUs
     public void delete(Integer user_id) {
         sysUserRoleMapper.deleteUserId(user_id);
     }
+
 }

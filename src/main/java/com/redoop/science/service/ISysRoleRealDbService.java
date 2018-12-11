@@ -19,4 +19,6 @@ public interface ISysRoleRealDbService extends IService<SysRoleRealDb> {
     List<Long> queryReadDbIdList(Long id);
 
     int deleteBatch(Long[] longs);
+
+    void deleteDb(Integer id);
 }

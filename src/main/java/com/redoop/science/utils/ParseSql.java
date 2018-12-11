@@ -54,7 +54,11 @@ public class ParseSql {
         return copySql;
     }
 
-
+    /**
+     * 实体
+     * @param sql
+     * @return
+     */
     public static String parseSql(String sql) {
         //将所有'替换为` 避免误操作
         String copySql = sql;
@@ -70,6 +74,9 @@ public class ParseSql {
                 dbNames.add(dbName);
             }
         }
+
+        //System.out.println("库名_______"+dbNames);
+
         Map<String, RealDb> realDbs = new HashMap<>();
         for (String dbName : dbNames) {
 
@@ -149,6 +156,9 @@ public class ParseSql {
         for (String tableName : tableNames) {
             String[] dbName = tableName.split("\\.");
             RealDb realDb = realDbs.get(dbName[0]);
+
+           // System.out.println("表名________"+tableName);
+
             if (realDb != null) {
                 replaceTableNames.put("`" + tableName + "`", dbName[1]);
                 switch (realDb.getDbType()) {
@@ -225,13 +235,12 @@ public class ParseSql {
             returnSql.append(sqlCode);
         }
         String repSql = copySql;
-        System.out.println("copySql==========="+copySql);
+        System.out.println("view_copySql==========="+copySql);
         for (String map : viwesNames.keySet()) {
             repSql = repSql.replaceAll(map.trim(), viwesNames.get(map));
         }
         returnSql.append(repSql);
-
-        System.out.println("view_repSqlrepSql====" + repSql);
+        System.out.println("view_repSql====" + repSql);
         return returnSql.toString();
     }
 
@@ -269,7 +278,7 @@ public class ParseSql {
         }
         returnSql.append(repSql);
 
-        System.out.println("repSqlrepSql>>>>>>>>>>>>>>>>>>" + repSql);
+        System.out.println("fun_repSql>>>>>>>>>>>>>>>>>>" + repSql);
         return returnSql.toString();
     }
 

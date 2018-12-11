@@ -8,8 +8,8 @@ import com.redoop.science.entity.Analysis;
 import com.redoop.science.entity.SysPermission;
 import com.redoop.science.entity.SysUserDetails;
 import com.redoop.science.service.IAnalysisService;
-import com.redoop.science.service.IRealDbService;
 import com.redoop.science.service.ISysPermissionService;
+import com.redoop.science.service.ISysRoleAnalysisService;
 import com.redoop.science.utils.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -37,9 +37,11 @@ public class AnalysisController {
     @Autowired
     private IAnalysisService analysisService;
     @Autowired
-    private IRealDbService realDbService;
-    @Autowired
     ISysPermissionService sysPermissionService;
+
+
+    @Autowired
+    ISysRoleAnalysisService roleAnalysisService;
     /**
      * 分析列表List
      * @param model
@@ -49,18 +51,23 @@ public class AnalysisController {
      */
     @GetMapping("/{num}")
     public ModelAndView index(Model model, @PathVariable Long num, HttpServletRequest request){
+        Integer id = SessionUtils.getUserId(request);
         Page<Analysis> page = new Page<>();
         page.setSize(11L);
         page.setCurrent(num);
         page.setDesc("ID");
-        IPage<Analysis> pages = analysisService.page(page,null);
 
-        List<SysPermission> permissionList = sysPermissionService.findByUserNamePermission(SessionUtils.getUserNickName(request));
+        Map<String,Object> params = new HashMap();
+        params.put("id",id);
+
+        IPage<Analysis> pages = analysisService.pageList(page,params);
+
+        List<SysPermission> permissionList = sysPermissionService.findByPermission(id);
 
         model.addAttribute("permissionList",permissionList);
         model.addAttribute("nickName", SessionUtils.getUserNickName(request));
         model.addAttribute("list", pages.getRecords());
-        model.addAttribute("activeType", 3);
+        //model.addAttribute("activeType", 3);
         model.addAttribute("pageNum", num);
         model.addAttribute("analysis", new Analysis());
         model.addAttribute("pages", pages.getPages());
@@ -68,10 +75,33 @@ public class AnalysisController {
         return new ModelAndView("/analysis/index");
     }
 
+    @RequestMapping("/lists")
+    @ResponseBody
+    public List<Map<String, Object>> list(){
+        //函数树
+        List<Map<String,Object>> analysisZList = new ArrayList<>();
+        Map<String,Object> fMap = new HashMap<>();
+        fMap.put("pId",0);
+        fMap.put("name","分析");
+        fMap.put("icon","/img/icon/db.png");
+        fMap.put("id",1);
+        analysisZList.add(fMap);
+        List<Analysis> analysisList = analysisService.list(null);
+        for (Analysis analysis:analysisList){
+            Map<String,Object> fMap2 = new HashMap<>();
+            fMap2.put("pId",1);
+            fMap2.put("name",analysis.getName());
+            fMap2.put("icon","/img/icon/table.png");
+            fMap2.put("id",analysis.getId());
+            analysisZList.add(fMap2);
+        }
+        return analysisZList;
+    }
+
     @GetMapping("/add")
     public ModelAndView add(Model model,HttpServletRequest request){
         //getZtree(model);
-        List<SysPermission> permissionList = sysPermissionService.findByUserNamePermission(SessionUtils.getUserNickName(request));
+        List<SysPermission> permissionList = sysPermissionService.findByPermission(SessionUtils.getUserId(request));
         model.addAttribute("permissionList",permissionList);
         model.addAttribute("nickName", SessionUtils.getUserNickName(request));
         return new ModelAndView("/analysis/update");
@@ -94,26 +124,33 @@ public class AnalysisController {
         SysUserDetails sysUser = SessionUtils.getUser(request);
         QueryWrapper queryWrapper = new QueryWrapper();
         queryWrapper.eq("NAME",sqlName);
-
+        Analysis analy  = analysisService.getOne(queryWrapper);
         if(id!=null){
             analysis = analysisService.getById(id);
+            if (sqlName.equals(analysis.getName()) ||analy==null){
+                analysis.setCode(ParseSql.parse(sql));
+                analysis.setName(sqlName);
+                analysis.setFinallyCode(sql);
+                analysis.setOperationTime(new Date());
+                analysis.setOperationId(sysUser.getId());
+            }else {
+                return new Result(ResultEnum.REPEAT);
+            }
         }else{
-            Analysis analy  = analysisService.getOne(queryWrapper);
             if(analy!=null){
                 return new Result(ResultEnum.REPEAT);
             }else{
                 analysis = new Analysis();
+                analysis.setCode(ParseSql.parse(sql));
+                analysis.setFinallyCode(sql);
+                analysis.setOperationId(sysUser.getId());
                 analysis.setCreateDate(new Date());
                 analysis.setCreatorId(sysUser.getId());
                 analysis.setCreatorName(sysUser.getNickname());
+                analysis.setName(sqlName);
             }
         }
-        analysis.setCode(ParseSql.parse(sql));
-        System.out.println("分析analysis.getCode()====="+analysis.getCode());
-        analysis.setName(sqlName);
-        analysis.setFinallyCode(sql);
-        analysis.setOperationTime(new Date());
-        analysis.setOperationId(sysUser.getId());
+
         if (analysisService.saveOrUpdate(analysis)){
             return new Result<String>(ResultEnum.SECCUSS);
         }else {
@@ -130,7 +167,7 @@ public class AnalysisController {
      */
     @GetMapping("/edit/{id}")
     public ModelAndView edit(Model model,@PathVariable(value = "id") String id,HttpServletRequest request){
-        List<SysPermission> permissionList = sysPermissionService.findByUserNamePermission(SessionUtils.getUserNickName(request));
+        List<SysPermission> permissionList = sysPermissionService.findByPermission(SessionUtils.getUserId(request));
         Analysis analysis = analysisService.getById(id);
         model.addAttribute("permissionList",permissionList);
         if(analysis!=null){
@@ -156,49 +193,11 @@ public class AnalysisController {
     public String delete(@PathVariable(value = "id")  Integer id){
         if (id!=null){
             analysisService.removeById(id);
+            roleAnalysisService.deleteAnalysis(id);
             return "redirect:/analysis/1";
         } else {
             return String.valueOf(new Result<String>(ResultEnum.FAIL));
         }
     }
-
-
-    /**
-     * 执行sql查询
-     * @param sql
-     * @return
-     */
-  /*  @PostMapping("/script")
-    @ResponseBody
-    public Result<String> script(@RequestParam(value = "sql") String sql) {
-        Result<String> stringResult = new Result<>(ResultEnum.FAIL);
-        String result = "";
-        try {
-            String runSql = ParseSql.parseSql(sql);
-            HttpUrl url = new HttpUrl.Builder()
-                    .scheme("http")
-                    .host("192.168.0.163")
-                    .port(9003)
-                    .addPathSegments("run\\script")
-                    .addQueryParameter("sql", runSql)
-                    .build();
-            String sqlResult = HttpClient.httpPost(url, "");
-            result = sqlResult;
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
-        System.out.println("resultresultresult>>>>>"+result);
-
-        if(JsonUtil.isJSONValid(result)){
-
-            stringResult = new Result<String>(ResultEnum.SECCUSS,result);
-        }else{
-            stringResult = new Result<String>(ResultEnum.FAIL,result);
-        }
-        return stringResult;
-    }*/
-
-
 
 }

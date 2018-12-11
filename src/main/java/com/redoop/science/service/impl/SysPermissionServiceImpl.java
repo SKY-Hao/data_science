@@ -8,6 +8,7 @@ import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * <p>
@@ -43,12 +44,12 @@ public class SysPermissionServiceImpl extends ServiceImpl<SysPermissionMapper, S
     }
 
     /**
-     * 根据登录用户的名称查询 所拥有的权限 目录导航菜单
-     * @param name
+     * 根据登录用户的sessionId查询 所拥有的权限 目录导航菜单
+     * @param id
      * @return
      */
     @Override
-    public List<SysPermission> findByUserNamePermission(String name) {
-        return baseMapper.findByUserNamePermission(name);
+    public List<SysPermission> findByPermission(Integer id) {
+        return baseMapper.findByPermission(id);
     }
 }

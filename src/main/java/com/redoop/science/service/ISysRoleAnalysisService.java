@@ -1,6 +1,7 @@
 package com.redoop.science.service;
 
 import com.baomidou.mybatisplus.extension.service.IService;
+import com.redoop.science.entity.SysRoleAnalysis;
 import com.redoop.science.entity.SysRoleFunction;
 
 import java.util.List;
@@ -13,11 +14,11 @@ import java.util.List;
  * @author admin
  * @since 2018年11月22日12:24:59
  */
-public interface ISysRoleFunService extends IService<SysRoleFunction> {
+public interface ISysRoleAnalysisService extends IService<SysRoleAnalysis> {
 
-    List<Long> queryFunIdList(Long id);
+    List<Long> queryAnalysisIdList(Long id);
 
     int deleteBatch(Long[] longs);
 
-    void deleteFunId(Integer id);
+    void deleteAnalysis(Integer id);
 }
