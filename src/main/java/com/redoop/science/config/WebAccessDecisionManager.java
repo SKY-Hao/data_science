@@ -42,9 +42,7 @@ public class WebAccessDecisionManager extends AbstractAccessDecisionManager {
         while (ite.hasNext()) {
             ConfigAttribute ca = ite.next();
             String needRole = ((SecurityConfig) ca).getAttribute();
-            logger.info("needRole>>>>>>>>>"+needRole);
             for (GrantedAuthority ga : authentication.getAuthorities()) {
-                logger.info("ga>>>>>>>"+ga.getAuthority());
                 if (needRole.equals(ga.getAuthority())) {
                     return;
                 }

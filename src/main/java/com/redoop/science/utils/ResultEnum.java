@@ -18,6 +18,10 @@ public enum ResultEnum {
     /**
      * 没有资源
      */
+    NO_PERMISSION(401,"无权限，拒绝访问"),
+    /**
+     * 没有资源
+     */
     EXIST(300,"没有资源"),
     /**
      *返回失败
