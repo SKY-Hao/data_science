@@ -69,13 +69,12 @@ public class ParseSql {
         Set<String> dbNames = new HashSet<>();
         for (String table : tables) {
             if (table.indexOf(".") != -1) {
-                String dbName = table.split("\\.")[0];
+                String[] tableInfo = table.split("\\.");
+                String dbName = tableInfo[0];
                 tableNames.add(table);
                 dbNames.add(dbName);
             }
         }
-
-        //System.out.println("库名_______"+dbNames);
 
         Map<String, RealDb> realDbs = new HashMap<>();
         for (String dbName : dbNames) {
@@ -108,19 +107,18 @@ public class ParseSql {
                     case 3:
 //                        PGsql
                         returnSql.append("connect jdbc where  " +
-                                "truncate=\"true\"" +
-                                "and url=\"jdbc:postgresql://" + realDb.getIp() + ":" + realDb.getPort() + "/" + realDb.getName() + "?socketTimeout=1&connectTimeout=1\"" +
-                                "and driver=\"org.postgresql.Driver\"" +
-                                "and user=\"" + realDb.getDbName() + "\" " +
-                                "and password=\"" + realDb.getDbPassword() + "\" " +
-                                "as " + realDb.getNikeName() + "; ");
+                                " truncate=\"true\"" +
+                                " and url=\"jdbc:postgresql://" + realDb.getIp() + ":" + realDb.getPort() + "/" + realDb.getName() + "?socketTimeout=1&connectTimeout=1\"" +
+                                " and driver=\"org.postgresql.Driver\"" +
+                                " and user=\"" + realDb.getDbName() + "\" " +
+                                " and password=\"" + realDb.getDbPassword() + "\" " +
+                                " as " + realDb.getNikeName() + "; ");
                         break;
                     case 4:
 //                        sqlserver
                         returnSql.append("connect jdbc where  " +
                                 "truncate=\"true\"" +
-                                "and url=\"jdbc:sqlserver://" + realDb.getIp() + ":" + realDb.getPort() + ";databaseName=" + realDb.getName() + ";\"" +
-                                "and driver=\"com.microsoft.sqlserver.jdbc.SQLServerDriver\"" +
+                                "and url=\"jdbc:sqlserver://" + realDb.getIp() + ":" + realDb.getPort() + ";databaseName=" + realDb.getName() + "\" and driver=\"com.microsoft.sqlserver.jdbc.SQLServerDriver\"" +
                                 "and user=\"" + realDb.getDbName() + "\" " +
                                 "and password=\"" + realDb.getDbPassword() + "\" " +
                                 "as " + realDb.getNikeName() + "; ");
@@ -128,12 +126,13 @@ public class ParseSql {
                     case 5:
 //                        hive
                         returnSql.append("connect jdbc where  " +
-                                "truncate=\"true\"" +
-                                "and url=\"jdbc:hive2://" + realDb.getIp() + ":" + realDb.getPort() + ";databaseName=" + realDb.getName() + ";\"" +
-                                "and driver=\"org.apache.hive.jdbc.HiveDriver\"" +
-                                "and user=\"" + realDb.getDbName() + "\" " +
-                                "and password=\"" + realDb.getDbPassword() + "\" " +
-                                "as " + realDb.getNikeName() + "; ");
+                                " truncate=\"true\"" +
+                                " and url=\"jdbc:hive2://" + realDb.getIp() + ":" + realDb.getPort() + "/" + realDb.getName() + "\"" +
+                                " and driver=\"org.apache.hive.jdbc.HiveDriver\"" +
+                                " and user=\"" + realDb.getDbName() + "\" " +
+                                " and password=\"" + realDb.getDbPassword() + "\" " +
+                                " and fetchSize=\"10000\" "+
+                                " as " + realDb.getNikeName() + "; ");
                         break;
                     case 6:
 //                        redis
@@ -146,14 +145,15 @@ public class ParseSql {
                                 "as " + realDb.getNikeName() + ";");
                         break;
                     case 8:
-//                        phoenix
+//                        L SQL
                         returnSql.append("connect jdbc where  " +
-                                "truncate=\"true\"" +
-                                "and url=\"jdbc:phoenix://" + realDb.getIp() + ":" + realDb.getPort() + ";databaseName=" + realDb.getName() + ";\"" +
-                                "and driver=\"org.apache.phoenix.jdbc.PhoenixDriver\"" +
-                                "and user=\"" + realDb.getDbName() + "\" " +
-                                "and password=\"" + realDb.getDbPassword() + "\" " +
-                                "as " + realDb.getNikeName() + "; ");
+                                " truncate=\"true\"" +
+                                " and url=\"jdbc:hive2://" + realDb.getIp() + ":" + realDb.getPort() + "/" + realDb.getName() + "\"" +
+                                " and driver=\"org.apache.hive.jdbc.HiveDriver\"" +
+                                " and user=\"" + realDb.getDbName() + "\" " +
+                                " and password=\"" + realDb.getDbPassword() + "\" " +
+                                " and fetchSize=\"10000\" "+
+                                " as " + realDb.getNikeName() + "; ");
                         break;
                 }
             }
@@ -163,7 +163,6 @@ public class ParseSql {
             String[] dbName = tableName.split("\\.");
             RealDb realDb = realDbs.get(dbName[0]);
 
-           // System.out.println("表名________"+tableName);
 
             if (realDb != null) {
                 replaceTableNames.put("`" + tableName + "`", dbName[1]);

@@ -153,6 +153,7 @@ public class RealDbController {
             return new ModelAndView("/realDb/add");
         } else {
             realDbService.saveForm(realDb);
+
         }
         return new ModelAndView("redirect:/real/1");
     }
