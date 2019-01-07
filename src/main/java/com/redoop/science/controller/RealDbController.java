@@ -4,8 +4,7 @@ package com.redoop.science.controller;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.redoop.science.constant.DBEnum;
-import com.redoop.science.entity.RealDb;
-import com.redoop.science.entity.SysPermission;
+import com.redoop.science.entity.*;
 import com.redoop.science.service.*;
 import com.redoop.science.utils.Result;
 import com.redoop.science.utils.ResultEnum;
@@ -44,6 +43,8 @@ public class RealDbController {
     ISysPermissionService sysPermissionService;
     @Autowired
     ISysRoleRealDbService roleRealDbService;
+    @Autowired
+    private ISysUserRoleService userRoleService;
 
     /**
      * 数据源列表分类
@@ -62,13 +63,24 @@ public class RealDbController {
         page.setCurrent(num);
         page.setDesc("ID");
 
-//        IPage<RealDb> pages = realDbService.page(page,queryWrapper);
         Map<String, Object> params = new HashMap();
         params.put("id", id);
-        IPage<RealDb> pages = realDbService.pageList(page, params);
 
-        //System.out.println("sessionId>>>>>>>>>>>>>"+SessionUtils.getUserId(request));
+        IPage<RealDb> pages = null;
 
+        //根据登录用户id 获取用户拥有角色ID
+        List<Long> userRoleIdList = userRoleService.findByRoleIdList(Long.valueOf(id));
+        for (Long r :userRoleIdList){
+            //判断是否为系统管理员，是则获取所有的列表信息
+            if (r.intValue()==1){
+                pages =  realDbService.pageListAdmin(page);
+            }else {
+                //列表(根据角色信息获取)
+                pages = realDbService.pageList(page, params);
+            }
+        }
+        //列表(根据角色信息获取)
+        //IPage<RealDb> pages = realDbService.pageList(page, params);
 
         List<SysPermission> permissionList = sysPermissionService.findByPermission(SessionUtils.getUserId(request));
 
@@ -152,8 +164,20 @@ public class RealDbController {
             model.addAttribute("nickName", SessionUtils.getUserNickName(request));
             return new ModelAndView("/realDb/add");
         } else {
+            //保存数据源
             realDbService.saveForm(realDb);
 
+            //将本角色下用户创建的信息，保存至中间表中，方便本角色下所有的用户访问
+            List<Long> roleIdList = userRoleService.findByRoleIdList(Long.valueOf(SessionUtils.getUserId(request)));
+            List<SysRoleRealDb> list = new ArrayList<>(SessionUtils.getUserId(request));
+            for (Long roleId : roleIdList) {
+                SysRoleRealDb sysRoleRealDb = new SysRoleRealDb();
+                sysRoleRealDb.setRealDbId(realDb.getId());
+                sysRoleRealDb.setRoleId(roleId.intValue());
+                list.add(sysRoleRealDb);
+            }
+            //System.out.println("list》》》》》》"+list);
+            roleRealDbService.saveBatch(list);
         }
         return new ModelAndView("redirect:/real/1");
     }
@@ -220,15 +244,15 @@ public class RealDbController {
         //根据id查询
         RealDb realDb1 = realDbService.getById(realDb.getId());
 
-        System.out.println("根据id查询>>>>>>>>>"+realDb1);
+        //System.out.println("根据id查询>>>>>>>>>"+realDb1);
 
-        System.out.println("realDb.getId()>>>>>>>>>"+realDb.getId());
-        System.out.println("realDb.getNikeName()>>>>>>>>>"+realDb.getNikeName());
+        //System.out.println("realDb.getId()>>>>>>>>>"+realDb.getId());
+        //System.out.println("realDb.getNikeName()>>>>>>>>>"+realDb.getNikeName());
 
         //根据数据源名查询
         RealDb dataReal = realDbService.findByNikeName(realDb.getNikeName());
 
-        System.out.println("根据数据源名查询>>>>>>>>>"+dataReal);
+       // System.out.println("根据数据源名查询>>>>>>>>>"+dataReal);
 
         realDb.setLogo(" /img/realDb/" + realDb.getDbType() + ".jpg");
 
@@ -268,7 +292,7 @@ public class RealDbController {
      * @param model
      * @return
      */
-    @RequestMapping("/selectDatabase")
+    /*@RequestMapping("/selectDatabase")
     @ResponseBody
     public List<RealDb> selectDatabase(Model model, HttpServletRequest request) {
 
@@ -277,6 +301,6 @@ public class RealDbController {
         model.addAttribute("permissionList", permissionList);
         model.addAttribute("list", list);
         return list;
-    }
+    }*/
 
 }

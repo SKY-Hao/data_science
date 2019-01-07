@@ -12,7 +12,6 @@ import lombok.*;
 import lombok.experimental.Accessors;
 
 import javax.validation.constraints.NotEmpty;
-import javax.validation.constraints.NotNull;
 
 /**
  * <p>
@@ -63,7 +62,9 @@ public class SysUser implements Serializable {
      * 创建日期
      */
     @TableField("CREATE_DATE")
-    private LocalDateTime createDate;
+    //private LocalDateTime createDate;
+
+    private Date createDate;
 
     /**
      * 操作人编号
@@ -173,11 +174,11 @@ public class SysUser implements Serializable {
         return serialVersionUID;
     }
 
-    public LocalDateTime getCreateDate() {
+    public Date getCreateDate() {
         return createDate;
     }
 
-    public void setCreateDate(LocalDateTime createDate) {
+    public void setCreateDate(Date createDate) {
         this.createDate = createDate;
     }
 

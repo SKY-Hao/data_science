@@ -91,7 +91,7 @@ public class RealDb implements Serializable {
     private String ip;
 
     /**
-     * 数据库类型(1-mysql,2-oracle,3-pg,4-sql server,5-hive,6-redis,7-kafka)
+     * 数据库类型(1-mysql,2-oracle,3-pg,4-sql server,5-hive,6-redis,7-kafka,8-L-SQL)
      */
 
     @TableField("DB_TYPE")

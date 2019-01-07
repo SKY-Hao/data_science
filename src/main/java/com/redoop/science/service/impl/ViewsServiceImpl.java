@@ -48,4 +48,9 @@ public class ViewsServiceImpl extends ServiceImpl<ViewsMapper, Views> implements
     public List<ViewsDto> findByRole(Integer id) {
         return viewsMapper.findById(id);
     }
+
+    @Override
+    public IPage<Views> pageListAdmin(Page<Views> page) {
+        return viewsMapper.pageListAdmin(page);
+    }
 }

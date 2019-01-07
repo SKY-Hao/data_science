@@ -36,4 +36,9 @@ public class AnalysisServiceImpl extends ServiceImpl<AnalysisMapper, Analysis> i
     public IPage<Analysis> pageList(Page<Analysis> page, Map<String, Object> params) {
         return analysisMapper.pageList(page,params);
     }
+
+    @Override
+    public IPage<Analysis> pageListAdmin(Page<Analysis> page) {
+        return analysisMapper.pageListAdmin(page);
+    }
 }

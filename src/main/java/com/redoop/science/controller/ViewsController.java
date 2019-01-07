@@ -43,7 +43,6 @@ public class ViewsController {
     @Autowired
     ISysPermissionService sysPermissionService;
 
-
     @GetMapping("/{num}")
     public ModelAndView index(Model model, @PathVariable Long num, HttpServletRequest request) {
 
@@ -58,6 +57,7 @@ public class ViewsController {
         page.setCurrent(num);
         page.setDesc("ID");
 
+        //列表(根据角色信息获取)
         IPage<Views> pages = viewsService.pageList(page, params);
 
         List<SysPermission> permissionList = sysPermissionService.findByPermission(id);
@@ -148,8 +148,6 @@ public class ViewsController {
         } else {
             return new Result<String>(ResultEnum.FAIL);
         }
-
-
     }
 
     @RequestMapping("/delete/{id}")

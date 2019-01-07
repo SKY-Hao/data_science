@@ -21,7 +21,7 @@ public interface ISysPermissionService extends IService<SysPermission> {
 
     List<SysPermission> getListParentId(Integer id);
 
-    List<SysPermission> getTpyeList();
+    //List<SysPermission> getTpyeList();
 
     List<SysPermissionDto> getSysPermissionDto();
 

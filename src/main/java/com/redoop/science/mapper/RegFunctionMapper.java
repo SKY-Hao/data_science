@@ -34,4 +34,6 @@ public interface RegFunctionMapper extends BaseMapper<RegFunction> {
             " LEFT JOIN sys_user_role c ON b.ROLE_ID = c.ROLE_ID " +
             "where c.USER_ID =#{id} and a.ID  is not NULL ")
     List<RegFunction> findByRoleUserId(Integer id);
+
+    IPage<RegFunction> pageListAdmin(Page<RegFunction> page);
 }

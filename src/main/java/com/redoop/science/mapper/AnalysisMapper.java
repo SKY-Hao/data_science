@@ -25,4 +25,6 @@ public interface AnalysisMapper extends BaseMapper<Analysis> {
     String findByCode(Integer id);
 
     IPage<Analysis> pageList(Page<Analysis> page, @Param("params")Map<String, Object> params);
+
+    IPage<Analysis> pageListAdmin(Page<Analysis> page);
 }

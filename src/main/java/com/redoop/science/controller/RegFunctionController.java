@@ -4,12 +4,11 @@ package com.redoop.science.controller;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
-import com.redoop.science.entity.RegFunction;
-import com.redoop.science.entity.SysPermission;
-import com.redoop.science.entity.SysUserDetails;
+import com.redoop.science.entity.*;
 import com.redoop.science.service.IRegFunctionService;
 import com.redoop.science.service.ISysPermissionService;
 import com.redoop.science.service.ISysRoleFunService;
+import com.redoop.science.service.ISysUserRoleService;
 import com.redoop.science.utils.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -39,12 +38,12 @@ public class RegFunctionController {
 
     @Autowired
     private IRegFunctionService regFunctionService;
-
     @Autowired
     ISysPermissionService sysPermissionService;
-
     @Autowired
     ISysRoleFunService roleFunService;
+    @Autowired
+    private ISysUserRoleService userRoleService;
 
     @GetMapping("/{num}")
     public ModelAndView index(Model model, @PathVariable Long num, HttpServletRequest request) {
@@ -59,7 +58,21 @@ public class RegFunctionController {
         Map<String, Object> params = new HashMap();
         params.put("id", id);
 
-        IPage<RegFunction> pages = regFunctionService.pageList(page, params);
+        IPage<RegFunction> pages = null;
+        //根据登录用户id 获取用户拥有角色ID
+        List<Long> userRoleIdList = userRoleService.findByRoleIdList(Long.valueOf(id));
+        for (Long r :userRoleIdList){
+            //判断是否为系统管理员，是则获取所有的列表信息
+            if (r.intValue()==1){
+                pages =  regFunctionService.pageListAdmin(page);
+            }else {
+                //列表(根据角色信息获取)
+                pages = regFunctionService.pageList(page, params);
+            }
+        }
+       // IPage<RegFunction> pages = regFunctionService.pageList(page, params);
+
+
         List<SysPermission> permissionList = sysPermissionService.findByPermission(SessionUtils.getUserId(request));
         model.addAttribute("permissionList", permissionList);
         model.addAttribute("nickName", SessionUtils.getUserNickName(request));
@@ -164,10 +177,22 @@ public class RegFunctionController {
                 regFunction.setName(name);
                 regFunction.setCreatorId(sysUser.getId());
                 regFunction.setCreatorName(sysUser.getNickname());
+
             }
         }
+        //注册函数
         if (regFunctionService.saveOrUpdate(regFunction)) {
-            //注册函数
+            //将本角色下用户创建的信息，保存至中间表中，方便本角色下所有的用户访问
+            List<Long> roleIdList = userRoleService.findByRoleIdList(Long.valueOf(SessionUtils.getUserId(request)));
+            List<SysRoleFunction> list = new ArrayList<>(SessionUtils.getUserId(request));
+            for (Long roleId : roleIdList) {
+                SysRoleFunction sysRoleFunction = new SysRoleFunction();
+                sysRoleFunction.setFunctionId(regFunction.getId());
+                sysRoleFunction.setRoleId(roleId.intValue());
+                list.add(sysRoleFunction);
+            }
+            //System.out.println("list》》》》》》"+list);
+            roleFunService.saveBatch(list);
             return new Result<String>(ResultEnum.SECCUSS);
         } else {
             return new Result<String>(ResultEnum.FAIL);

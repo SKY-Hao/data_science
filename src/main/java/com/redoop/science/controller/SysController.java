@@ -71,7 +71,8 @@ public class SysController {
     public String index(Map map, HttpServletRequest request) {
 
         List<SysUser> list = sysUserService.list(null);
-        List<SysPermission> permissionList = sysPermissionService.getTpyeList();
+        List<SysPermission> permissionList = sysPermissionService.findByPermission(SessionUtils.getUserId(request));
+        //List<SysPermission> permissionList = sysPermissionService.getTpyeList();
         map.put("page", list);
         map.put("permissionList", permissionList);
         map.put("nickName", SessionUtils.getUserNickName(request));
@@ -117,7 +118,7 @@ public class SysController {
         SysUser user = sysUserService.getById(id);
 
         //获取用户所属的角色列表
-        List<Long> roleIdList = userRoleService.queryRoleIdList(id);
+        List<Long> roleIdList = userRoleService.findByRoleIdList(id);
         user.setRoleIdList(roleIdList);
         Map map = new HashMap();
         map.put("user", user);
@@ -133,9 +134,9 @@ public class SysController {
     public Result save(@RequestBody SysUser user) {
 
         user.setNickName(user.getUsername());
-        LocalDateTime localDateTime = LocalDateTime.now();
-        localDateTime.format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
-        user.setCreateDate(localDateTime);
+        //LocalDateTime localDateTime = LocalDateTime.now();
+        //localDateTime.format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
+        //user.setCreateDate(new  Date());
         user.setPassword(passwordEncoder.encode(user.getPassword().trim()));
         if (sysUserService.save(user)) {
 
@@ -163,7 +164,8 @@ public class SysController {
     @RequestMapping("/user/update")
     @ResponseBody
     public Result update(@RequestBody SysUser user) {
-        user.setNickName(user.getUsername());
+        //user.setNickName(user.getUsername());
+       // user.setCreateDate(new  Date());
        /* LocalDateTime localDateTime = LocalDateTime.now();
         localDateTime.format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
         user.setCreateDate(localDateTime);*/

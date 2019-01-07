@@ -13,7 +13,7 @@ public enum  DBEnum {
     HIVE(5,"hive"),
     REDIS(6,"redis"),
     KAFKA(7,"kafka"),
-    L(8,"L");
+    L(8,"L-SQL");
 
 
 

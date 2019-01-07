@@ -34,4 +34,9 @@ public class ViewsTablesServiceImpl extends ServiceImpl<ViewsTablesMapper, Views
     public IPage<ViewsTables> pageList(Page<ViewsTables> page, Map<String, Object> params) {
         return tablesMapper.findByRole(page,params);
     }
+
+    @Override
+    public IPage<ViewsTables> pageListAdmin(Page<ViewsTables> page) {
+        return tablesMapper.pageListAdmin(page);
+    }
 }

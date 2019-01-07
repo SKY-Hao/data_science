@@ -26,4 +26,6 @@ public interface ViewsTablesMapper extends BaseMapper<ViewsTables> {
     String findByName(String dbName);
 
     IPage<ViewsTables> findByRole(Page<ViewsTables> page, @Param("params") Map<String, Object> params);
+
+    IPage<ViewsTables> pageListAdmin(Page<ViewsTables> page);
 }

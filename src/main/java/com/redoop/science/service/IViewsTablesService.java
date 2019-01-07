@@ -21,4 +21,6 @@ public interface IViewsTablesService extends IService<ViewsTables> {
     String getByName(String dbName);
 
     IPage<ViewsTables> pageList(Page<ViewsTables> page, Map<String, Object> params);
+
+    IPage<ViewsTables> pageListAdmin(Page<ViewsTables> page);
 }

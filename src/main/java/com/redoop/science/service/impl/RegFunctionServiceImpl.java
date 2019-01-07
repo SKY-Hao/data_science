@@ -42,4 +42,8 @@ public class RegFunctionServiceImpl extends ServiceImpl<RegFunctionMapper, RegFu
         return regFunctionMapper.findByRoleUserId(id);
     }
 
+    @Override
+    public IPage<RegFunction> pageListAdmin(Page<RegFunction> page) {
+        return regFunctionMapper.pageListAdmin(page);
+    }
 }

@@ -26,4 +26,6 @@ public interface VirtualTablesMapper extends BaseMapper<VirtualTables> {
     List<VirtualTables> findByRole(Integer id);
 
     IPage<VirtualTables> pageList(Page<VirtualTables> page, @Param("params") Map<String, Object> params);
+
+    IPage<VirtualTables> pageListAdmin(Page<VirtualTables> page);
 }

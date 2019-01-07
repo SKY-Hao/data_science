@@ -33,10 +33,10 @@ public class SysPermissionServiceImpl extends ServiceImpl<SysPermissionMapper, S
         return baseMapper.findListParentId(id);
     }
 
-    @Override
-    public List<SysPermission> getTpyeList() {
-        return baseMapper.findTypeList();
-    }
+//    @Override
+//    public List<SysPermission> getTpyeList() {
+//        return baseMapper.findTypeList();
+//    }
 
     @Override
     public List<SysPermissionDto> getSysPermissionDto() {

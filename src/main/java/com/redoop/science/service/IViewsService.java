@@ -25,4 +25,6 @@ public interface IViewsService extends IService<Views> {
     IPage<Views> pageList(Page<Views> page, Map<String, Object> params);
 
     List<ViewsDto> findByRole(Integer id);
+
+    IPage<Views> pageListAdmin(Page<Views> page);
 }

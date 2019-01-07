@@ -21,4 +21,6 @@ public interface IVirtualTablesService extends IService<VirtualTables> {
     List<VirtualTables> findByRole(Integer id);
 
     IPage<VirtualTables> pageList(Page<VirtualTables> page, Map<String, Object> params);
+
+    IPage<VirtualTables> pageListAdmin(Page<VirtualTables> page);
 }

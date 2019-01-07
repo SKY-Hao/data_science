@@ -120,7 +120,9 @@
 	</div>
 	<div id="realFormButtn" style="margin-left: 15%">
 		<button type="submit" class="btn btn-success">保存</button>
-		<input type="reset" class="btn btn-warning" value="返回" onclick="window.open('/real/1')"/>
+		<!--<input type="reset" class="btn btn-warning" value="返回" onclick="window.open('/real/1')"/>-->
+		<input type="reset" class="btn btn-warning" value="返回" onclick="returnSQL()"/>
+
 	</div>
 
 </form>
@@ -135,7 +137,11 @@
 <script src="/js/nouislider.min.js"></script>
 <script src="/js/jquery.zoom.min.js"></script>
 <script src="/js/main.js"></script>
-
+<script type="text/javascript">
+    function returnSQL() {
+        location.href="/real/1"
+    }
+</script>
 
 </body>
 

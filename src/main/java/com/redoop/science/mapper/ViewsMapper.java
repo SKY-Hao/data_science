@@ -29,4 +29,6 @@ public interface ViewsMapper extends BaseMapper<Views> {
             "LEFT JOIN sys_user_role c ON b.ROLE_ID = c.ROLE_ID  " +
             "WHERE c.USER_ID = #{id} AND a.ID IS NOT NULL")*/
     List<ViewsDto> findById(Integer id);
+
+    IPage<Views> pageListAdmin(Page<Views> page);
 }

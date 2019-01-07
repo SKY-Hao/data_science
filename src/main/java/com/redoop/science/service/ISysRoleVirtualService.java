@@ -24,4 +24,5 @@ public interface ISysRoleVirtualService extends IService<SysRoleVirtualTables> {
      * @param id
      */
     void deleteVirtualTables(Integer id);
+
 }

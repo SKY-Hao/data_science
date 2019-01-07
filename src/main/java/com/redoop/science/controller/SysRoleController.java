@@ -172,7 +172,7 @@ public class SysRoleController {
     @ResponseBody
     public Result save(@RequestBody SysRole role) {
 
-        //role.setCreateTime(new Date());
+        role.setCreateTime(new Date());
         // System.out.println("保存时:前端传回的role》》》》》》》" + role);
         if (roleService.save(role)) {
 
@@ -270,7 +270,7 @@ public class SysRoleController {
     @RequestMapping("/update")
     @ResponseBody
     public Result update(@RequestBody SysRole role) {
-        //role.setCreateTime(new Date());
+        role.setCreateTime(new Date());
         if (roleService.saveOrUpdate(role)) {
 
             Long a = role.getId().longValue();

@@ -67,12 +67,16 @@ public class RealDbServiceImpl extends ServiceImpl<RealDbMapper, RealDb> impleme
         realDbMapper.insert(realDb);
     }
 
+    @Override
+    public IPage<RealDb> pageListAdmin(Page<RealDb> page) {
+        return realDbMapper.pageListAdmin(page);
+    }
 
-    /**
+/**
      * 查看库中的表信息
      * @return
      */
-    @Override
+   /* @Override
     public List<RealDb> selectDatabase() {
 
        String JDBC_DRIVER = "com.mysql.jdbc.Driver";
@@ -142,7 +146,7 @@ public class RealDbServiceImpl extends ServiceImpl<RealDbMapper, RealDb> impleme
 
         System.out.println("Goodbye!");
         return list;
-    }
+    }*/
 
 
 }

@@ -52,6 +52,9 @@ public class VirtualTablesController {
     @Autowired
     ISysRoleVirtualService roleVirtualService;
 
+    @Autowired
+    ISysUserRoleService userRoleService;
+
     /**
      * 数据源列表分类
      *
@@ -69,11 +72,26 @@ public class VirtualTablesController {
 
         Map<String, Object> params = new HashMap();
         params.put("id", id);
-        IPage<VirtualTables> pages = virtualTablesService.pageList(page, params);
 
+        IPage<VirtualTables> pages = null;
+
+
+        //根据登录用户id 获取用户拥有角色ID
+        List<Long> userRoleIdList = userRoleService.findByRoleIdList(Long.valueOf(id));
+        for (Long r :userRoleIdList){
+            //判断是否为系统管理员，是则获取所有的列表信息
+            if (r.intValue()==1){
+                pages =  virtualTablesService.pageListAdmin(page);
+            }else {
+                //列表(根据角色信息获取)
+                pages = virtualTablesService.pageList(page, params);
+            }
+        }
+
+        //导航栏列表(根据角色信息获取)
         List<SysPermission> permissionList = sysPermissionService.findByPermission(SessionUtils.getUserId(request));
-        model.addAttribute("permissionList", permissionList);
 
+        model.addAttribute("permissionList", permissionList);
         model.addAttribute("nickName", SessionUtils.getUserNickName(request));
         model.addAttribute("items", pages.getRecords());
         // model.addAttribute("activeType", 1);

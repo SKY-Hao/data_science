@@ -15,7 +15,7 @@ import java.util.List;
  */
 public interface ISysUserRoleService extends IService<SysUserRole> {
 
-    List<Long> queryRoleIdList(Long id);
+    List<Long> findByRoleIdList(Long id);
 
     void delete(Integer user_id);
 

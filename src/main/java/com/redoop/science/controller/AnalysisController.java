@@ -4,12 +4,11 @@ package com.redoop.science.controller;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
-import com.redoop.science.entity.Analysis;
-import com.redoop.science.entity.SysPermission;
-import com.redoop.science.entity.SysUserDetails;
+import com.redoop.science.entity.*;
 import com.redoop.science.service.IAnalysisService;
 import com.redoop.science.service.ISysPermissionService;
 import com.redoop.science.service.ISysRoleAnalysisService;
+import com.redoop.science.service.ISysUserRoleService;
 import com.redoop.science.utils.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -39,6 +38,8 @@ public class AnalysisController {
     @Autowired
     ISysPermissionService sysPermissionService;
 
+    @Autowired
+    private ISysUserRoleService userRoleService;
 
     @Autowired
     ISysRoleAnalysisService roleAnalysisService;
@@ -60,7 +61,19 @@ public class AnalysisController {
         Map<String,Object> params = new HashMap();
         params.put("id",id);
 
-        IPage<Analysis> pages = analysisService.pageList(page,params);
+        IPage<Analysis> pages =null;
+        //根据登录用户id 获取用户拥有角色ID
+        List<Long> userRoleIdList = userRoleService.findByRoleIdList(Long.valueOf(id));
+        for (Long r :userRoleIdList){
+            //判断是否为系统管理员，是则获取所有的列表信息
+            if (r.intValue()==1){
+                pages =  analysisService.pageListAdmin(page);
+            }else {
+                //列表(根据角色信息获取)
+                pages = analysisService.pageList(page, params);
+            }
+        }
+        //IPage<Analysis> pages = analysisService.pageList(page,params);
 
         List<SysPermission> permissionList = sysPermissionService.findByPermission(id);
 
@@ -152,6 +165,19 @@ public class AnalysisController {
         }
 
         if (analysisService.saveOrUpdate(analysis)){
+
+            //将本角色下用户创建的信息，保存至中间表中，方便本角色下所有的用户访问
+            List<Long> roleIdList = userRoleService.findByRoleIdList(Long.valueOf(SessionUtils.getUserId(request)));
+            List<SysRoleAnalysis> list = new ArrayList<>(SessionUtils.getUserId(request));
+            for (Long roleId : roleIdList) {
+                SysRoleAnalysis roleAnalysis = new SysRoleAnalysis();
+                roleAnalysis.setAnalysisId(analysis.getId());
+                roleAnalysis.setRoleId(roleId.intValue());
+                list.add(roleAnalysis);
+            }
+            //System.out.println("list》》》》》》"+list);
+            roleAnalysisService.saveBatch(list);
+
             return new Result<String>(ResultEnum.SECCUSS);
         }else {
             return new Result<String>(ResultEnum.FAIL);

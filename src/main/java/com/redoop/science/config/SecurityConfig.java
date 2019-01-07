@@ -49,7 +49,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         http.authorizeRequests()
 
                 //允许访问静态资源
-                .antMatchers("/css/**", "/fonts/**", "/img/**", "/js/**", "/favicon.ico").permitAll()
+                .antMatchers("/css/**", "/fonts/**", "/img/**", "/js/**", "/favicon.ico","/analysis/**","/api/**").permitAll()
                 .anyRequest().authenticated()
                 .and()
                 .formLogin()

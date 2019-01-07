@@ -1,6 +1,8 @@
 package com.redoop.science.controller;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.redoop.science.entity.SysRoleRealDb;
+import com.redoop.science.entity.SysRoleVirtualTables;
 import com.redoop.science.entity.SysUserDetails;
 import com.redoop.science.entity.VirtualTables;
 import com.redoop.science.service.*;
@@ -16,6 +18,9 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.*;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
 
 /**
  * @Author: Alan
@@ -29,6 +34,11 @@ public class JobController {
 
     @Autowired
     private IVirtualTablesService virtualTablesService;
+
+    @Autowired
+    ISysUserRoleService userRoleService;
+    @Autowired
+    ISysRoleVirtualService roleVirtualService;
 
     @PostMapping("/script")
     @ResponseBody
@@ -45,7 +55,8 @@ public class JobController {
                     .scheme("http")
 //                    .host("127.0.0.1")
                     .host("192.168.0.122")
-                    .port(9113)
+//                    .port(9113)
+                    .port(9003)
                     .addPathSegments("run\\script")
                     .addQueryParameter("sql", runSql)
                     .build();
@@ -71,6 +82,14 @@ public class JobController {
         return stringResult;
     }
 
+    /**
+     * 查询保存虚拟库表
+     * @param request
+     * @param id
+     * @param sql
+     * @param sqlName
+     * @return
+     */
     @PostMapping("/save")
     @ResponseBody
     public Result save(HttpServletRequest request,
@@ -103,6 +122,20 @@ public class JobController {
         virtualTables.setOperationId(sysUser.getId());
         virtualTables.setName(sqlName);
         if (virtualTablesService.saveOrUpdate(virtualTables)) {
+
+
+            //将本角色下用户创建的信息，保存至中间表中，方便本角色下所有的用户访问
+            List<Long> roleIdList = userRoleService.findByRoleIdList(Long.valueOf(SessionUtils.getUserId(request)));
+            List<SysRoleVirtualTables> list = new ArrayList<>(SessionUtils.getUserId(request));
+            for (Long roleId : roleIdList) {
+                SysRoleVirtualTables sysRoleRealDb = new SysRoleVirtualTables();
+                sysRoleRealDb.setVirtualId(virtualTables.getId());
+                sysRoleRealDb.setRoleId(roleId.intValue());
+                list.add(sysRoleRealDb);
+            }
+            //System.out.println("list》》》》》》"+list);
+            roleVirtualService.saveBatch((Collection<SysRoleVirtualTables>) list);
+
             return new Result<String>(ResultEnum.SECCUSS);
         } else {
             return new Result<String>(ResultEnum.FAIL);

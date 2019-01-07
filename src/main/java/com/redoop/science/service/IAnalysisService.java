@@ -21,4 +21,6 @@ public interface IAnalysisService extends IService<Analysis> {
     String getId(Integer id);
 
     IPage<Analysis> pageList(Page<Analysis> page, Map<String, Object> params);
+
+    IPage<Analysis> pageListAdmin(Page<Analysis> page);
 }

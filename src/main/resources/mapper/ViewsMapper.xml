@@ -66,11 +66,28 @@
             GROUP BY d.ID
         </where>
     </select>
+
+
     <select id="findById" resultType="list" resultMap="viewsTablesResult" parameterType="map">
         SELECT a.* FROM views a
         LEFT JOIN sys_role_views_tables b ON a.ID = b.VIEW_TABLES_ID
         LEFT JOIN sys_user_role c ON b.ROLE_ID = c.ROLE_ID
          WHERE c.USER_ID = #{id} AND a.ID IS NOT NULL
+    </select>
+
+
+
+
+
+    <select id="pageListAdmin" resultType="com.redoop.science.entity.Views" parameterType="hashmap">
+        SELECT
+        distinct d.*
+        FROM
+        views_tables a
+        LEFT JOIN sys_role_views_tables b ON a.ID = b.VIEW_TABLES_ID
+        LEFT JOIN sys_user_role c ON b.ROLE_ID = c.ROLE_ID
+        LEFT JOIN views d on a.VIEWS_ID = d.ID
+            GROUP BY d.ID
     </select>
 
 </mapper>

@@ -3,7 +3,7 @@
 <mapper namespace="com.redoop.science.mapper.AnalysisMapper">
 
     <select id="pageList" resultType="com.redoop.science.entity.Analysis" parameterType="hashmap">
-        SELECT a.* FROM analysis a
+        SELECT DISTINCT a.* FROM analysis a
         LEFT JOIN sys_role_analysis b on a.ID = b.ANALYSIS_ID
         LEFT JOIN sys_user_role c ON b.ROLE_ID = c.ROLE_ID
         <where>
@@ -12,4 +12,13 @@
         </where>
     </select>
 
+
+    <select id="pageListAdmin" resultType="com.redoop.science.entity.Analysis" parameterType="hashmap">
+        SELECT DISTINCT a.* FROM analysis a
+        LEFT JOIN sys_role_analysis b on a.ID = b.ANALYSIS_ID
+        LEFT JOIN sys_user_role c ON b.ROLE_ID = c.ROLE_ID
+        <where>
+            and a.ID  is not NULL
+        </where>
+    </select>
 </mapper>

@@ -70,6 +70,7 @@
                 <option value="5" th:selected="${realDb.dbType=='5'}" >hive</option>
                 <option value="6" th:selected="${realDb.dbType=='6'}" >redis</option>
                 <option value="7" th:selected="${realDb.dbType=='7'}" >kafka</option>
+                <option value="8" th:selected="${realDb.dbType=='8'}" >L-SQL</option>
             </select>
         </div>
     </div>
@@ -107,12 +108,11 @@
     </div>
     <div id="realFormButtn">
         <button type="submit" class="btn btn-success">更新</button>
-        <input type="reset" class="btn btn-warning" value="返回" onclick="window.open('/real/1')"/>
+       <!-- <input type="reset" class="btn btn-warning" value="返回" onclick="window.open('/real/1')"/>-->
+        <input type="reset" class="btn btn-warning" value="返回" onclick="returnSQL()"/>
     </div>
 
 </form>
-
-
 
 <div th:include="/common/footer::footer" id="footerDiv"></div>
 <!-- jQuery Plugins -->
@@ -122,7 +122,11 @@
 <script src="/js/nouislider.min.js"></script>
 <script src="/js/jquery.zoom.min.js"></script>
 <script src="/js/main.js"></script>
-
+<script type="text/javascript">
+    function returnSQL() {
+        location.href="/real/1"
+    }
+</script>
 </body>
 
 </html>

@@ -5,10 +5,7 @@ import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.redoop.science.dto.ViewsDto;
 import com.redoop.science.entity.*;
-import com.redoop.science.service.ISysPermissionService;
-import com.redoop.science.service.ISysRoleViewService;
-import com.redoop.science.service.IViewsService;
-import com.redoop.science.service.IViewsTablesService;
+import com.redoop.science.service.*;
 import com.redoop.science.utils.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -44,7 +41,8 @@ public class ViewsTablesController {
     ISysPermissionService sysPermissionService;
     @Autowired
     ISysRoleViewService roleViewService;
-
+    @Autowired
+    ISysUserRoleService userRoleService;
     /**
      * 视图表
      *
@@ -66,7 +64,21 @@ public class ViewsTablesController {
 
         Map<String, Object> params = new HashMap();
         params.put("id", id);
-        IPage<ViewsTables> pages = viewsTablesService.pageList(page, params);
+
+        IPage<ViewsTables> pages =null;
+        //根据登录用户id 获取用户拥有角色ID
+        List<Long> userRoleIdList = userRoleService.findByRoleIdList(Long.valueOf(id));
+        for (Long r :userRoleIdList){
+            //判断是否为系统管理员，是则获取所有的列表信息
+            if (r.intValue()==1){
+                pages =  viewsTablesService.pageListAdmin(page);
+            }else {
+                //列表(根据角色信息获取)
+                pages = viewsTablesService.pageList(page, params);
+            }
+        }
+
+       // IPage<ViewsTables> pages = viewsTablesService.pageList(page, params);
 
         List<SysPermission> permissionList = sysPermissionService.findByPermission(SessionUtils.getUserId(request));
 
@@ -94,7 +106,8 @@ public class ViewsTablesController {
 
         List<ViewsDto> views = viewsService.getViewsTables();
         getZtree(model);
-        List<SysPermission> permissionList = sysPermissionService.getTpyeList();
+        List<SysPermission> permissionList = sysPermissionService.findByPermission(SessionUtils.getUserId(request));
+       // List<SysPermission> permissionList = sysPermissionService.getTpyeList();
         model.addAttribute("permissionList", permissionList);
         model.addAttribute("nickName", SessionUtils.getUserNickName(request));
         model.addAttribute("select", views);
@@ -160,6 +173,19 @@ public class ViewsTablesController {
         tables.setOperationId(sysUser.getId());
 
         if (viewsTablesService.save(tables)) {
+
+            //将本角色下用户创建的信息，保存至中间表中，方便本角色下所有的用户访问
+            List<Long> roleIdList = userRoleService.findByRoleIdList(Long.valueOf(SessionUtils.getUserId(request)));
+            List<SysRoleViewsTables> list = new ArrayList<>(SessionUtils.getUserId(request));
+            for (Long roleId : roleIdList) {
+                SysRoleViewsTables sysRoleViewsTables = new SysRoleViewsTables();
+                sysRoleViewsTables.setViewTablesId(tables.getId());
+                sysRoleViewsTables.setRoleId(roleId.intValue());
+                list.add(sysRoleViewsTables);
+            }
+            //System.out.println("list》》》》》》"+list);
+            roleViewService.saveBatch(list);
+
             return new Result<String>(ResultEnum.SECCUSS);
         } else {
             return new Result<String>(ResultEnum.FAIL);

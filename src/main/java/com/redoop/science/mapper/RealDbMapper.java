@@ -39,4 +39,6 @@ public interface RealDbMapper extends BaseMapper<RealDb> {
 
 
     IPage<RealDb> findByRole(Page<RealDb> page, @Param("params")Map params);
+
+    IPage<RealDb> pageListAdmin(Page<RealDb> page);
 }

@@ -36,4 +36,9 @@ public class VirtualTablesServiceImpl extends ServiceImpl<VirtualTablesMapper, V
     public IPage<VirtualTables> pageList(Page<VirtualTables> page, Map<String, Object> params) {
         return virtualTablesMapper.pageList(page,params);
     }
+
+    @Override
+    public IPage<VirtualTables> pageListAdmin(Page<VirtualTables> page) {
+        return virtualTablesMapper.pageListAdmin(page);
+    }
 }

@@ -24,13 +24,12 @@ public class SysUserRoleServiceImpl extends ServiceImpl<SysUserRoleMapper, SysUs
     SysUserRoleMapper sysUserRoleMapper;
 
     @Override
-    public List<Long> queryRoleIdList(Long id) {
-        return sysUserRoleMapper.findById(id);
+    public List<Long> findByRoleIdList(Long id) {
+        return sysUserRoleMapper.findByRoleId(id);
     }
 
     @Override
     public void delete(Integer user_id) {
         sysUserRoleMapper.deleteUserId(user_id);
     }
-
 }

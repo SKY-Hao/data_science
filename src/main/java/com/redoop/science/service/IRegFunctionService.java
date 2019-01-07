@@ -23,4 +23,6 @@ public interface IRegFunctionService extends IService<RegFunction> {
     IPage<RegFunction> pageList(Page<RegFunction> page, Map<String, Object> params);
 
     List<RegFunction> findByRole(Integer id);
+
+    IPage<RegFunction> pageListAdmin(Page<RegFunction> page);
 }
