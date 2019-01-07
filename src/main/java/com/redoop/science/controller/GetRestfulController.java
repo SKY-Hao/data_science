@@ -1,5 +1,6 @@
 package com.redoop.science.controller;
 
+import com.redoop.science.common.MlSql;
 import com.redoop.science.service.IAnalysisService;
 import com.redoop.science.utils.*;
 import okhttp3.HttpUrl;
@@ -25,6 +26,8 @@ public class GetRestfulController {
 
     @Autowired
     private IAnalysisService analysisService;
+    @Autowired
+    private MlSql mlSql;
 
     @GetMapping("/analysis/{id}")
     @ResponseBody
@@ -54,8 +57,8 @@ public class GetRestfulController {
 
             HttpUrl url = new HttpUrl.Builder()
                     .scheme("http")
-                    .host("192.168.0.122")
-                    .port(9003)
+                    .host(mlSql.getIp())
+                    .port(mlSql.getPort())
                     .addPathSegments("run\\script")
                     .addQueryParameter("sql", runSql)
                     .build();

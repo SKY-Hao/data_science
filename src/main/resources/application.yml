@@ -111,3 +111,7 @@ spring:
       web:
         exposure:
           include:  ["*"]
+seasbase:
+  mlsql:
+    ip: 192.168.0.163
+    port: 9003

@@ -1,6 +1,7 @@
 package com.redoop.science.controller;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.redoop.science.common.MlSql;
 import com.redoop.science.entity.SysUserDetails;
 import com.redoop.science.entity.VirtualTables;
 import com.redoop.science.service.*;
@@ -29,6 +30,8 @@ public class JobController {
 
     @Autowired
     private IVirtualTablesService virtualTablesService;
+    @Autowired
+    private MlSql mlSql;
 
     @PostMapping("/script")
     @ResponseBody
@@ -43,9 +46,8 @@ public class JobController {
             String runSql = ParseSql.parse(sql);
             HttpUrl url = new HttpUrl.Builder()
                     .scheme("http")
-//                    .host("127.0.0.1")
-                    .host("192.168.0.122")
-                    .port(9113)
+                    .host(mlSql.getIp())
+                    .port(mlSql.getPort())
                     .addPathSegments("run\\script")
                     .addQueryParameter("sql", runSql)
                     .build();
