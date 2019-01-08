@@ -39,14 +39,14 @@
 <body>
 <div th:include="/common/header::header"></div>
 
-<form class="form-horizontal" role="form" style="margin-top: 33px" th:action="@{/real/update}" th:object="${realDb}"  th:method="post">
+<form class="form-horizontal" role="form" style="margin-top: 33px;margin-left: auto;margin-right: auto;width: 1000px" th:action="@{/real/update}" th:object="${realDb}"  th:method="post">
 
     <input type="hidden" th:name="id" th:value="${realDb.id}" />
 
     <div class="form-group">
         <label class="col-sm-2 control-label">IP</label>
         <div class="col-sm-10">
-            <input  style="width: 33%" class="form-control" type="text" id="ip" th:value="${realDb.ip}"  th:name="ip" placeholder="Enter ip" >
+            <input  style="width: 80%" class="form-control" type="text" id="ip" th:value="${realDb.ip}"  th:name="ip" placeholder="Enter ip" >
             <label style="color:red" th:if="${#fields.hasErrors('ip')}" th:errors="${realDb.ip}">ip Error</label>
             <!--<label style="color:red" th:if="${#fields.hasErrors('ip')}" th:errors="*{ip}">ip Error</label>-->
         </div>
@@ -54,7 +54,7 @@
    <div class="form-group">
         <label class="col-sm-2 control-label">端口</label>
         <div class="col-sm-10">
-            <input  style="width: 33%" class="form-control" id="port" type="text" th:value="${realDb.port}"  th:name="port" placeholder="Enter 端口" >
+            <input  style="width: 80%" class="form-control" id="port" type="text" th:value="${realDb.port}"  th:name="port" placeholder="Enter 端口" >
             <label style="color:red" th:if="${#fields.hasErrors('port')}" th:errors="${realDb.port}">port Error</label>
         </div>
     </div>
@@ -62,7 +62,7 @@
     <div class="form-group">
         <label class="col-sm-2 control-label">驱动</label>
         <div class="col-sm-10">
-            <select  id="dbType"  th:name="dbType" th:field="${realDb.dbType}" th:value="${realDb.dbType}">
+            <select  id="dbType" style="width: 80%" th:name="dbType" th:field="${realDb.dbType}" th:value="${realDb.dbType}">
                 <option value="1" th:selected="${realDb.dbType=='1'}" >mysql</option>
                 <option value="2" th:selected="${realDb.dbType=='2'}" >oracle</option>
                 <option value="3" th:selected="${realDb.dbType=='3'}" >pgsql</option>
@@ -78,14 +78,14 @@
     <div class="form-group">
         <label class="col-sm-2 control-label">数据库名</label>
         <div class="col-sm-10">
-            <input style="width: 33%" class="form-control" id="name" type="text" th:value="${realDb.name}"  th:name="name" placeholder="Enter 数据库名" >
+            <input style="width: 80%" class="form-control" id="name" type="text" th:value="${realDb.name}"  th:name="name" placeholder="Enter 数据库名" >
             <label style="color:red" th:if="${#fields.hasErrors('name')}" th:errors="${realDb.name}">name Error</label>
         </div>
     </div>
     <div class="form-group">
         <label class="col-sm-2 control-label">数据库用户</label>
         <div class="col-sm-10">
-            <input style="width: 33%" class="form-control" id="dbName" type="text" th:value="${realDb.dbName}"   th:name="dbName" placeholder="Enter 数据库用户">
+            <input style="width: 80%" class="form-control" id="dbName" type="text" th:value="${realDb.dbName}"   th:name="dbName" placeholder="Enter 数据库用户">
             <label style="color:red" th:if="${#fields.hasErrors('dbName')}" th:errors="${realDb.dbName}">dbName Error</label>
         </div>
     </div>
@@ -93,7 +93,7 @@
     <div class="form-group">
         <label class="col-sm-2 control-label">数据库密码</label>
         <div class="col-sm-10">
-            <input style="width: 33%" class="form-control" id="dbPassword" type="text" th:value="${realDb.dbPassword}"  th:name="dbPassword" placeholder="Enter 数据库密码">
+            <input style="width: 80%" class="form-control" id="dbPassword" type="text" th:value="${realDb.dbPassword}"  th:name="dbPassword" placeholder="Enter 数据库密码">
             <label style="color:red" th:if="${#fields.hasErrors('dbPassword')}" th:errors="${realDb.dbPassword}">dbPassword Error</label>
         </div>
     </div>
@@ -101,12 +101,12 @@
     <div class="form-group">
         <label class="col-sm-2 control-label">数据源名</label>
         <div class="col-sm-10">
-            <input  style="width: 33%" class="form-control" id="nikeName" type="text"th:value="${realDb.nikeName}"   th:name="nikeName" placeholder="Enter 数据源名">
+            <input  style="width: 80%" class="form-control" id="nikeName" type="text"th:value="${realDb.nikeName}"   th:name="nikeName" placeholder="Enter 数据源名">
             <div th:text="${hintMessage}"style="color: red; font-weight: 700;"/>
             <label style="color:red" th:if="${#fields.hasErrors('nikeName')}" th:errors="${realDb.nikeName}">nikeName Error</label>
         </div>
     </div>
-    <div id="realFormButtn">
+    <div id="realFormButtn" style="margin-left: 53%">
         <button type="submit" class="btn btn-success">更新</button>
        <!-- <input type="reset" class="btn btn-warning" value="返回" onclick="window.open('/real/1')"/>-->
         <input type="reset" class="btn btn-warning" value="返回" onclick="returnSQL()"/>

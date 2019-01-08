@@ -43,13 +43,13 @@ public class ParseSql {
     public static String parse(String sql) {
         String copySql = sql;
         if (copySql.indexOf("`") != -1) {
-            copySql = parseSql(copySql);
-        }
-        if (copySql.indexOf("view.") != -1) {
-            copySql =  viewParseSql(copySql);
-        }
-        if (copySql.indexOf("(") != -1) {
-            copySql =  funParseSql(copySql);
+            return parseSql(copySql);
+        } else {
+            if (copySql.indexOf("view.") != -1) {
+                return viewParseSql(copySql);
+            } else if (copySql.indexOf("(") != -1) {
+                return funParseSql(copySql);
+            }
         }
         return copySql;
     }

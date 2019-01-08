@@ -17,7 +17,7 @@ public class LoginController {
 
     @GetMapping("/")
     public String root() {
-        return "redirect:/virtual/1";
+        return "redirect:/analysis/1";
     }
 
     @GetMapping("/401")

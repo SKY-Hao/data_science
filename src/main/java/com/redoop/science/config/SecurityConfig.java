@@ -61,7 +61,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .exceptionHandling().accessDeniedPage("/error/401")
                 .and()
                 .csrf().disable();
-        http.sessionManagement().maximumSessions(1).maxSessionsPreventsLogin(false).expiredUrl("/login?expired=true")
+        http.sessionManagement().maximumSessions(5).maxSessionsPreventsLogin(false).expiredUrl("/login?expired=true")
                 .sessionRegistry(sessionRegistry());
 
         http.logout().logoutSuccessUrl("/login");

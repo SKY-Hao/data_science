@@ -43,10 +43,10 @@ spring:
       driver-class-name: com.mysql.cj.jdbc.Driver
       #\u57FA\u672C\u5C5E\u6027
       jdbc:
-      url: jdbc:mysql://127.0.0.1:3306/data_science?serverTimezone=Asia/Shanghai&useUnicode=true&characterEncoding=utf8&autoReconnect=true&rewriteBatchedStatements=TRUE&useSSL=false&allowPublicKeyRetrieval=true
+      url: jdbc:mysql://192.168.0.163:3306/data_science?serverTimezone=Asia/Shanghai&useUnicode=true&characterEncoding=utf8&autoReconnect=true&rewriteBatchedStatements=TRUE&useSSL=false&allowPublicKeyRetrieval=true
       #url: jdbc:mysql://192.168.0.122:3306/data_science?serverTimezone=Asia/Shanghai&useUnicode=true&characterEncoding=utf8&autoReconnect=true&rewriteBatchedStatements=TRUE&useSSL=false&allowPublicKeyRetrieval=true
       username: root
-      password: root
+      password:
       #password: Redoop123$%^
 #      username: root
 #      password: Alansun&**@7882

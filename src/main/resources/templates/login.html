@@ -52,7 +52,7 @@
                         <br />
                     </div>
                     <div class="panel loginbox">
-                        <div class="text-center margin-big padding-big-top"><h1>Redoop</h1></div>
+                        <div class="text-center margin-big padding-big-top"><h1>Login</h1></div>
                         <div class="panel-body" style="padding:30px; padding-bottom:10px; padding-top:10px;">
                             <div class="form-group">
                                 <div class="field field-icon-right">
@@ -88,7 +88,7 @@ function login() {
 
         if (result.code == 200) {
             layer.msg("登录成功");
-            location.href="/virtual/1";
+            location.href="/analysis/1";
             //window.location.href=="/virtual";
         } else if (result.code == 1002) { {
             layer.msg(result.msg)
