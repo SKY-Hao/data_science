@@ -29,7 +29,7 @@ public interface RegFunctionMapper extends BaseMapper<RegFunction> {
             "LEFT JOIN sys_role_real_db b on a.ID = b.REAL_DB_ID " +
             "LEFT JOIN sys_user_role c on b.ROLE_ID = c.ROLE_ID " +
             "WHERE c.USER_ID =#{id} and a.ID  is not NULL")*/
-    @Select(" SELECT a.* FROM reg_function a" +
+    @Select(" SELECT DISTINCT a.* FROM reg_function a" +
             " LEFT JOIN sys_role_function b on a.ID = b.FUNCTION_ID" +
             " LEFT JOIN sys_user_role c ON b.ROLE_ID = c.ROLE_ID " +
             "where c.USER_ID =#{id} and a.ID  is not NULL ")

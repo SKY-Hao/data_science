@@ -174,10 +174,10 @@ public class RegFunctionController {
             }else{
                 regFunction = new RegFunction();
                 regFunction.setCreateDate(new Date());
+                regFunction.setCode(code);
                 regFunction.setName(name);
                 regFunction.setCreatorId(sysUser.getId());
                 regFunction.setCreatorName(sysUser.getNickname());
-
             }
         }
         //注册函数

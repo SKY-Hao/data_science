@@ -1,5 +1,6 @@
 package com.redoop.science;
 
+import com.redoop.science.entity.RealDb;
 import org.junit.Test;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
@@ -14,9 +15,9 @@ import java.util.Set;
  * @Description:
  */
 public class Test1234 {
-    @Test
+    /*@Test
     public void test(){
-        String copySql = "select * from hive_'ods.people' as a;";
+        String copySql = "select * from 'ods.people' as a;";
         StringBuffer returnSql = new StringBuffer();
 
         String[] codes = copySql.split(" ");
@@ -40,6 +41,47 @@ public class Test1234 {
                 System.out.println("tableNames======="+tableNames);
             }
         }
-    }
+    }*/
+   @Test
+    public void test() {
+       String copySql = "select * from `test.t_user` as test_user;";
+       StringBuilder returnSql = new StringBuilder();
+       //获取使用库
+       String[] tables = copySql.split("`");
+
+       // String[] partition = copySql.split("_partition");
+
+       Set<String> tableNames = new HashSet<>();
+       Set<String> dbNames = new HashSet<>();
+       Set<String> partition = new HashSet<>();
+
+       for (String table : tables) {
+           if (table.indexOf(".") != -1) {
+               String[] tableInfo = table.split("\\.");
+               String dbName = tableInfo[0];
+
+               tableNames.add(table);
+               dbNames.add(dbName);
+
+               System.out.println("dbName=======" + dbName);
+               System.out.println("dbNames=======" + dbNames);
+           }
+
+          /* if (table.indexOf("_partition")!=-1){
+               String[] tableInfo = table.split("\\.");
+               String parName = tableInfo[0];
+
+               tableNames.add(table);
+               partition.add(parName);
+
+               System.out.println("parName======="+parName);
+               System.out.println("partition======="+partition);
+           }*/
+       }
+       for (String tableName : tableNames) {
+           String[] dbName = tableName.split("\\.");
+           System.out.println(dbName[1]);
+       }
+   }
 
 }

@@ -75,6 +75,11 @@ public class ParseSql {
                 String dbName = tableInfo[0];
                 tableNames.add(table);
                 dbNames.add(dbName);
+
+                System.out.println("dbName=======" + table);
+                System.out.println("dbName=======" + dbName);
+                System.out.println("dbNames=======" + dbNames);
+
             }
         }
 
@@ -164,7 +169,7 @@ public class ParseSql {
         for (String tableName : tableNames) {
             String[] dbName = tableName.split("\\.");
             RealDb realDb = realDbs.get(dbName[0]);
-
+            System.out.println("dbName[0]====="+dbName[0]);
 
             if (realDb != null) {
                 replaceTableNames.put("`" + tableName + "`", dbName[1]);
