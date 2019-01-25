@@ -5,6 +5,7 @@ import com.redoop.science.entity.RealDb;
 import com.redoop.science.service.IRealDbService;
 import com.redoop.science.service.IRegFunctionService;
 import com.redoop.science.service.IViewsTablesService;
+import lombok.extern.slf4j.Slf4j;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,6 +21,7 @@ import java.util.Set;
  * Created by Administrator on 2018/10/10.
  */
 @Component
+@Slf4j
 public class ParseSql {
 
     Logger logger = LoggerFactory.getLogger(getClass());
@@ -201,7 +203,7 @@ public class ParseSql {
         if (repSql.indexOf(";") != -1) {
             returnSql.append(repSql);
         }
-        System.out.println("returnSql.append(repSql)>>>>>>===" + returnSql);
+        log.info("returnSql.append(repSql)>>>>>>===" + returnSql);
         return returnSql.toString();
     }
 
@@ -236,8 +238,10 @@ public class ParseSql {
         Map<String, String> replaceTableNames = new HashMap<>();
         for (String dbName : tableNames) {
             String code = parseSqlUtils.viewsTablesService.getByName(dbName);
-            String sqlCode = parseSql(code);
-            returnSql.append(sqlCode);
+            if(code!=null){
+                String sqlCode = parseSql(code);
+                returnSql.append(sqlCode);
+            }
         }
         String repSql = copySql;
         System.out.println("view_copySql==========="+copySql);
@@ -274,8 +278,10 @@ public class ParseSql {
         }
         for (String dbName : tableNames) {
             String code = parseSqlUtils.regFunctionService.getByName(dbName);
-            String sqlCode = parseSql(code);
-            returnSql.append(sqlCode);
+            if(code!=null){
+                String sqlCode = parseSql(code);
+                returnSql.append(sqlCode);
+            }
         }
         String repSql = copySql;
         for (String map : funNames.keySet()) {
