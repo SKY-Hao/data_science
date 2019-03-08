@@ -14,6 +14,11 @@ import org.springframework.test.context.junit4.SpringRunner;
 public class RealDConnect {
 
   public static void main(String[] args) {
+
+
+
+
+
      /* Connection conn = null;
         //String className = "oracle.jdbc.driver.OracleDriver";
         //String url = "jdbc:oracle:thin:@192.168.1.150:1521:orcl";

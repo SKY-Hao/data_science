@@ -55,6 +55,9 @@
                                 <li th:if="${permissionList != null}" th:each="item : ${permissionList}">
                                     <a  th:href="${item.url}" th:text="${item.name}"></a>
                                 </li>
+                                <!--<li th:class="${activeType eq 6}? 'active' : ''">
+                                    <a href="/process/6">工作流</a>
+                                </li>-->
                                <!-- <li>
                                     <a href="http://192.168.0.163:8089">调度器</a>
                                 </li>-->

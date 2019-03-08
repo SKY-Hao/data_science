@@ -45,7 +45,7 @@ public class SysDeptController {
         map.put("deptList", deptList);
         map.put("permissionList", permissionList);
         map.put("nickName", SessionUtils.getUserNickName(request));
-
+        //return "/sys/g6";
         return "/sys/dept";
     }
 
