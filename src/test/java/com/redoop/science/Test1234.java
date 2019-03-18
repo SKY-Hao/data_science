@@ -83,7 +83,7 @@ public class Test1234 {
     }
 
 
- /*   @Test
+    @Test
     public void a() {
         int[] arr={12,45,34,85,48,3,0,2,1};
         //外层循环控制排序趟数
@@ -101,28 +101,30 @@ public class Test1234 {
         for (int num :arr){
             System.out.println(num);
         }
-    }*/
+    }
 
 
-/* @Test
+ @Test
     public  void  b(){
       int[] arry={78,65,45,21,35,68,98,99};
-     for (int i=0;i<arry.length;i++){
-         for (int j=arry.length-1;j>i;j--){
-             if (arry[j]>arry[j-1]){
-                 int tmp ;
-                 tmp = arry[j];
-                 arry[j]=arry[j-1];
-                 arry[j-1]=tmp;
-             }
-         }
-     }
+
+      for(int i =0; i<arry.length;i++){
+          for (int j=0;j<arry.length-1-i;j++){
+              if (arry[j]>arry[j+1]){
+                  int tmp;
+                  tmp= arry[j];
+                  arry[j]=arry[j+1];
+                  arry[j+1]=tmp;
+              }
+          }
+      }
+
      for (int num :arry){
          System.out.println(num);
      }
 
 
- }*/
+ }
 
 
 }

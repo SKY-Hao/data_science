@@ -80,6 +80,7 @@ public class AnalysisController {
         model.addAttribute("permissionList",permissionList);
         model.addAttribute("nickName", SessionUtils.getUserNickName(request));
         model.addAttribute("list", pages.getRecords());
+        //System.out.println("分析数据》》》》》》"+pages.getRecords());
         //model.addAttribute("activeType", 3);
         model.addAttribute("pageNum", num);
         model.addAttribute("analysis", new Analysis());
