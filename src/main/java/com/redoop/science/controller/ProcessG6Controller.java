@@ -38,10 +38,9 @@ public class ProcessG6Controller {
     @Autowired
     private IProcessG6Service processG6Service;
 
+    @ResponseBody
     @GetMapping("/{num}")
     public ModelAndView index(Model model, @PathVariable Long num, HttpServletRequest request) {
-
-
 
         Integer id = SessionUtils.getUserId(request);
         Page<ProcessG6> page = new Page<>();
@@ -82,10 +81,16 @@ public class ProcessG6Controller {
         return new ModelAndView("/process/g6");
     }
 
-    @GetMapping("/add")
-    public ModelAndView add(Model model){
 
-        return new ModelAndView("/process/flow");
+    /**
+     * 保存接口
+     * @param processG6
+     */
+    @ResponseBody
+    @RequestMapping("/save")
+    public void add(@RequestBody ProcessG6 processG6){
+
+        processG6Service.save(processG6);
     }
 
    /* @GetMapping("/{num}")

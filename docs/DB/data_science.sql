@@ -69,8 +69,8 @@ CREATE TABLE `analysis_table` (
 -- ----------------------------
 -- Table structure for process
 -- ----------------------------
-DROP TABLE IF EXISTS `process`;
-CREATE TABLE `process` (
+DROP TABLE IF EXISTS `process_g6`;
+CREATE TABLE `process_g6` (
   `ID` int(11) NOT NULL AUTO_INCREMENT COMMENT '编号',
   `NAME` varchar(30) DEFAULT NULL COMMENT '名称',
   `REMARK` varchar(200) DEFAULT NULL COMMENT '注释',
@@ -87,7 +87,7 @@ CREATE TABLE `process` (
 -- ----------------------------
 -- Records of process
 -- ----------------------------
-INSERT INTO `process` VALUES ('11', 'test_process', null, null, null, null, null, null, 'SELECT * FROM B;', 'SELECT * FROM A;');
+INSERT INTO `process_g6` VALUES ('11', 'test_process', null, null, null, null, null, null, 'SELECT * FROM B;', 'SELECT * FROM A;');
 
 -- ----------------------------
 -- Table structure for real_db
